@@ -2,9 +2,10 @@ package janala.analysis;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Copyright (c) 2006-2011,
@@ -40,7 +41,7 @@ import java.util.LinkedList;
  */
 public class ClassTemplate {
     LinkedList<String> fields;
-    LinkedHashMap<String,Integer> staticFieldToIndex;
+    Map<String,Integer> staticFieldToIndex;
     //SValue staticFields[];
 
     public void populateAllFields(Class c) {
@@ -60,7 +61,7 @@ public class ClassTemplate {
 
     public ClassTemplate() {
         fields = new LinkedList<String>();
-        staticFieldToIndex = new LinkedHashMap<String,Integer>();
+        staticFieldToIndex = new HashMap<String,Integer>();
     }
 
     private void addField(String name) {

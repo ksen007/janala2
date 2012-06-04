@@ -95,15 +95,15 @@ public interface Interpreter {
 
     public void INVOKEINTERFACE(int iid, int mid, String owner, String name, String desc);
 
-    public void GETSTATIC(int iid, int mid, int cIdx, int fIdx, String desc);
+    public void GETSTATIC(int iid, int mid, int fIdx, String desc);
 
-    public void PUTSTATIC(int iid, int mid, int cIdx, int fIdx,  String desc);
+    public void PUTSTATIC(int iid, int mid, int fIdx,  String desc);
 
-    public void GETFIELD(int iid, int mid, int cIdx, int fIdx, String desc);
+    public void GETFIELD(int iid, int mid, int fIdx, String desc);
 
-    public void PUTFIELD(int iid, int mid, int cIdx, int fIdx, String desc);
+    public void PUTFIELD(int iid, int mid, int fIdx, String desc);
 
-    public void NEW(int iid, int mid, String type, int cIdx);
+    public void NEW(int iid, int mid, String type, int nFields, int nStaticFields);
 
     public void ANEWARRAY(int iid, int mid, String type);
 

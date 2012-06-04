@@ -1,8 +1,6 @@
 package janala.instrument;
 
 import janala.analysis.ClassDepot;
-import janala.analysis.ClassNames;
-import janala.analysis.ObjectInfo;
 import janala.config.Config;
 import org.objectweb.asm.*;
 
@@ -679,12 +677,12 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitLdcInsn(type);
+        String dottedType = type.replace('/','.');
         switch (opcode) {
             case NEW:
-                int cIdx = ClassNames.instance.get(type);
-                addBipushInsn(mv,cIdx);
-
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEW", "(IILjava/lang/String;I)V");
+                addBipushInsn(mv,ClassDepot.instance.nFields(dottedType));
+                addBipushInsn(mv,ClassDepot.instance.nStaticFields(dottedType));
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEW", "(IILjava/lang/String;II)V");
                 break;
             case ANEWARRAY:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ANEWARRAY", "(IILjava/lang/String;)V");
@@ -705,54 +703,45 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
     public void visitFieldInsn(int opcode, String owner, String name, String desc) {
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
-        int cIdx = ClassNames.instance.get(owner);
-        ObjectInfo tmp = ClassNames.instance.get(cIdx);
-        addBipushInsn(mv,cIdx);
+
+        String dottedOwner = owner.replace('/','.');
 //        mv.visitLdcInsn(owner);
 //        mv.visitLdcInsn(name);
-//        System.out.println("*************************** Idx ");
         switch (opcode) {
             case GETSTATIC:
-                int fIdx = tmp.get(owner,name,true);
-                addBipushInsn(mv,fIdx);
+                addBipushInsn(mv,ClassDepot.instance.getStaticFieldIndex(dottedOwner,name));
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GETSTATIC",
-                        "(IIIILjava/lang/String;)V");
+                        "(IIILjava/lang/String;)V");
 
-                System.out.println("Idx "+ ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 addValueReadInsn(mv,desc,"GETFIELDORSTATIC_");
                 break;
             case PUTSTATIC:
-                fIdx = tmp.get(owner,name,true);
-                addBipushInsn(mv,fIdx);
+                addBipushInsn(mv,ClassDepot.instance.getStaticFieldIndex(dottedOwner,name));
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "PUTSTATIC",
-                        "(IIIILjava/lang/String;)V");
-                System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                        "(IIILjava/lang/String;)V");
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 break;
             case GETFIELD:
-                fIdx = tmp.get(owner,name,false);
-                addBipushInsn(mv,fIdx);
+                addBipushInsn(mv,ClassDepot.instance.getFieldIndex(dottedOwner,name));
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GETFIELD",
-                        "(IIIILjava/lang/String;)V");
-                System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                        "(IIILjava/lang/String;)V");
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 addValueReadInsn(mv,desc,"GETFIELDORSTATIC_");
                 break;
             case PUTFIELD:
-                fIdx = tmp.get(owner,name,false);
-                addBipushInsn(mv,fIdx);
+                addBipushInsn(mv,ClassDepot.instance.getFieldIndex(dottedOwner,name));
+                mv.visitLdcInsn(desc);
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "PUTFIELD",
-                        "(IIIILjava/lang/String;)V");
-                System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                        "(IIILjava/lang/String;)V");
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 break;
             default:

@@ -114,7 +114,4 @@ public class ClassDepot {
         System.out.println(instance.getFieldIndex("janala.scratchpad.B1","x"));
     }
 
-    public int getClassId(String className) {
-        return 0;  //To change body of created methods use File | Settings | File Templates.
-    }
 }
