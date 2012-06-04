@@ -51,13 +51,17 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
 	public byte[] transform(ClassLoader loader,String cname, Class<?> c, ProtectionDomain d, byte[] cbuf)
             throws IllegalClassFormatException {
 
-		if (!cname.startsWith("janala") && !cname.startsWith("gnu/trove")) {
+		if (!cname.startsWith("janala")
+                && !cname.startsWith("gnu/trove")
+                && !cname.startsWith("java/util")
+                && !cname.startsWith("com/apple/java")
+                && !cname.startsWith("java/lang")) {
             System.out.println(">>>>>>>>>>>>>>> transform "+cname);
             ClassReader cr = new ClassReader(cbuf);
             ClassWriter cw = new ClassWriter(cr, 0);
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
             cr.accept(cv, 0);
-            //System.out.println("<<<<<<<<<<<<<<< end transform "+cname);
+            System.out.println("<<<<<<<<<<<<<<< end transform "+cname);
             return cw.toByteArray();
         } else {
             //System.out.println("--------------- skipping "+cname);

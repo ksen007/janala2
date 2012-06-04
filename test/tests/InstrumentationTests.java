@@ -55,5 +55,6 @@ public class InstrumentationTests {
         o = new LockTest1();
 
         o = new ReturnTest1();
+        System.out.println("**************** Finished **************");
     }
 }

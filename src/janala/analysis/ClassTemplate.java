@@ -41,7 +41,7 @@ import java.util.LinkedList;
 public class ClassTemplate {
     LinkedList<String> fields;
     LinkedHashMap<String,Integer> staticFieldToIndex;
-    SValue staticFields[];
+    //SValue staticFields[];
 
     public void populateAllFields(Class c) {
         Field[] fields = c.getDeclaredFields();
@@ -53,7 +53,7 @@ public class ClassTemplate {
                 addStaticField(field.getName());
             }
         }
-        createStaticFields();
+//        createStaticFields();
         System.out.println(this.fields);
         System.out.println(staticFieldToIndex);
     }
@@ -76,9 +76,9 @@ public class ClassTemplate {
         staticFieldToIndex.put(name,staticFieldToIndex.size());
     }
 
-    private void createStaticFields() {
-        staticFields = new SObject[staticFieldToIndex.size()];
-    }
+//    private void createStaticFields() {
+//        staticFields = new SObject[staticFieldToIndex.size()];
+//    }
 
     public int getFieldIndex(String name) {
         int i = fields.size();
@@ -98,7 +98,11 @@ public class ClassTemplate {
         else return -1;
     }
 
-    public int size() {
+    public int nFields() {
         return fields.size();
+    }
+
+    public int nStaticFields() {
+        return staticFieldToIndex.size();
     }
 }

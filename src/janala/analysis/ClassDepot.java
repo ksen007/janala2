@@ -45,7 +45,7 @@ public class ClassDepot {
         templates = new TreeMap<String, ClassTemplate>();
     }
 
-    public ClassTemplate getOrCreateTemplate(String cName, Class clazz) {
+    private ClassTemplate getOrCreateTemplate(String cName, Class clazz) {
         ClassTemplate ct = templates.get(cName);
         if (ct != null)
             return ct;
@@ -86,11 +86,23 @@ public class ClassDepot {
         return -1;
     }
 
-    public int getClassSize(String cName) {
+    public int nFields(String cName) {
         try {
             Class clazz = Class.forName(cName);
             ClassTemplate ct = getOrCreateTemplate(cName,clazz);
-            return ct.size();
+            return ct.nFields();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        return -1;
+    }
+
+    public int nStaticFields(String cName) {
+        try {
+            Class clazz = Class.forName(cName);
+            ClassTemplate ct = getOrCreateTemplate(cName,clazz);
+            return ct.nStaticFields();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.exit(-1);
@@ -100,5 +112,9 @@ public class ClassDepot {
 
     public static void main(String[] args) {
         System.out.println(instance.getFieldIndex("janala.scratchpad.B1","x"));
+    }
+
+    public int getClassId(String className) {
+        return 0;  //To change body of created methods use File | Settings | File Templates.
     }
 }

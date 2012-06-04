@@ -159,24 +159,24 @@ public class DJVM {
         intp.INVOKEINTERFACE(iid,mid,owner,name,desc);
     }
 
-    public static void GETSTATIC(int iid, int mid, String owner, String name, String desc) {
-        intp.GETSTATIC(iid,mid,owner,name,desc);
+    public static void GETSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
+        intp.GETSTATIC(iid,mid,cIdx,fIdx,desc);
     }
 
-    public static void PUTSTATIC(int iid, int mid, String owner, String name, String desc) {
-        intp.PUTSTATIC(iid,mid,owner,name,desc);
+    public static void PUTSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
+        intp.PUTSTATIC(iid,mid,cIdx,fIdx,desc);
     }
 
-    public static void GETFIELD(int iid, int mid, String owner, String name, String desc) {
-        intp.GETFIELD(iid,mid,owner,name,desc);
+    public static void GETFIELD(int iid, int mid, int cIdx, int fIdx, String desc) {
+        intp.GETFIELD(iid,mid,cIdx,fIdx,desc);
     }
 
-    public static void PUTFIELD(int iid, int mid, String owner, String name, String desc) {
-        intp.PUTFIELD(iid,mid,owner,name,desc);
+    public static void PUTFIELD(int iid, int mid, int cIdx, int fIdx, String desc) {
+        intp.PUTFIELD(iid,mid,cIdx,fIdx,desc);
     }
 
-    public static void NEW(int iid, int mid, String type) {
-        intp.NEW(iid,mid,type);
+    public static void NEW(int iid, int mid, String type, int cIdx) {
+        intp.NEW(iid,mid,type,cIdx);
     }
 
     public static void ANEWARRAY(int iid, int mid, String type) {
