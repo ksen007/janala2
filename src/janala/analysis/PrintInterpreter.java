@@ -159,42 +159,42 @@ public class PrintInterpreter implements Interpreter {
     }
 
     public void GETSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
-        ObjectInfo oi = ClassNames.instance.get(cIdx);
-        FieldInfo fi = oi.get(fIdx);
-        fi = fi.init();
+//        ObjectInfo oi = ClassNames.instance.get(cIdx);
+//        FieldInfo fi = oi.get(fIdx);
+//        fi = fi.init();
 
-        System.out.println("GETSTATIC iid="+iid+" mid="+mid+" fIdx="+fi.fieldId+" desc="+desc);
+        System.out.println("GETSTATIC iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc);
     }
 
     public void PUTSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
-        ObjectInfo oi = ClassNames.instance.get(cIdx);
-        FieldInfo fi = oi.get(fIdx);
-        fi = fi.init();
+//        ObjectInfo oi = ClassNames.instance.get(cIdx);
+//        FieldInfo fi = oi.get(fIdx);
+//        fi = fi.init();
 
-        System.out.println("PUTSTATIC iid="+iid+" mid="+mid+" fIdx="+fi.fieldId+" desc="+desc);
+        System.out.println("PUTSTATIC iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc);
     }
 
     public void GETFIELD(int iid, int mid, int cIdx, int fIdx, String desc) {
-        ObjectInfo oi = ClassNames.instance.get(cIdx);
-        FieldInfo fi = oi.get(fIdx);
-        fi = fi.init();
+//        ObjectInfo oi = ClassNames.instance.get(cIdx);
+//        FieldInfo fi = oi.get(fIdx);
+//        fi = fi.init();
 
-        System.out.println("GETFIELD iid="+iid+" mid="+mid+" fIdx="+fi.fieldId+" desc="+desc);
+        System.out.println("GETFIELD iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc);
     }
 
     public void PUTFIELD(int iid, int mid, int cIdx, int fIdx, String desc) {
-        ObjectInfo oi = ClassNames.instance.get(cIdx);
-        FieldInfo fi = oi.get(fIdx);
-        fi = fi.init();
+//        ObjectInfo oi = ClassNames.instance.get(cIdx);
+//        FieldInfo fi = oi.get(fIdx);
+//        fi = fi.init();
 
-        System.out.println("PUTFIELD iid="+iid+" mid="+mid+" fIdx="+fi.fieldId+" desc="+desc);
+        System.out.println("PUTFIELD iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc);
     }
 
     public void NEW(int iid, int mid, String type, int cIdx) {
-        ObjectInfo oi = ClassNames.instance.get(cIdx);
-        oi = oi.init();
+//        ObjectInfo oi = ClassNames.instance.get(cIdx);
+//        oi = oi.init();
 
-        System.out.println("NEW iid="+iid+" mid="+mid+" nFields="+oi.nFields+" nStaticFields="+oi.nStaticFields);
+        System.out.println("NEW iid="+iid+" mid="+mid+" cIdx="+cIdx);
     }
 
     public void ANEWARRAY(int iid, int mid, String type) {

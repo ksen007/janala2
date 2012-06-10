@@ -720,7 +720,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GETSTATIC",
                         "(IIIILjava/lang/String;)V");
 
-                System.out.println("Idx "+ ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                //System.out.println("Idx "+ ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 addValueReadInsn(mv,desc,"GETFIELDORSTATIC_");
                 break;
@@ -731,7 +731,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "PUTSTATIC",
                         "(IIIILjava/lang/String;)V");
-                System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 break;
             case GETFIELD:
@@ -741,7 +741,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GETFIELD",
                         "(IIIILjava/lang/String;)V");
-                System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 addValueReadInsn(mv,desc,"GETFIELDORSTATIC_");
                 break;
@@ -752,7 +752,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "PUTFIELD",
                         "(IIIILjava/lang/String;)V");
-                System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
+                //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 break;
             default:
