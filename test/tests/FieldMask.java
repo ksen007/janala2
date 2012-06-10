@@ -1,4 +1,4 @@
-package janala.analysis;
+package tests;
 
 /**
  * Copyright (c) 2006-2011,
@@ -32,5 +32,22 @@ package janala.analysis;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class SValue {
+
+class A1 {
+    int x = 1;
+}
+
+class B1 extends A1 {
+    public B1() {
+        x = 3;
+    }
+    int x = 2;
+}
+
+public class FieldMask {
+    public static void main(String[] args) {
+        B1 b = new B1();
+        System.out.println(b.x);
+        //b.foo();
+    }
 }
