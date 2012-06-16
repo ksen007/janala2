@@ -721,80 +721,44 @@ public class PrintInterpreter implements Interpreter {
         System.out.println("MONITOREXIT iid="+iid+" mid="+mid);
     }
 
-    public void GETFIELDORSTATIC_VALUE(double v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_double (double v) {
+        System.out.println("GETVALUE_double v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(long v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_long (long v) {
+        System.out.println("GETVALUE_long v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(Object v) {
-        System.out.println("GETFIELDORSTATIC_Object v="+ System.identityHashCode(v));
+    public void GETVALUE_Object (Object v) {
+        System.out.println("GETVALUE_Object v="+System.identityHashCode(v));
     }
 
-    public void GETFIELDORSTATIC_VALUE(boolean v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_boolean (boolean v) {
+        System.out.println("GETVALUE_boolean v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(byte v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_byte (byte v) {
+        System.out.println("GETVALUE_byte v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(char v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_char (char v) {
+        System.out.println("GETVALUE_char v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(float v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_float (float v) {
+        System.out.println("GETVALUE_float v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(int v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_int (int v) {
+        System.out.println("GETVALUE_int v="+v);
     }
 
-    public void GETFIELDORSTATIC_VALUE(short v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+    public void GETVALUE_short (short v) {
+        System.out.println("GETVALUE_short v="+v);
     }
 
-    public void INVOKEMETHOD_VALUE(double v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(long v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(Object v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(boolean v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(byte v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(char v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(float v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(int v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE(short v) {
-        System.out.println("INVOKEMETHOD_VALUE v="+v);
-    }
-
-    public void INVOKEMETHOD_VALUE() {
-        System.out.println("INVOKEMETHOD_VALUE");
+    public void GETVALUE_void() {
+        System.out.println("GETVALUE_void");
     }
 
     public void INVOKEMETHOD_EXCEPTION() {

@@ -367,43 +367,25 @@ public interface Interpreter {
 
     public void MONITOREXIT(int iid, int mid);
 
-    public void GETFIELDORSTATIC_VALUE(double v);
+    public void GETVALUE_double (double v);
 
-    public void GETFIELDORSTATIC_VALUE(long v);
+    public void GETVALUE_long (long v);
 
-    public void GETFIELDORSTATIC_VALUE(Object v);
+    public void GETVALUE_Object (Object v);
 
-    public void GETFIELDORSTATIC_VALUE(boolean v);
+    public void GETVALUE_boolean (boolean v);
 
-    public void GETFIELDORSTATIC_VALUE(byte v);
+    public void GETVALUE_byte (byte v);
 
-    public void GETFIELDORSTATIC_VALUE(char v);
+    public void GETVALUE_char (char v);
 
-    public void GETFIELDORSTATIC_VALUE(float v);
+    public void GETVALUE_float (float v);
 
-    public void GETFIELDORSTATIC_VALUE(int v);
+    public void GETVALUE_int (int v);
 
-    public void GETFIELDORSTATIC_VALUE(short v);
+    public void GETVALUE_short (short v);
 
-    public void INVOKEMETHOD_VALUE(double v);
-
-    public void INVOKEMETHOD_VALUE(long v);
-
-    public void INVOKEMETHOD_VALUE(Object v);
-
-    public void INVOKEMETHOD_VALUE(boolean v);
-
-    public void INVOKEMETHOD_VALUE(byte v);
-
-    public void INVOKEMETHOD_VALUE(char v);
-
-    public void INVOKEMETHOD_VALUE(float v);
-
-    public void INVOKEMETHOD_VALUE(int v);
-
-    public void INVOKEMETHOD_VALUE(short v);
-
-    public void INVOKEMETHOD_VALUE();
+    public void GETVALUE_void();
 
     public void INVOKEMETHOD_EXCEPTION();
 }
