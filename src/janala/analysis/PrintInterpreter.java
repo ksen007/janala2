@@ -730,7 +730,7 @@ public class PrintInterpreter implements Interpreter {
     }
 
     public void GETFIELDORSTATIC_VALUE(Object v) {
-        System.out.println("GETFIELDORSTATIC_VALUE v="+v);
+        System.out.println("GETFIELDORSTATIC_Object v="+ System.identityHashCode(v));
     }
 
     public void GETFIELDORSTATIC_VALUE(boolean v) {

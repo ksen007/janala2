@@ -45,8 +45,8 @@ public class ObjectInfo {
 
     public ObjectInfo init() {
         if (nFields==-1) {
-            nFields = ClassDepot.instance.nFields(className);
-            nStaticFields = ClassDepot.instance.nStaticFields(className);
+//            nFields = ClassDepot.instance.nFields(className);
+//            nStaticFields = ClassDepot.instance.nStaticFields(className);
         }
         return this;
     }

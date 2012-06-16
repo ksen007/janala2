@@ -21,11 +21,11 @@ public class FieldInfo {
 
     public FieldInfo init() {
         if (fieldId == -1) {
-            if (isStatic) {
-                fieldId = ClassDepot.instance.getStaticFieldIndex(className,fieldName);
-            } else {
-                fieldId = ClassDepot.instance.getFieldIndex(className,fieldName);
-            }
+//            if (isStatic) {
+//                fieldId = ClassDepot.instance.getStaticFieldIndex(className,fieldName);
+//            } else {
+//                fieldId = ClassDepot.instance.getFieldIndex(className,fieldName);
+//            }
         }
         return this;
     }
