@@ -9,6 +9,10 @@ public class IOR extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIOR(this);
+    }
+
     @Override
     public String toString() {
         return "IOR iid="+iid+" mid="+mid;

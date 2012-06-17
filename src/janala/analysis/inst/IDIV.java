@@ -9,6 +9,10 @@ public class IDIV extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIDIV(this);
+    }
+
     @Override
     public String toString() {
         return "IDIV iid="+iid+" mid="+mid;

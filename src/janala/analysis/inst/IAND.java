@@ -9,6 +9,10 @@ public class IAND extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIAND(this);
+    }
+
     @Override
     public String toString() {
         return "IAND iid="+iid+" mid="+mid;

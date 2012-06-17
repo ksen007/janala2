@@ -4,12 +4,14 @@
 
 package janala.analysis;
 
+import java.io.Serializable;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/3/12
  * Time: 5:46 PM
  */
-public class FieldInfo {
+public class FieldInfo implements Serializable {
     String className;
     String fieldName;
     boolean isStatic;

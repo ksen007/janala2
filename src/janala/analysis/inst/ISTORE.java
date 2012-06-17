@@ -12,6 +12,10 @@ public class ISTORE extends Instruction {
         this.var = var;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitISTORE(this);
+    }
+
     @Override
     public String toString() {
         return "ISTORE iid="+iid+" mid="+mid+" var="+var;

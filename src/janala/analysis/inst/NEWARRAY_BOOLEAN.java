@@ -9,6 +9,10 @@ public class NEWARRAY_BOOLEAN extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNEWARRAY_BOOLEAN(this);
+    }
+
     @Override
     public String toString() {
         return "NEWARRAY_BOOLEAN iid="+iid+" mid="+mid;

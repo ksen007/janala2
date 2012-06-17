@@ -12,6 +12,10 @@ public class ANEWARRAY extends Instruction {
         this.type = type;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitANEWARRAY(this);
+    }
+
     @Override
     public String toString() {
         return "ANEWARRAY iid="+iid+" mid="+mid+" type="+type;

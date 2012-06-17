@@ -12,6 +12,10 @@ public class IFGE extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIFGE(this);
+    }
+
     @Override
     public String toString() {
         return "IFGE iid="+iid+" mid="+mid+" label="+label;

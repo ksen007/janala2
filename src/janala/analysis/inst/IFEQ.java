@@ -12,6 +12,10 @@ public class IFEQ extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIFEQ(this);
+    }
+
     @Override
     public String toString() {
         return "IFEQ iid="+iid+" mid="+mid+" label="+label;

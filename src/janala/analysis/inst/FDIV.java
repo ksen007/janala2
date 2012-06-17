@@ -9,6 +9,10 @@ public class FDIV extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFDIV(this);
+    }
+
     @Override
     public String toString() {
         return "FDIV iid="+iid+" mid="+mid;

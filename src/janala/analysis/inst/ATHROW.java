@@ -9,6 +9,10 @@ public class ATHROW extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitATHROW(this);
+    }
+
     @Override
     public String toString() {
         return "ATHROW iid="+iid+" mid="+mid;

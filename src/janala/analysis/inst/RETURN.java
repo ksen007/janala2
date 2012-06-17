@@ -9,6 +9,10 @@ public class RETURN extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitRETURN(this);
+    }
+
     @Override
     public String toString() {
         return "RETURN iid="+iid+" mid="+mid;

@@ -9,6 +9,10 @@ public class IMUL extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIMUL(this);
+    }
+
     @Override
     public String toString() {
         return "IMUL iid="+iid+" mid="+mid;

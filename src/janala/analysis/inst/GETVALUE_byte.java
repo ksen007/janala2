@@ -12,6 +12,10 @@ public class GETVALUE_byte extends Instruction {
         this.v = v;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETVALUE_byte(this);
+    }
+
     @Override
     public String toString() {
         return "GETVALUE_byte v="+v;

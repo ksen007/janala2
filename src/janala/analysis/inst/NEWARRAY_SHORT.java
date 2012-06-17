@@ -9,6 +9,10 @@ public class NEWARRAY_SHORT extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNEWARRAY_SHORT(this);
+    }
+
     @Override
     public String toString() {
         return "NEWARRAY_SHORT iid="+iid+" mid="+mid;

@@ -9,6 +9,10 @@ public class BALOAD extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitBALOAD(this);
+    }
+
     @Override
     public String toString() {
         return "BALOAD iid="+iid+" mid="+mid;

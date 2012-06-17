@@ -9,6 +9,10 @@ public class NEWARRAY_INT extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNEWARRAY_INT(this);
+    }
+
     @Override
     public String toString() {
         return "NEWARRAY_INT iid="+iid+" mid="+mid;

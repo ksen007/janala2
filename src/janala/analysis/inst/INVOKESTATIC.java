@@ -16,6 +16,10 @@ public class INVOKESTATIC extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitINVOKESTATIC(this);
+    }
+
     @Override
     public String toString() {
         return "INVOKESTATIC iid="+iid+" mid="+mid+" owner="+owner+" name="+name+" desc="+desc;

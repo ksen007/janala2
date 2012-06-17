@@ -12,6 +12,10 @@ public class ALOAD extends Instruction {
         this.var = var;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitALOAD(this);
+    }
+
     @Override
     public String toString() {
         return "ALOAD iid="+iid+" mid="+mid+" var="+var;

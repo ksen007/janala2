@@ -9,6 +9,10 @@ public class DCMPG extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitDCMPG(this);
+    }
+
     @Override
     public String toString() {
         return "DCMPG iid="+iid+" mid="+mid;

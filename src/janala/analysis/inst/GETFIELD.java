@@ -16,6 +16,10 @@ public class GETFIELD extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETFIELD(this);
+    }
+
     @Override
     public String toString() {
         return "GETFIELD iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc;

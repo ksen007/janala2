@@ -9,6 +9,10 @@ public class ARRAYLENGTH extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitARRAYLENGTH(this);
+    }
+
     @Override
     public String toString() {
         return "ARRAYLENGTH iid="+iid+" mid="+mid;

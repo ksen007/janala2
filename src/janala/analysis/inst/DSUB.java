@@ -9,6 +9,10 @@ public class DSUB extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitDSUB(this);
+    }
+
     @Override
     public String toString() {
         return "DSUB iid="+iid+" mid="+mid;

@@ -9,6 +9,10 @@ public class NEWARRAY_FLOAT extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNEWARRAY_FLOAT(this);
+    }
+
     @Override
     public String toString() {
         return "NEWARRAY_FLOAT iid="+iid+" mid="+mid;

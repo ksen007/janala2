@@ -12,6 +12,10 @@ public class GETVALUE_double extends Instruction {
         this.v = v;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETVALUE_double(this);
+    }
+
     @Override
     public String toString() {
         return "GETVALUE_double v="+v;

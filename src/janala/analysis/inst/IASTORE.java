@@ -9,6 +9,10 @@ public class IASTORE extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIASTORE(this);
+    }
+
     @Override
     public String toString() {
         return "IASTORE iid="+iid+" mid="+mid;

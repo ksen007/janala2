@@ -9,6 +9,10 @@ public class MONITORENTER extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitMONITORENTER(this);
+    }
+
     @Override
     public String toString() {
         return "MONITORENTER iid="+iid+" mid="+mid;

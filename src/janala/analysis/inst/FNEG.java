@@ -9,6 +9,10 @@ public class FNEG extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFNEG(this);
+    }
+
     @Override
     public String toString() {
         return "FNEG iid="+iid+" mid="+mid;

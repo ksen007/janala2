@@ -9,6 +9,10 @@ public class ICONST_4 extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitICONST_4(this);
+    }
+
     @Override
     public String toString() {
         return "ICONST_4 iid="+iid+" mid="+mid;

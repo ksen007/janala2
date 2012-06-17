@@ -9,6 +9,10 @@ public class IREM extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIREM(this);
+    }
+
     @Override
     public String toString() {
         return "IREM iid="+iid+" mid="+mid;

@@ -9,6 +9,10 @@ public class DALOAD extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitDALOAD(this);
+    }
+
     @Override
     public String toString() {
         return "DALOAD iid="+iid+" mid="+mid;

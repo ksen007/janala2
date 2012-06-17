@@ -9,6 +9,10 @@ public class LSHL extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLSHL(this);
+    }
+
     @Override
     public String toString() {
         return "LSHL iid="+iid+" mid="+mid;

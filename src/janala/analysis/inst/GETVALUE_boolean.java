@@ -12,6 +12,10 @@ public class GETVALUE_boolean extends Instruction {
         this.v = v;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETVALUE_boolean(this);
+    }
+
     @Override
     public String toString() {
         return "GETVALUE_boolean v="+v;

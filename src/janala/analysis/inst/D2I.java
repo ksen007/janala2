@@ -9,6 +9,10 @@ public class D2I extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitD2I(this);
+    }
+
     @Override
     public String toString() {
         return "D2I iid="+iid+" mid="+mid;

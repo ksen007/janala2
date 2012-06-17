@@ -4,6 +4,7 @@
 
 package janala.analysis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,7 +14,7 @@ import java.util.TreeMap;
  * Date: 6/3/12
  * Time: 5:53 PM
  */
-public class ObjectInfo {
+public class ObjectInfo implements Serializable {
     Map<String, Integer> nameToIndex;
     ArrayList<FieldInfo> fieldList;
 

@@ -16,6 +16,10 @@ public class PUTFIELD extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitPUTFIELD(this);
+    }
+
     @Override
     public String toString() {
         return "PUTFIELD iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc;

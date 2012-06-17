@@ -12,6 +12,10 @@ public class LDC_String extends Instruction {
         this.c = c;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLDC_String(this);
+    }
+
     @Override
     public String toString() {
         return "LDC iid="+iid+" mid="+mid+" c="+c;

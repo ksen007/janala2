@@ -12,6 +12,10 @@ public class IFNE extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIFNE(this);
+    }
+
     @Override
     public String toString() {
         return "IFNE iid="+iid+" mid="+mid+" label="+label;

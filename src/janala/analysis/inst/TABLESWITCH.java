@@ -18,6 +18,10 @@ public class TABLESWITCH extends Instruction {
         this.labels = labels;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitTABLESWITCH(this);
+    }
+
     @Override
     public String toString() {
         return "TABLESWITCH iid="+iid+" mid="+mid+" min="+min+" max="+max+" dflt="+dflt+" labels="+labels;

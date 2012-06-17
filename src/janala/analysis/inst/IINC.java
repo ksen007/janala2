@@ -14,6 +14,10 @@ public class IINC extends Instruction {
         this.increment = increment;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIINC(this);
+    }
+
     @Override
     public String toString() {
         return "IINC iid="+iid+" mid="+mid+" var="+var+" increment="+increment;

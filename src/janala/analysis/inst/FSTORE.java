@@ -12,6 +12,10 @@ public class FSTORE extends Instruction {
         this.var = var;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFSTORE(this);
+    }
+
     @Override
     public String toString() {
         return "FSTORE iid="+iid+" mid="+mid+" var="+var;

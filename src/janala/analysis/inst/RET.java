@@ -12,6 +12,10 @@ public class RET extends Instruction {
         this.var = var;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitRET(this);
+    }
+
     @Override
     public String toString() {
         return "RET iid="+iid+" mid="+mid+" var="+var;

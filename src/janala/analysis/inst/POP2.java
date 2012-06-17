@@ -9,6 +9,10 @@ public class POP2 extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitPOP2(this);
+    }
+
     @Override
     public String toString() {
         return "POP2 iid="+iid+" mid="+mid;

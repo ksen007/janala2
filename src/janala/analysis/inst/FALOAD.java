@@ -9,6 +9,10 @@ public class FALOAD extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFALOAD(this);
+    }
+
     @Override
     public String toString() {
         return "FALOAD iid="+iid+" mid="+mid;

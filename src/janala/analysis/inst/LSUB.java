@@ -9,6 +9,10 @@ public class LSUB extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLSUB(this);
+    }
+
     @Override
     public String toString() {
         return "LSUB iid="+iid+" mid="+mid;

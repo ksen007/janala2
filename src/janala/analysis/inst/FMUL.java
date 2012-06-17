@@ -9,6 +9,10 @@ public class FMUL extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFMUL(this);
+    }
+
     @Override
     public String toString() {
         return "FMUL iid="+iid+" mid="+mid;

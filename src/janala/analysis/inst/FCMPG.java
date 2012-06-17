@@ -9,6 +9,10 @@ public class FCMPG extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFCMPG(this);
+    }
+
     @Override
     public String toString() {
         return "FCMPG iid="+iid+" mid="+mid;

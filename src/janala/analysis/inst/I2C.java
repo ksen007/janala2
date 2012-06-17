@@ -9,6 +9,10 @@ public class I2C extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitI2C(this);
+    }
+
     @Override
     public String toString() {
         return "I2C iid="+iid+" mid="+mid;

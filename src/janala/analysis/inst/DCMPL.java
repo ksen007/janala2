@@ -9,6 +9,10 @@ public class DCMPL extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitDCMPL(this);
+    }
+
     @Override
     public String toString() {
         return "DCMPL iid="+iid+" mid="+mid;

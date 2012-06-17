@@ -12,6 +12,10 @@ public class BIPUSH extends Instruction {
         this.value = value;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitBIPUSH(this);
+    }
+
     @Override
     public String toString() {
         return "BIPUSH iid="+iid+" mid="+mid+" value="+value;

@@ -9,6 +9,10 @@ public class NOP extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNOP(this);
+    }
+
     @Override
     public String toString() {
         return "NOP iid="+iid+" mid="+mid;

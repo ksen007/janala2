@@ -26,6 +26,11 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
 		if (!cname.startsWith("janala")
                 && !cname.startsWith("gnu/trove")
                 && !cname.startsWith("java/util")
+                && !cname.startsWith("java/io")
+                && !cname.startsWith("java/security")
+                && !cname.startsWith("javax/security")
+                && !cname.startsWith("sun/security")
+                && !cname.startsWith("sun/reflect")
                 && !cname.startsWith("com/apple/java")
                 && !cname.startsWith("java/lang")) {
             System.out.println(">>>>>>>>>>>>>>> transform "+cname);

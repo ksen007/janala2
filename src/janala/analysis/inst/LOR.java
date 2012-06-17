@@ -9,6 +9,10 @@ public class LOR extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLOR(this);
+    }
+
     @Override
     public String toString() {
         return "LOR iid="+iid+" mid="+mid;

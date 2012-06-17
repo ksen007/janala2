@@ -9,6 +9,10 @@ public class LRETURN extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLRETURN(this);
+    }
+
     @Override
     public String toString() {
         return "LRETURN iid="+iid+" mid="+mid;

@@ -9,6 +9,10 @@ public class LMUL extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLMUL(this);
+    }
+
     @Override
     public String toString() {
         return "LMUL iid="+iid+" mid="+mid;

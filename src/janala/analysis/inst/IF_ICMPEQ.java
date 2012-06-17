@@ -12,6 +12,10 @@ public class IF_ICMPEQ extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIF_ICMPEQ(this);
+    }
+
     @Override
     public String toString() {
         return "IF_ICMPEQ iid="+iid+" mid="+mid+" label="+label;

@@ -12,6 +12,10 @@ public class GETVALUE_short extends Instruction {
         this.v = v;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETVALUE_short(this);
+    }
+
     @Override
     public String toString() {
         return "GETVALUE_short v="+v;

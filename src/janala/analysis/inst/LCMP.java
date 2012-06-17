@@ -9,6 +9,10 @@ public class LCMP extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLCMP(this);
+    }
+
     @Override
     public String toString() {
         return "LCMP iid="+iid+" mid="+mid;

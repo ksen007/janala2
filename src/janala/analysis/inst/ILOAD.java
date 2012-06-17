@@ -12,6 +12,10 @@ public class ILOAD extends Instruction {
         this.var = var;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitILOAD(this);
+    }
+
     @Override
     public String toString() {
         return "ILOAD iid="+iid+" mid="+mid+" var="+var;

@@ -12,6 +12,10 @@ public class IFLT extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIFLT(this);
+    }
+
     @Override
     public String toString() {
         return "IFLT iid="+iid+" mid="+mid+" label="+label;

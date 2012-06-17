@@ -16,6 +16,10 @@ public class GETSTATIC extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETSTATIC(this);
+    }
+
     @Override
     public String toString() {
         return "GETSTATIC iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc;

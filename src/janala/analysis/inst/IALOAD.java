@@ -9,6 +9,10 @@ public class IALOAD extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIALOAD(this);
+    }
+
     @Override
     public String toString() {
         return "IALOAD iid="+iid+" mid="+mid;

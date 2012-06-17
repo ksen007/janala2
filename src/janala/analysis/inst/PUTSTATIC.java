@@ -16,6 +16,10 @@ public class PUTSTATIC extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitPUTSTATIC(this);
+    }
+
     @Override
     public String toString() {
         return "PUTSTATIC iid="+iid+" mid="+mid+" cIdx="+cIdx+" fIdx="+fIdx+" desc="+desc;

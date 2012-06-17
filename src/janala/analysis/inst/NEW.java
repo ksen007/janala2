@@ -14,6 +14,10 @@ public class NEW extends Instruction {
         this.cIdx = cIdx;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNEW(this);
+    }
+
     @Override
     public String toString() {
         return "NEW iid="+iid+" mid="+mid+" cIdx="+cIdx;

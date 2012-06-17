@@ -12,6 +12,10 @@ public class GETVALUE_Object extends Instruction {
         this.v = v;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitGETVALUE_Object(this);
+    }
+
     @Override
     public String toString() {
         return "GETVALUE_Object v="+v;

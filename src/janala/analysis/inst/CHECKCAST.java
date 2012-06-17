@@ -12,6 +12,10 @@ public class CHECKCAST extends Instruction {
         this.type = type;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitCHECKCAST(this);
+    }
+
     @Override
     public String toString() {
         return "CHECKCAST iid="+iid+" mid="+mid+" type="+type;

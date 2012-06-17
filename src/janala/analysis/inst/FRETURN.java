@@ -9,6 +9,10 @@ public class FRETURN extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFRETURN(this);
+    }
+
     @Override
     public String toString() {
         return "FRETURN iid="+iid+" mid="+mid;

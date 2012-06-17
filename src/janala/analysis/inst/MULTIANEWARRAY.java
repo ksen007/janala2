@@ -14,6 +14,10 @@ public class MULTIANEWARRAY extends Instruction {
         this.dims = dims;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitMULTIANEWARRAY(this);
+    }
+
     @Override
     public String toString() {
         return "MULTIANEWARRAY iid="+iid+" mid="+mid+" desc="+desc+" dims="+dims;

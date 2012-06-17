@@ -9,6 +9,10 @@ public class FREM extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFREM(this);
+    }
+
     @Override
     public String toString() {
         return "FREM iid="+iid+" mid="+mid;

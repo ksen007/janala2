@@ -16,6 +16,10 @@ public class LOOKUPSWITCH extends Instruction{
         this.labels = labels;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLOOKUPSWITCH(this);
+    }
+
     @Override
     public String toString() {
         return "LOOKUPSWITCH iid="+iid+" mid="+mid+" dflt="+dflt+" keys="+keys+" labels="+labels;

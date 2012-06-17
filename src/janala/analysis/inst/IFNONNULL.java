@@ -12,6 +12,10 @@ public class IFNONNULL extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIFNONNULL(this);
+    }
+
     @Override
     public String toString() {
         return "IFNONNULL iid="+iid+" mid="+mid+" label="+label;

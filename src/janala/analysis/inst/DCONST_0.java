@@ -9,6 +9,10 @@ public class DCONST_0 extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitDCONST_0(this);
+    }
+
     @Override
     public String toString() {
         return "DCONST_0 iid="+iid+" mid="+mid;

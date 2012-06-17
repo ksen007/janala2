@@ -9,6 +9,10 @@ public class LNEG extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLNEG(this);
+    }
+
     @Override
     public String toString() {
         return "LNEG iid="+iid+" mid="+mid;

@@ -9,6 +9,10 @@ public class FASTORE extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFASTORE(this);
+    }
+
     @Override
     public String toString() {
         return "FASTORE iid="+iid+" mid="+mid;

@@ -12,6 +12,10 @@ public class IF_ACMPNE extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIF_ACMPNE(this);
+    }
+
     @Override
     public String toString() {
         return "IF_ACMPNE iid="+iid+" mid="+mid+" label="+label;

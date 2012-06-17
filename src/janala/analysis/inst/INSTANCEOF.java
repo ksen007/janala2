@@ -12,6 +12,10 @@ public class INSTANCEOF extends Instruction {
         this.type = type;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitINSTANCEOF(this);
+    }
+
     @Override
     public String toString() {
         return "INSTANCEOF iid="+iid+" mid="+mid+" type="+type;

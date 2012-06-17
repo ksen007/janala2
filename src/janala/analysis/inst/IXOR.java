@@ -9,6 +9,10 @@ public class IXOR extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIXOR(this);
+    }
+
     @Override
     public String toString() {
         return "IXOR iid="+iid+" mid="+mid;

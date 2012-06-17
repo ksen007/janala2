@@ -16,6 +16,10 @@ public class INVOKEINTERFACE extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitINVOKEINTERFACE(this);
+    }
+
     @Override
     public String toString() {
         return "INVOKEINTERFACE iid="+iid+" mid="+mid+" owner="+owner+" name="+name+" desc="+desc;

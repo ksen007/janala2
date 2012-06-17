@@ -9,6 +9,10 @@ public class FSUB extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitFSUB(this);
+    }
+
     @Override
     public String toString() {
         return "FSUB iid="+iid+" mid="+mid;

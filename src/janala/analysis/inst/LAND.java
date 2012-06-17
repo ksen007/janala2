@@ -9,6 +9,10 @@ public class LAND extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLAND(this);
+    }
+
     @Override
     public String toString() {
         return "LAND iid="+iid+" mid="+mid;

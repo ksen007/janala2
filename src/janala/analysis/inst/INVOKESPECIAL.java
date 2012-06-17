@@ -16,6 +16,10 @@ public class INVOKESPECIAL extends Instruction {
         this.desc = desc;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitINVOKESPECIAL(this);
+    }
+
     @Override
     public String toString() {
         return "INVOKESPECIAL iid="+iid+" mid="+mid+" owner="+owner+" name="+name+" desc="+desc;

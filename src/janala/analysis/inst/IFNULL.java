@@ -12,6 +12,10 @@ public class IFNULL extends Instruction {
         this.label = label;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitIFNULL(this);
+    }
+
     @Override
     public String toString() {
         return "IFNULL iid="+iid+" mid="+mid+" label="+label;

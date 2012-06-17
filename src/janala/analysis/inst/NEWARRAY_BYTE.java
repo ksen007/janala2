@@ -9,6 +9,10 @@ public class NEWARRAY_BYTE extends Instruction {
         super(iid, mid);
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitNEWARRAY_BYTE(this);
+    }
+
     @Override
     public String toString() {
         return "NEWARRAY_BYTE iid="+iid+" mid="+mid;

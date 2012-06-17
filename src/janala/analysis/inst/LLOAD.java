@@ -12,6 +12,10 @@ public class LLOAD extends Instruction {
         this.var = var;
     }
 
+    public void visit(IVisitor visitor) {
+	visitor.visitLLOAD(this);
+    }
+
     @Override
     public String toString() {
         return "LLOAD iid="+iid+" mid="+mid+" var="+var;

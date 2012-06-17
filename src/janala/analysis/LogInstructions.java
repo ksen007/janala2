@@ -5,6 +5,11 @@
 package janala.analysis;
 
 import janala.analysis.inst.*;
+import janala.config.Config;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -13,9 +18,41 @@ import janala.analysis.inst.*;
  */
 
 
-public class LogInstructions implements Interpreter {
+public class LogInstructions extends Thread implements Interpreter{
+
+    private ObjectOutputStream outputStream;
+
+    public LogInstructions() {
+        try {
+            outputStream = new ObjectOutputStream(new FileOutputStream(Config.traceFileName));
+            Runtime.getRuntime().addShutdownHook(this);
+        } catch (IOException e) {
+            e.printStackTrace();  
+            System.exit(1);
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            outputStream.close();
+            outputStream = new ObjectOutputStream(new FileOutputStream(Config.traceAuxFileName));
+            outputStream.writeObject(ClassNames.instance);
+            outputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void log(Instruction insn) {
         System.out.println(insn);
+        try {
+            outputStream.writeObject(insn);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     public void LDC(int iid, int mid, int c) {
