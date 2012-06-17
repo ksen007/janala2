@@ -1,3 +1,7 @@
+/*
+ * Author: Koushik Sen (ksen@cs.berkeley.edu)
+ */
+
 package janala.analysis;
 
 import java.util.ArrayList;
