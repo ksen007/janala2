@@ -50,8 +50,12 @@ public class ObjectInfo implements Serializable {
 
     public ObjectInfo init() {
         if (nFields==-1) {
-//            nFields = ClassDepot.instance.nFields(className);
-//            nStaticFields = ClassDepot.instance.nStaticFields(className);
+            nFields = ClassDepot.instance.nFields(className);
+            nStaticFields = ClassDepot.instance.nStaticFields(className);
+            if (fieldList!=null)
+                for (FieldInfo fieldInfo : fieldList) {
+                    fieldInfo.init();
+                }
         }
         return this;
     }

@@ -40,4 +40,12 @@ public class ClassNames implements Serializable {
         return classList.get(i);
     }
 
+
+    public void init() {
+        if (classList !=null)
+            for (ObjectInfo objectInfo : classList) {
+                objectInfo.init();
+            }
+    }
+
 }
