@@ -32,11 +32,11 @@ package janala.analysis.inst;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class MULTINEWARRAY extends Instruction {
+public class MULTIANEWARRAY extends Instruction {
     String desc;
     int dims;
 
-    public MULTINEWARRAY(int iid, int mid, String desc, int dims) {
+    public MULTIANEWARRAY(int iid, int mid, String desc, int dims) {
         super(iid, mid);
         this.desc = desc;
         this.dims = dims;
