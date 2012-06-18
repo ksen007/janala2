@@ -5,7 +5,7 @@
 package janala.analysis.inst;
 
 public class LDC_long extends Instruction {
-    long c;
+    public long c;
 
     public LDC_long(int iid, int mid, long c) {
         super(iid, mid);

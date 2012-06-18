@@ -5,7 +5,7 @@
 package janala.analysis.inst;
 
 public class GETVALUE_long extends Instruction {
-    long v;
+    public long v;
 
     public GETVALUE_long(long v) {
         super(-1, -1);

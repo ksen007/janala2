@@ -5,7 +5,7 @@
 package janala.analysis.inst;
 
 public class GETVALUE_double extends Instruction {
-    double v;
+    public double v;
 
     public GETVALUE_double(double v) {
         super(-1, -1);

@@ -5,6 +5,9 @@
 package janala.interpreters;
 
 import janala.analysis.inst.*;
+import org.objectweb.asm.Type;
+
+import java.util.Stack;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -12,715 +15,764 @@ import janala.analysis.inst.*;
  * Time: 12:12 PM
  */
 public class ConcreteInterpreter implements IVisitor {
+    private Stack<Frame> stack;
+    private Frame currentFrame;
+
+    public ConcreteInterpreter() {
+        stack = new Stack<Frame>();
+        stack.add(currentFrame = new Frame());
+    }
+
     public void visitAALOAD(AALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitAASTORE(AASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitALOAD(ALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitANEWARRAY(ANEWARRAY inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitARETURN(ARETURN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitASTORE(ASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitATHROW(ATHROW inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitBALOAD(BALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitBASTORE(BASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitBIPUSH(BIPUSH inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitCALOAD(CALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitCASTORE(CASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitCHECKCAST(CHECKCAST inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitD2F(D2F inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitD2I(D2I inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitD2L(D2L inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDADD(DADD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2((Double)currentFrame.pop2()+(Double)currentFrame.pop2());
     }
 
     public void visitDALOAD(DALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDASTORE(DASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDCMPG(DCMPG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDCMPL(DCMPL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDCONST_0(DCONST_0 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDCONST_1(DCONST_1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDDIV(DDIV inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDLOAD(DLOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2(currentFrame.getLocal2(inst.var));
     }
 
     public void visitDMUL(DMUL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDNEG(DNEG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDREM(DREM inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDRETURN(DRETURN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Object tmp = currentFrame.pop2();
+        stack.pop();
+        currentFrame = stack.peek();
+        currentFrame.push2(tmp);
     }
 
     public void visitDSTORE(DSTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDSUB(DSUB inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDUP(DUP inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDUP2(DUP2 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDUP2_X1(DUP2_X1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDUP2_X2(DUP2_X2 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDUP_X1(DUP_X1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitDUP_X2(DUP_X2 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitF2D(F2D inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitF2I(F2I inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitF2L(F2L inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFADD(FADD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFALOAD(FALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFASTORE(FASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFCMPG(FCMPG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFCMPL(FCMPL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFCONST_0(FCONST_0 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFCONST_1(FCONST_1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFCONST_2(FCONST_2 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFDIV(FDIV inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFLOAD(FLOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFMUL(FMUL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFNEG(FNEG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFREM(FREM inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFRETURN(FRETURN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFSTORE(FSTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitFSUB(FSUB inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETFIELD(GETFIELD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETSTATIC(GETSTATIC inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_byte(GETVALUE_byte inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_char(GETVALUE_char inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_double(GETVALUE_double inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (!currentFrame.peek2().equals(inst.v)) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_float(GETVALUE_float inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_int(GETVALUE_int inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_long(GETVALUE_long inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (!currentFrame.peek2().equals(inst.v)) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_short(GETVALUE_short inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_void(GETVALUE_void inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGOTO(GOTO inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitI2B(I2B inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitI2C(I2C inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitI2D(I2D inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitI2F(I2F inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitI2L(I2L inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitI2S(I2S inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIADD(IADD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIALOAD(IALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIAND(IAND inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIASTORE(IASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_0(ICONST_0 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_1(ICONST_1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_2(ICONST_2 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_3(ICONST_3 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_4(ICONST_4 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_5(ICONST_5 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitICONST_M1(ICONST_M1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIDIV(IDIV inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFEQ(IFEQ inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFGE(IFGE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFGT(IFGT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFLE(IFLE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFLT(IFLT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFNE(IFNE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIFNULL(IFNULL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIINC(IINC inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitILOAD(ILOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIMUL(IMUL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitINEG(INEG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitINSTANCEOF(INSTANCEOF inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
+    }
+
+    private void setArgumentsAndNewFrame(String desc, boolean isInstance) {
+        Type[] types = Type.getArgumentTypes(desc);
+        Frame tmp;
+        stack.push(tmp = new Frame());
+        int len = types.length;
+        Object[] tmpValues = new Object[len];
+        for (int i = len-1; i>=0; i--) {
+            if (types[i]==Type.DOUBLE_TYPE || types[i]==Type.LONG_TYPE) {
+                tmpValues[i] = currentFrame.pop2();
+            } else {
+                tmpValues[i] = currentFrame.pop();
+            }
+        }
+        if (isInstance) {
+            tmp.addLocal(currentFrame.pop());
+        }
+        for (int i=0; i<len; i++) {
+            if (types[i]==Type.DOUBLE_TYPE || types[i]==Type.LONG_TYPE) {
+                tmp.addLocal2(tmpValues[i]);
+            } else {
+                tmp.addLocal(tmpValues[i]);
+            }
+        }
+        currentFrame = tmp;
+
     }
 
     public void visitINVOKEINTERFACE(INVOKEINTERFACE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        setArgumentsAndNewFrame(inst.desc,true);
     }
 
     public void visitINVOKEMETHOD_EXCEPTION(INVOKEMETHOD_EXCEPTION inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        setArgumentsAndNewFrame(inst.desc,true);
     }
 
     public void visitINVOKESTATIC(INVOKESTATIC inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        setArgumentsAndNewFrame(inst.desc,false);
     }
 
     public void visitINVOKEVIRTUAL(INVOKEVIRTUAL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        setArgumentsAndNewFrame(inst.desc,true);
     }
 
     public void visitIOR(IOR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIREM(IREM inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIRETURN(IRETURN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitISHL(ISHL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitISHR(ISHR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitISTORE(ISTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitISUB(ISUB inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIUSHR(IUSHR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitIXOR(IXOR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitJSR(JSR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitL2D(L2D inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitL2F(L2F inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitL2I(L2I inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLADD(LADD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2((Long)currentFrame.pop2()+(Long)currentFrame.pop2());
     }
 
     public void visitLALOAD(LALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLAND(LAND inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLASTORE(LASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLCMP(LCMP inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLCONST_0(LCONST_0 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2(new Long(0));
     }
 
     public void visitLCONST_1(LCONST_1 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2(new Long(1));
     }
 
     public void visitLDC_String(LDC_String inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push(inst.c);
     }
 
     public void visitLDC_double(LDC_double inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2(inst.c);
     }
 
     public void visitLDC_float(LDC_float inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push(inst.c);
     }
 
     public void visitLDC_int(LDC_int inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push(inst.c);
     }
 
     public void visitLDC_long(LDC_long inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2(inst.c);
     }
 
     public void visitLDIV(LDIV inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLLOAD(LLOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.push2(currentFrame.getLocal2(inst.var));
     }
 
     public void visitLMUL(LMUL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLNEG(LNEG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLOOKUPSWITCH(LOOKUPSWITCH inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLOR(LOR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLREM(LREM inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLRETURN(LRETURN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        Object tmp = currentFrame.pop2();
+        stack.pop();
+        currentFrame = stack.peek();
+        currentFrame.push2(tmp);
     }
 
     public void visitLSHL(LSHL inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLSHR(LSHR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLSTORE(LSTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLSUB(LSUB inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLUSHR(LUSHR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLXOR(LXOR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitMONITORENTER(MONITORENTER inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitMONITOREXIT(MONITOREXIT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitMULTIANEWARRAY(MULTIANEWARRAY inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEW(NEW inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_BOOLEAN(NEWARRAY_BOOLEAN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_BYTE(NEWARRAY_BYTE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_CHAR(NEWARRAY_CHAR inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_DOUBLE(NEWARRAY_DOUBLE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_FLOAT(NEWARRAY_FLOAT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_INT(NEWARRAY_INT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_LONG(NEWARRAY_LONG inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEWARRAY_SHORT(NEWARRAY_SHORT inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNOP(NOP inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitPOP(POP inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.pop();
     }
 
     public void visitPOP2(POP2 inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        currentFrame.pop2();
     }
 
     public void visitPUTFIELD(PUTFIELD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitPUTSTATIC(PUTSTATIC inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitRET(RET inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitRETURN(RETURN inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        stack.pop();
+        if (!stack.isEmpty())
+            currentFrame = stack.peek();
+        else
+            currentFrame = null;
     }
 
     public void visitSALOAD(SALOAD inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitSASTORE(SASTORE inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitSIPUSH(SIPUSH inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitSWAP(SWAP inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitTABLESWITCH(TABLESWITCH inst) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 }

@@ -5,9 +5,9 @@
 package janala.analysis.inst;
 
 public class INVOKESTATIC extends Instruction {
-    String owner;
-    String name;
-    String desc;
+    public String owner;
+    public String name;
+    public String desc;
 
     public INVOKESTATIC(int iid, int mid, String owner, String name, String desc) {
         super(iid, mid);

@@ -7,7 +7,7 @@ package janala.analysis.inst;
 public class INVOKEINTERFACE extends Instruction {
     String owner;
     String name;
-    String desc;
+    public String desc;
 
     public INVOKEINTERFACE(int iid, int mid, String owner, String name, String desc) {
         super(iid, mid);

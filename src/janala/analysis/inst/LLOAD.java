@@ -5,7 +5,7 @@
 package janala.analysis.inst;
 
 public class LLOAD extends Instruction {
-    int var;
+    public int var;
 
     public LLOAD(int iid, int mid, int var) {
         super(iid, mid);
