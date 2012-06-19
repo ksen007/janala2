@@ -12,19 +12,19 @@ import java.util.ArrayList;
  * Time: 6:03 PM
  */
 public class Frame {
-    private ArrayList<Object> locals = new ArrayList<Object>(8);
-    private ArrayList<Object> stack = new ArrayList<Object>(8);
+    private ArrayList<Value> locals = new ArrayList<Value>(8);
+    private ArrayList<Value> stack = new ArrayList<Value>(8);
 
-    public void addLocal(Object o) {
+    public void addLocal(Value o) {
         locals.add(o);
     }
 
-    public void addLocal2(Object o) {
+    public void addLocal2(Value o) {
         locals.add(o);
         locals.add(PlaceHolder.instance);
     }
 
-    public void setLocal(int index, Object o) {
+    public void setLocal(int index, Value o) {
         int sz = locals.size();
         int diff = index - sz;
         while(diff>=0) {
@@ -34,11 +34,11 @@ public class Frame {
         locals.set(index,o);
     }
 
-    public Object getLocal(int index) {
+    public Value getLocal(int index) {
         return locals.get(index);
     }
 
-    public void setLocal2(int index, Object o) {
+    public void setLocal2(int index, Value o) {
         int sz = locals.size();
         int diff = index - sz;
         while(diff>=-1) {
@@ -48,34 +48,42 @@ public class Frame {
         locals.set(index,o);
     }
 
-    public Object getLocal2(int index) {
+    public Value getLocal2(int index) {
         return locals.get(index);
     }
 
 
-    public void push(Object o) {
+    public void push(Value o) {
         stack.add(o);
     }
 
-    public void push2(Object o) {
+    public void push2(Value o) {
         stack.add(o);
         stack.add(PlaceHolder.instance);
     }
 
-    public Object pop() {
+    public Value pop() {
         return stack.remove(stack.size()-1);
     }
 
-    public Object pop2() {
+    public Value pop2() {
         stack.remove(stack.size()-1);
         return stack.remove(stack.size()-1);
     }
 
-    public Object peek2() {
+    public Value peek() {
+        return stack.get(stack.size()-1);
+    }
+
+    public Value peek2() {
         return stack.get(stack.size()-2);
     }
 
-    public Object peek() {
-        return stack.get(stack.size()-1);
+    public Value peek3() {
+        return stack.get(stack.size()-3);
+    }
+
+    public Value peek4() {
+        return stack.get(stack.size()-4);
     }
 }

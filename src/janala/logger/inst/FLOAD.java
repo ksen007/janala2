@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class FLOAD extends Instruction {
-    int var;
+    public int var;
 
     public FLOAD(int iid, int mid, int var) {
         super(iid, mid);

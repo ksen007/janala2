@@ -5,8 +5,8 @@
 package janala.logger.inst;
 
 public class IINC extends Instruction {
-    int var;
-    int increment;
+    public int var;
+    public int increment;
 
     public IINC(int iid, int mid, int var, int increment) {
         super(iid, mid);

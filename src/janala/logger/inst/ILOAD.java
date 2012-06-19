@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class ILOAD extends Instruction {
-    int var;
+    public int var;
 
     public ILOAD(int iid, int mid, int var) {
         super(iid, mid);

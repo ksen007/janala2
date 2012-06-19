@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class SIPUSH extends Instruction {
-    int value;
+    public int value;
 
     public SIPUSH(int iid, int mid, int value) {
         super(iid, mid);

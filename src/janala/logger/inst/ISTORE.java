@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class ISTORE extends Instruction {
-    int var;
+    public int var;
 
     public ISTORE(int iid, int mid, int var) {
         super(iid, mid);

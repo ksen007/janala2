@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class LSTORE extends Instruction {
-    int var;
+    public int var;
 
     public LSTORE(int iid, int mid, int var) {
         super(iid, mid);
