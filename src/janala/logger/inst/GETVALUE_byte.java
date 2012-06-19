@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class GETVALUE_byte extends Instruction {
-    byte v;
+    public byte v;
 
     public GETVALUE_byte(byte v) {
         super(-1, -1);

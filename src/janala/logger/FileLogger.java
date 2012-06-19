@@ -38,6 +38,7 @@ public class FileLogger extends Thread implements Logger {
             outputStream.close();
             outputStream = new ObjectOutputStream(new FileOutputStream(Config.traceAuxFileName));
             outputStream.writeObject(ClassNames.instance);
+            System.out.println(ClassNames.instance);
             outputStream.close();
 
         } catch (IOException e) {

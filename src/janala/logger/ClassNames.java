@@ -48,4 +48,12 @@ public class ClassNames implements Serializable {
             }
     }
 
+
+    @Override
+    public String toString() {
+        return "ClassNames{\n" +
+                "nameToIndex=" + nameToIndex +
+                "\n, classList=" + classList +
+                "\n}";
+    }
 }

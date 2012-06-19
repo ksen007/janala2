@@ -10,7 +10,7 @@ package janala.interpreters;
  * Time: 10:01 AM
  */
 public class FloatValue extends Value{
-    private float concrete;
+    float concrete;
 
     public FloatValue(float concrete) {
         this.concrete = concrete;

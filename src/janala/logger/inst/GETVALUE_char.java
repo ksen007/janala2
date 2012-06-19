@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class GETVALUE_char extends Instruction {
-    char v;
+    public char v;
 
     public GETVALUE_char(char v) {
         super(-1, -1);

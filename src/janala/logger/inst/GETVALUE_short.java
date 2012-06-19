@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class GETVALUE_short extends Instruction {
-    short v;
+    public short v;
 
     public GETVALUE_short(short v) {
         super(-1, -1);

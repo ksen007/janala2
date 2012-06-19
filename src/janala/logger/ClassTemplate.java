@@ -7,12 +7,11 @@ package janala.logger;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class ClassTemplate {
     LinkedList<String> fields;
-    LinkedHashMap<String,Integer> staticFieldToIndex;
+    LinkedList<String> staticFields;
     //SValue staticFields[];
 
     public void populateAllFields(Class c) {
@@ -27,12 +26,12 @@ public class ClassTemplate {
         }
 //        createStaticFields();
         System.out.println(this.fields);
-        System.out.println(staticFieldToIndex);
+        System.out.println(this.staticFields);
     }
 
     public ClassTemplate() {
         fields = new LinkedList<String>();
-        staticFieldToIndex = new LinkedHashMap<String,Integer>();
+        staticFields = new LinkedList<String>();
     }
 
     private void addField(String name) {
@@ -42,10 +41,11 @@ public class ClassTemplate {
 
     public void addFields(ClassTemplate pt) {
         fields.addAll(pt.fields);
+        staticFields.addAll(pt.staticFields);
     }
 
     private void addStaticField(String name) {
-        staticFieldToIndex.put(name,staticFieldToIndex.size());
+        staticFields.addLast(name);
     }
 
 //    private void createStaticFields() {
@@ -65,9 +65,15 @@ public class ClassTemplate {
     }
 
     public int getStaticFieldIndex(String name) {
-        Integer I = staticFieldToIndex.get(name);
-        if (I!=null) return I;
-        else return -1;
+        int i = staticFields.size();
+        Iterator<String> iter = staticFields.descendingIterator();
+        while(iter.hasNext()) {
+            i--;
+            String field = iter.next();
+            if (field.equals(name))
+                return i;
+        }
+        return -1;
     }
 
     public int nFields() {
@@ -75,6 +81,6 @@ public class ClassTemplate {
     }
 
     public int nStaticFields() {
-        return staticFieldToIndex.size();
+        return staticFields.size();
     }
 }

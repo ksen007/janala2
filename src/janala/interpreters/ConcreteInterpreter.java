@@ -4,6 +4,9 @@
 
 package janala.interpreters;
 
+import janala.logger.ClassNames;
+import janala.logger.FieldInfo;
+import janala.logger.ObjectInfo;
 import janala.logger.inst.*;
 import org.objectweb.asm.Type;
 
@@ -17,10 +20,12 @@ import java.util.Stack;
 public class ConcreteInterpreter implements IVisitor {
     private Stack<Frame> stack;
     private Frame currentFrame;
+    private ClassNames cnames;
 
-    public ConcreteInterpreter() {
+    public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
         stack.add(currentFrame = new Frame());
+        this.cnames = cnames;
     }
 
     public void visitAALOAD(AALOAD inst) {
@@ -32,11 +37,11 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        currentFrame.push(ObjectValue.NULL);
     }
 
     public void visitALOAD(ALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        currentFrame.push(currentFrame.getLocal(inst.var));
     }
 
     public void visitANEWARRAY(ANEWARRAY inst) {
@@ -44,7 +49,10 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitARETURN(ARETURN inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectValue tmp = (ObjectValue)currentFrame.pop();
+        stack.pop();
+        currentFrame = stack.peek();
+        currentFrame.push(tmp);
     }
 
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
@@ -52,7 +60,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitASTORE(ASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        currentFrame.setLocal(inst.var, currentFrame.pop());
     }
 
     public void visitATHROW(ATHROW inst) {
@@ -301,11 +309,24 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETFIELD(GETFIELD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectInfo oi = cnames.get(inst.cIdx);
+        FieldInfo fi = oi.get(inst.fIdx,false);
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+            currentFrame.push2(ref.getField(fi.fieldId));
+        } else {
+            currentFrame.push(ref.getField(fi.fieldId));
+        }
     }
 
     public void visitGETSTATIC(GETSTATIC inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectInfo oi = cnames.get(inst.cIdx);
+        FieldInfo fi = oi.get(inst.fIdx,true);
+        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+            currentFrame.push2(oi.getStaticField(fi.fieldId));
+        } else {
+            currentFrame.push(oi.getStaticField(fi.fieldId));
+        }
     }
 
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
@@ -313,15 +334,21 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        if (((IntValue)currentFrame.peek()).concrete != (inst.v?1:0)) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_byte(GETVALUE_byte inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_char(GETVALUE_char inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_double(GETVALUE_double inst) {
@@ -331,11 +358,15 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETVALUE_float(GETVALUE_float inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        if (((FloatValue)currentFrame.peek()).concrete != inst.v) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_int(GETVALUE_int inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_long(GETVALUE_long inst) {
@@ -345,11 +376,12 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETVALUE_short(GETVALUE_short inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
+            throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
+        }
     }
 
     public void visitGETVALUE_void(GETVALUE_void inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGOTO(GOTO inst) {
@@ -820,7 +852,9 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitNEW(NEW inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectInfo oi = cnames.get(inst.cIdx);
+        System.out.println(oi.nFields);
+        currentFrame.push(new ObjectValue(oi.nFields));
     }
 
     public void visitNEWARRAY_BOOLEAN(NEWARRAY_BOOLEAN inst) {
@@ -867,11 +901,28 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitPUTFIELD(PUTFIELD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectInfo oi = cnames.get(inst.cIdx);
+        FieldInfo fi = oi.get(inst.fIdx,false);
+        Value value;
+        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+            value = currentFrame.pop2();
+        } else {
+            value = currentFrame.pop();
+        }
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(fi.fieldId,value);
     }
 
     public void visitPUTSTATIC(PUTSTATIC inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectInfo oi = cnames.get(inst.cIdx);
+        FieldInfo fi = oi.get(inst.fIdx,true);
+        Value value;
+        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+            value = currentFrame.pop2();
+        } else {
+            value = currentFrame.pop();
+        }
+        oi.setField(fi.fieldId,value);
     }
 
     public void visitRET(RET inst) {

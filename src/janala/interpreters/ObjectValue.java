@@ -10,8 +10,12 @@ package janala.interpreters;
  * Time: 8:58 AM
  */
 public class ObjectValue extends Value {
-    final public static ObjectValue NULL = new ObjectValue();
+    final public static ObjectValue NULL = new ObjectValue(0);
     private Value[] concrete;
+
+    public ObjectValue(int nFields) {
+        concrete = new Value[nFields];
+    }
 
     public boolean IF_ACMPEQ(ObjectValue o2) {
         return (this==o2);
@@ -29,20 +33,11 @@ public class ObjectValue extends Value {
         return (this!=NULL);
     }
 
-    public void GETSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
-
+    public Value getField(int fieldId) {
+        return concrete[fieldId];
     }
 
-    public void PUTSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
-
+    public void setField(int fieldId, Value value) {
+        concrete[fieldId] = value;
     }
-
-    public void GETFIELD(int iid, int mid, int cIdx, int fIdx, String desc) {
-
-    }
-
-    public void PUTFIELD(int iid, int mid, int cIdx, int fIdx, String desc) {
-
-    }
-
 }

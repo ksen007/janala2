@@ -46,7 +46,7 @@ class B1 extends A1 {
 
 public class FieldMask {
     public static void main(String[] args) {
-        B1 b = new B1();
+        A1 b = new B1();
         System.out.println(b.x);
         //b.foo();
     }

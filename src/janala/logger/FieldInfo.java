@@ -16,7 +16,7 @@ public class FieldInfo implements Serializable {
     String fieldName;
     boolean isStatic;
 
-    int fieldId;
+    public int fieldId;
 
     public FieldInfo(String className, String fieldName, boolean aStatic) {
         this.className = className.replace('/','.');
@@ -34,5 +34,15 @@ public class FieldInfo implements Serializable {
             }
         }
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "FieldInfo{" +
+                "className='" + className + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", isStatic=" + isStatic +
+                ", fieldId=" + fieldId +
+                '}';
     }
 }

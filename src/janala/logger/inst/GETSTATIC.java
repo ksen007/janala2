@@ -5,9 +5,9 @@
 package janala.logger.inst;
 
 public class GETSTATIC extends Instruction {
-    int cIdx;
-    int fIdx;
-    String desc;
+    public int cIdx;
+    public int fIdx;
+    public String desc;
 
     public GETSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
         super(iid, mid);

@@ -16,7 +16,11 @@ public class DoubleTest {
     }
 
     private static long bar(long l, long l1) {
-        return l + l1;
+        if (l - l1 < 0) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private static double foo(double v, double v1) {

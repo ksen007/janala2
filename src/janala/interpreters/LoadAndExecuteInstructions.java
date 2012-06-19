@@ -29,7 +29,7 @@ public class LoadAndExecuteInstructions {
             inputStream.close();
             cnames.init();
 
-            IVisitor intp = new ConcreteInterpreter();
+            IVisitor intp = new ConcreteInterpreter(cnames);
             inputStream = new ObjectInputStream(new FileInputStream(Config.traceFileName));
             Instruction inst;
             while((inst  = (Instruction)inputStream.readObject())!=null) {

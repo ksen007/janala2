@@ -6,7 +6,7 @@ package janala.logger.inst;
 
 public class NEW extends Instruction {
     String type;
-    int cIdx;
+    public int cIdx;
 
     public NEW(int iid, int mid, String type, int cIdx) {
         super(iid, mid);

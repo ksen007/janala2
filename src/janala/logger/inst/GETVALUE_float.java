@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class GETVALUE_float extends Instruction {
-    float v;
+    public float v;
 
     public GETVALUE_float(float v) {
         super(-1, -1);

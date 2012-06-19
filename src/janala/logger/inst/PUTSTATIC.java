@@ -5,9 +5,9 @@
 package janala.logger.inst;
 
 public class PUTSTATIC extends Instruction {
-    int cIdx;
-    int fIdx;
-    String desc;
+    public int cIdx;
+    public int fIdx;
+    public String desc;
 
     public PUTSTATIC(int iid, int mid, int cIdx, int fIdx, String desc) {
         super(iid, mid);

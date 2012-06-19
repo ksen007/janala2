@@ -4,8 +4,11 @@
 
 package janala.logger;
 
+import janala.interpreters.Value;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,11 +18,15 @@ import java.util.TreeMap;
  * Time: 5:53 PM
  */
 public class ObjectInfo implements Serializable {
-    Map<String, Integer> nameToIndex;
+    Map<String, Integer> fieldNameToIndex;
     ArrayList<FieldInfo> fieldList;
 
+    Map<String, Integer> staticFieldNameToIndex;
+    ArrayList<FieldInfo> staticFieldList;
+
     int nStaticFields;
-    int nFields;
+    public int nFields;
+    public Value[] statics;
 
     String className;
 
@@ -28,24 +35,42 @@ public class ObjectInfo implements Serializable {
         nFields = -1;
     }
 
-    public int get(String className,String fieldName, boolean isStatic) {
-        if (nameToIndex==null) {
-            nameToIndex = new TreeMap<String, Integer>();
+    private int get(String className,String fieldName, boolean isStatic, Map<String, Integer> fieldNameToIndex, ArrayList<FieldInfo> fieldList) {
+        //System.out.println("******************* calling get *******************************");
+        if (fieldNameToIndex==null) {
+            fieldNameToIndex = new TreeMap<String, Integer>();
+            if (isStatic) {
+                this.staticFieldNameToIndex = fieldNameToIndex;
+            } else {
+                this.fieldNameToIndex = fieldNameToIndex;
+            }
         }
         if (fieldList==null) {
             fieldList = new ArrayList<FieldInfo>();
+            if (isStatic) {
+                this.staticFieldList = fieldList;
+            } else {
+                this.fieldList = fieldList;
+            }
         }
-        Integer i = nameToIndex.get(fieldName);
+        Integer i = fieldNameToIndex.get(fieldName);
         if (i==null) {
             i = fieldList.size();
-            nameToIndex.put(fieldName,i);
+            fieldNameToIndex.put(fieldName,i);
             fieldList.add(new FieldInfo(className,fieldName,isStatic));
         }
+//        System.out.println("ObjectInfo "+this);
         return i;
     }
 
-    public FieldInfo get(int i) {
-        return fieldList.get(i);
+    public int get(String className,String fieldName, boolean isStatic) {
+        if (isStatic) return get(className,fieldName,isStatic,staticFieldNameToIndex,staticFieldList);
+        else return get(className,fieldName,isStatic,fieldNameToIndex,fieldList);
+    }
+
+    public FieldInfo get(int i, boolean isStatic) {
+        if (isStatic) return staticFieldList.get(i);
+        else return fieldList.get(i);
     }
 
     public ObjectInfo init() {
@@ -56,8 +81,34 @@ public class ObjectInfo implements Serializable {
                 for (FieldInfo fieldInfo : fieldList) {
                     fieldInfo.init();
                 }
+            if (staticFieldList!=null)
+                for (FieldInfo fieldInfo : staticFieldList) {
+                    fieldInfo.init();
+                }
         }
+        statics = new Value[nStaticFields];
         return this;
     }
 
+    public Value getStaticField(int fieldId) {
+        return statics[fieldId];
+    }
+
+    public void setField(int fieldId, Value value) {
+        statics[fieldId] = value;
+    }
+
+    @Override
+    public String toString() {
+        return "ObjectInfo{" +
+                "fieldNameToIndex=" + fieldNameToIndex +
+                ", fieldList=" + fieldList +
+                ", staticFieldNameToIndex=" + staticFieldNameToIndex +
+                ", staticFieldList=" + staticFieldList +
+                ", nStaticFields=" + nStaticFields +
+                ", nFields=" + nFields +
+                ", statics=" + (statics == null ? null : Arrays.asList(statics)) +
+                ", className='" + className + '\'' +
+                '}';
+    }
 }

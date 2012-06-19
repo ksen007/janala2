@@ -10,7 +10,7 @@ package janala.interpreters;
  * Time: 8:35 AM
  */
 public class IntValue extends Value {
-    private int concrete;
+    int concrete;
 
     public IntValue(int i) {
         concrete = i;
