@@ -4,7 +4,7 @@
 
 package janala.interpreters;
 
-import janala.analysis.inst.*;
+import janala.logger.inst.*;
 import org.objectweb.asm.Type;
 
 import java.util.Stack;

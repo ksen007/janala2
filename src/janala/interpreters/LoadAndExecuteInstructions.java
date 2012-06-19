@@ -4,9 +4,9 @@
 
 package janala.interpreters;
 
-import janala.analysis.ClassNames;
-import janala.analysis.inst.IVisitor;
-import janala.analysis.inst.Instruction;
+import janala.logger.ClassNames;
+import janala.logger.inst.IVisitor;
+import janala.logger.inst.Instruction;
 import janala.config.Config;
 
 import java.io.EOFException;

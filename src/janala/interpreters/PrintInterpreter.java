@@ -4,7 +4,7 @@
 
 package janala.interpreters;
 
-import janala.analysis.inst.*;
+import janala.logger.inst.*;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)

@@ -4,8 +4,8 @@
 
 package janala.instrument;
 
-import janala.analysis.ClassNames;
-import janala.analysis.ObjectInfo;
+import janala.logger.ClassNames;
+import janala.logger.ObjectInfo;
 import janala.config.Config;
 import org.objectweb.asm.*;
 
