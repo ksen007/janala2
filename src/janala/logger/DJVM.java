@@ -704,7 +704,12 @@ public class DJVM {
    public static void GETVALUE_void() {
         intp.GETVALUE_void();
     }
+
     public static void INVOKEMETHOD_EXCEPTION() {
         intp.INVOKEMETHOD_EXCEPTION();
+    }
+
+    public static void INVOKEMETHOD_END() {
+        intp.INVOKEMETHOD_END();
     }
 }

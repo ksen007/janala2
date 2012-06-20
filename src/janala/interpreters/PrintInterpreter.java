@@ -723,4 +723,8 @@ public class PrintInterpreter implements IVisitor {
     public void visitTABLESWITCH(TABLESWITCH inst) {
         System.out.println(inst);
     }
+
+    public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst) {
+        System.out.println(inst);
+    }
 }

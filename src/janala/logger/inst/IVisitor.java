@@ -357,4 +357,6 @@ public interface IVisitor {
     public void visitSWAP(SWAP inst);
 
     public void visitTABLESWITCH(TABLESWITCH inst);
+
+    public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst);
 }

@@ -736,4 +736,8 @@ public class PrintLogger implements Logger {
     public void INVOKEMETHOD_EXCEPTION() {
         System.out.println("INVOKEMETHOD_EXCEPTION");
     }
+
+    public void INVOKEMETHOD_END() {
+        System.out.println("INVOKEMETHOD_END");
+    }
 }

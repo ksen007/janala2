@@ -360,4 +360,6 @@ public interface Logger {
     public void GETVALUE_void();
 
     public void INVOKEMETHOD_EXCEPTION();
+
+    public void INVOKEMETHOD_END();
 }

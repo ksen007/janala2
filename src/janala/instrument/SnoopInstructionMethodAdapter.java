@@ -770,13 +770,11 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         mv.visitMethodInsn(opcode, owner, name, desc);
         mv.visitJumpInsn(GOTO,end);
         mv.visitLabel(handler);
-
-        //addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
-        //saddBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKEMETHOD_EXCEPTION", "()V");
         mv.visitInsn(ATHROW);
-
         mv.visitLabel(end);
+        
+        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKEMETHOD_END", "()V");
         addValueReadInsn(mv,desc,"GETVALUE_");
 
         mv.visitTryCatchBlock(begin,handler,handler,null);

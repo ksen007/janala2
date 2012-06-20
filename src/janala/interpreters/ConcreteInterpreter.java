@@ -50,9 +50,9 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitARETURN(ARETURN inst) {
         ObjectValue tmp = (ObjectValue)currentFrame.pop();
-        stack.pop();
-        currentFrame = stack.peek();
-        currentFrame.push(tmp);
+        Frame tmp2 = stack.pop();
+        stack.peek().push(tmp);
+        stack.push(tmp2);
     }
 
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
@@ -169,9 +169,9 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitDRETURN(DRETURN inst) {
         DoubleValue tmp = (DoubleValue)currentFrame.pop2();
-        stack.pop();
-        currentFrame = stack.peek();
-        currentFrame.push2(tmp);
+        Frame tmp2 = stack.pop();
+        stack.peek().push2(tmp);
+        stack.push(tmp2);
     }
 
     public void visitDSTORE(DSTORE inst) {
@@ -293,9 +293,9 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitFRETURN(FRETURN inst) {
         FloatValue tmp = (FloatValue)currentFrame.pop();
-        stack.pop();
-        currentFrame = stack.peek();
-        currentFrame.push(tmp);
+        Frame tmp2 = stack.pop();
+        stack.peek().push(tmp);
+        stack.push(tmp2);
     }
 
     public void visitFSTORE(FSTORE inst) {
@@ -330,7 +330,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+//        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
@@ -621,7 +621,8 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitINVOKEMETHOD_EXCEPTION(INVOKEMETHOD_EXCEPTION inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        stack.pop();
+        currentFrame = stack.peek();
     }
 
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
@@ -650,9 +651,9 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitIRETURN(IRETURN inst) {
         IntValue tmp = (IntValue)currentFrame.pop();
-        stack.pop();
-        currentFrame = stack.peek();
-        currentFrame.push(tmp);
+        Frame tmp2 = stack.pop();
+        stack.peek().push(tmp);
+        stack.push(tmp2);
     }
 
     public void visitISHL(ISHL inst) {
@@ -800,9 +801,9 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitLRETURN(LRETURN inst) {
         LongValue tmp = (LongValue)currentFrame.pop2();
-        stack.pop();
-        currentFrame = stack.peek();
-        currentFrame.push2(tmp);
+        Frame tmp2 = stack.pop();
+        stack.peek().push2(tmp);
+        stack.push(tmp2);
     }
 
     public void visitLSHL(LSHL inst) {
@@ -930,11 +931,6 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitRETURN(RETURN inst) {
-        stack.pop();
-        if (!stack.isEmpty())
-            currentFrame = stack.peek();
-        else
-            currentFrame = null;
     }
 
     public void visitSALOAD(SALOAD inst) {
@@ -958,5 +954,10 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitTABLESWITCH(TABLESWITCH inst) {
         throw new RuntimeException("Unimplemented instruction "+inst);
+    }
+
+    public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst) {
+        stack.pop();
+        currentFrame = stack.peek();
     }
 }

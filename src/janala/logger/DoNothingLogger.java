@@ -717,4 +717,8 @@ public class DoNothingLogger implements Logger {
         
     }
 
+    public void INVOKEMETHOD_END() {
+        
+    }
+
 }

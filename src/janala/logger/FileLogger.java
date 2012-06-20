@@ -768,5 +768,9 @@ log(new NEW(iid, mid, type, cIdx) );
         log(new INVOKEMETHOD_EXCEPTION() );
     }
 
+    public void INVOKEMETHOD_END() {
+        log (new INVOKEMETHOD_END());
+    }
+
 
 }
