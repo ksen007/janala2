@@ -34,7 +34,9 @@ public class ObjectValue extends Value {
     }
 
     public Value getField(int fieldId) {
-        return concrete[fieldId];
+        Value v = concrete[fieldId];
+        if (v==null) return PlaceHolder.instance;
+        else return v;
     }
 
     public void setField(int fieldId, Value value) {

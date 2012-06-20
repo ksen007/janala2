@@ -24,7 +24,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
-        stack.add(currentFrame = new Frame());
+        stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
     }
 
@@ -49,10 +49,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitARETURN(ARETURN inst) {
-        ObjectValue tmp = (ObjectValue)currentFrame.pop();
-        Frame tmp2 = stack.pop();
-        stack.peek().push(tmp);
-        stack.push(tmp2);
+        currentFrame.ret = currentFrame.pop();
     }
 
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
@@ -168,14 +165,11 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitDRETURN(DRETURN inst) {
-        DoubleValue tmp = (DoubleValue)currentFrame.pop2();
-        Frame tmp2 = stack.pop();
-        stack.peek().push2(tmp);
-        stack.push(tmp2);
+        currentFrame.ret = currentFrame.pop2();
     }
 
     public void visitDSTORE(DSTORE inst) {
-        currentFrame.setLocal2(inst.var,currentFrame.pop2());
+        currentFrame.setLocal2(inst.var, currentFrame.pop2());
     }
 
     public void visitDSUB(DSUB inst) {
@@ -292,10 +286,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitFRETURN(FRETURN inst) {
-        FloatValue tmp = (FloatValue)currentFrame.pop();
-        Frame tmp2 = stack.pop();
-        stack.peek().push(tmp);
-        stack.push(tmp2);
+        currentFrame.ret = currentFrame.pop();
     }
 
     public void visitFSTORE(FSTORE inst) {
@@ -334,48 +325,88 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.pop();
+            currentFrame.push(new IntValue(inst.v?1:0));
+            return;
+        }
         if (((IntValue)currentFrame.peek()).concrete != (inst.v?1:0)) {
             throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_byte(GETVALUE_byte inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.pop();
+            currentFrame.push(new IntValue(inst.v));
+            return;
+        }
         if (((IntValue)currentFrame.peek()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_char(GETVALUE_char inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.pop();
+            currentFrame.push(new IntValue(inst.v));
+            return;
+        }
         if (((IntValue)currentFrame.peek()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_double(GETVALUE_double inst) {
+        if (currentFrame.peek2()==PlaceHolder.instance) {
+            currentFrame.pop2();
+            currentFrame.push2(new DoubleValue(inst.v));
+            return;
+        }
         if (((DoubleValue)currentFrame.peek2()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_float(GETVALUE_float inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.pop();
+            currentFrame.push(new FloatValue(inst.v));
+            return;
+        }
         if (((FloatValue)currentFrame.peek()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_int(GETVALUE_int inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.pop();
+            currentFrame.push(new IntValue(inst.v));
+            return;
+        }
         if (((IntValue)currentFrame.peek()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_long(GETVALUE_long inst) {
+        if (currentFrame.peek2()==PlaceHolder.instance) {
+            currentFrame.pop2();
+            currentFrame.push2(new LongValue(inst.v));
+            return;
+        }
         if (((LongValue)currentFrame.peek2()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_short(GETVALUE_short inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.pop();
+            currentFrame.push(new IntValue(inst.v));
+            return;
+        }
         if (((IntValue)currentFrame.peek()).concrete != inst.v) {
             throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
         }
@@ -567,7 +598,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitIINC(IINC inst) {
         IntValue i1 = (IntValue)currentFrame.getLocal(inst.var);
-        currentFrame.setLocal(inst.var,i1.IINC(inst.increment));
+        currentFrame.setLocal(inst.var, i1.IINC(inst.increment));
     }
 
     public void visitILOAD(ILOAD inst) {
@@ -591,8 +622,17 @@ public class ConcreteInterpreter implements IVisitor {
 
     private void setArgumentsAndNewFrame(String desc, boolean isInstance) {
         Type[] types = Type.getArgumentTypes(desc);
+        Type retType = Type.getReturnType(desc);
+        int nReturnWords;
+        if (retType==Type.DOUBLE_TYPE || retType==Type.LONG_TYPE) {
+            nReturnWords = 2;
+        } else if (retType==Type.VOID_TYPE) {
+            nReturnWords = 0;
+        } else {
+            nReturnWords = 1;
+        }
         Frame tmp;
-        stack.push(tmp = new Frame());
+        stack.push(tmp = new Frame(nReturnWords));
         int len = types.length;
         Value[] tmpValues = new Value[len];
         for (int i = len-1; i>=0; i--) {
@@ -620,11 +660,6 @@ public class ConcreteInterpreter implements IVisitor {
         setArgumentsAndNewFrame(inst.desc,true);
     }
 
-    public void visitINVOKEMETHOD_EXCEPTION(INVOKEMETHOD_EXCEPTION inst) {
-        stack.pop();
-        currentFrame = stack.peek();
-    }
-
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
         setArgumentsAndNewFrame(inst.desc,true);
     }
@@ -650,10 +685,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIRETURN(IRETURN inst) {
-        IntValue tmp = (IntValue)currentFrame.pop();
-        Frame tmp2 = stack.pop();
-        stack.peek().push(tmp);
-        stack.push(tmp2);
+        currentFrame.ret = currentFrame.pop();
     }
 
     public void visitISHL(ISHL inst) {
@@ -800,10 +832,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLRETURN(LRETURN inst) {
-        LongValue tmp = (LongValue)currentFrame.pop2();
-        Frame tmp2 = stack.pop();
-        stack.peek().push2(tmp);
-        stack.push(tmp2);
+        currentFrame.ret = currentFrame.pop2();
     }
 
     public void visitLSHL(LSHL inst) {
@@ -854,7 +883,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitNEW(NEW inst) {
         ObjectInfo oi = cnames.get(inst.cIdx);
-        System.out.println(oi.nFields);
+//        System.out.println(oi.nFields);
         currentFrame.push(new ObjectValue(oi.nFields));
     }
 
@@ -956,8 +985,18 @@ public class ConcreteInterpreter implements IVisitor {
         throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
-    public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst) {
+    public void visitINVOKEMETHOD_EXCEPTION(INVOKEMETHOD_EXCEPTION inst) {
         stack.pop();
         currentFrame = stack.peek();
+    }
+
+    public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst) {
+        Frame old = stack.pop();
+        currentFrame = stack.peek();
+        if (old.nReturnWords==2) {
+            currentFrame.push2(old.ret);
+        } else if (old.nReturnWords==1) {
+            currentFrame.push(old.ret);
+        }
     }
 }
