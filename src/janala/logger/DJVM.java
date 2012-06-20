@@ -171,36 +171,8 @@ public class DJVM {
         intp.SIPUSH(iid,mid,value);
     }
 
-    public static void NEWARRAY_INT(int iid, int mid) {
-        intp.NEWARRAY_INT(iid,mid);
-    }
-
-    public static void NEWARRAY_BYTE(int iid, int mid) {
-        intp.NEWARRAY_BYTE(iid,mid);
-    }
-
-    public static void NEWARRAY_CHAR(int iid, int mid) {
-        intp.NEWARRAY_CHAR(iid,mid);
-    }
-
-    public static void NEWARRAY_LONG(int iid, int mid) {
-        intp.NEWARRAY_LONG(iid,mid);
-    }
-
-    public static void NEWARRAY_BOOLEAN(int iid, int mid) {
-        intp.NEWARRAY_BOOLEAN(iid,mid);
-    }
-
-    public static void NEWARRAY_DOUBLE(int iid, int mid) {
-        intp.NEWARRAY_DOUBLE(iid,mid);
-    }
-
-    public static void NEWARRAY_FLOAT(int iid, int mid) {
-        intp.NEWARRAY_FLOAT(iid,mid);
-    }
-
-    public static void NEWARRAY_SHORT(int iid, int mid) {
-        intp.NEWARRAY_SHORT(iid,mid);
+    public static void NEWARRAY(int iid, int mid) {
+        intp.NEWARRAY(iid,mid);
     }
 
     public static void ILOAD(int iid, int mid, int var) {

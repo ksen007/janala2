@@ -11,7 +11,7 @@ package janala.interpreters;
  */
 public class ObjectValue extends Value {
     final public static ObjectValue NULL = new ObjectValue(0);
-    private Value[] concrete;
+    Value[] concrete;
 
     public ObjectValue(int nFields) {
         concrete = new Value[nFields];

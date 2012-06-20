@@ -29,11 +29,16 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitAALOAD(AALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(ref.getField(i1.concrete));
     }
 
     public void visitAASTORE(AASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
@@ -45,7 +50,9 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitANEWARRAY(ANEWARRAY inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue tmp = new ObjectValue(i1.concrete);
+        currentFrame.push(tmp);
     }
 
     public void visitARETURN(ARETURN inst) {
@@ -53,7 +60,8 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(new IntValue(ref.concrete.length));
     }
 
     public void visitASTORE(ASTORE inst) {
@@ -65,11 +73,16 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitBALOAD(BALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(ref.getField(i1.concrete));
     }
 
     public void visitBASTORE(BASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitBIPUSH(BIPUSH inst) {
@@ -77,11 +90,16 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitCALOAD(CALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(ref.getField(i1.concrete));
     }
 
     public void visitCASTORE(CASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitCHECKCAST(CHECKCAST inst) {
@@ -110,11 +128,16 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitDALOAD(DALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push2(ref.getField(i1.concrete));
     }
 
     public void visitDASTORE(DASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop2();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitDCMPG(DCMPG inst) {
@@ -227,11 +250,16 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitFALOAD(FALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(ref.getField(i1.concrete));
     }
 
     public void visitFASTORE(FASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitFCMPG(FCMPG inst) {
@@ -455,7 +483,9 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIALOAD(IALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(ref.getField(i1.concrete));
     }
 
     public void visitIAND(IAND inst) {
@@ -465,7 +495,10 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIASTORE(IASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitICONST_0(ICONST_0 inst) {
@@ -657,19 +690,19 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitINVOKEINTERFACE(INVOKEINTERFACE inst) {
-        setArgumentsAndNewFrame(inst.desc,true);
+        setArgumentsAndNewFrame(inst.desc, true);
     }
 
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
-        setArgumentsAndNewFrame(inst.desc,true);
+        setArgumentsAndNewFrame(inst.desc, true);
     }
 
     public void visitINVOKESTATIC(INVOKESTATIC inst) {
-        setArgumentsAndNewFrame(inst.desc,false);
+        setArgumentsAndNewFrame(inst.desc, false);
     }
 
     public void visitINVOKEVIRTUAL(INVOKEVIRTUAL inst) {
-        setArgumentsAndNewFrame(inst.desc,true);
+        setArgumentsAndNewFrame(inst.desc, true);
     }
 
     public void visitIOR(IOR inst) {
@@ -747,7 +780,9 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLALOAD(LALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push2(ref.getField(i1.concrete));
     }
 
     public void visitLAND(LAND inst) {
@@ -757,7 +792,10 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLASTORE(LASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop2();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitLCMP(LCMP inst) {
@@ -848,7 +886,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLSTORE(LSTORE inst) {
-        currentFrame.setLocal2(inst.var,currentFrame.pop2());
+        currentFrame.setLocal2(inst.var, currentFrame.pop2());
     }
 
     public void visitLSUB(LSUB inst) {
@@ -883,40 +921,13 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitNEW(NEW inst) {
         ObjectInfo oi = cnames.get(inst.cIdx);
-//        System.out.println(oi.nFields);
         currentFrame.push(new ObjectValue(oi.nFields));
     }
 
-    public void visitNEWARRAY_BOOLEAN(NEWARRAY_BOOLEAN inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_BYTE(NEWARRAY_BYTE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_CHAR(NEWARRAY_CHAR inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_DOUBLE(NEWARRAY_DOUBLE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_FLOAT(NEWARRAY_FLOAT inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_INT(NEWARRAY_INT inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_LONG(NEWARRAY_LONG inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitNEWARRAY_SHORT(NEWARRAY_SHORT inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+    public void visitNEWARRAY(NEWARRAY inst) {
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue tmp = new ObjectValue(i1.concrete);
+        currentFrame.push(tmp);
     }
 
     public void visitNOP(NOP inst) {
@@ -963,11 +974,16 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitSALOAD(SALOAD inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        currentFrame.push(ref.getField(i1.concrete));
     }
 
     public void visitSASTORE(SASTORE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value value = currentFrame.pop();
+        IntValue i = (IntValue)currentFrame.pop();
+        ObjectValue ref = (ObjectValue)currentFrame.pop();
+        ref.setField(i.concrete,value);
     }
 
     public void visitSIPUSH(SIPUSH inst) {

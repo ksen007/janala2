@@ -21,8 +21,8 @@ public class Testme {
     }
 
     public static void main(String[] args){
-        int x = -11;
-        int y = -22;
+        int x = 22;
+        int y = 11;
         testme(x,y);
     }
 }

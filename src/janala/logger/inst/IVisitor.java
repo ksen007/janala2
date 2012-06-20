@@ -318,21 +318,7 @@ public interface IVisitor {
 
     public void visitNEW(NEW inst);
 
-    public void visitNEWARRAY_BOOLEAN(NEWARRAY_BOOLEAN inst);
-
-    public void visitNEWARRAY_BYTE(NEWARRAY_BYTE inst);
-
-    public void visitNEWARRAY_CHAR(NEWARRAY_CHAR inst);
-
-    public void visitNEWARRAY_DOUBLE(NEWARRAY_DOUBLE inst);
-
-    public void visitNEWARRAY_FLOAT(NEWARRAY_FLOAT inst);
-
-    public void visitNEWARRAY_INT(NEWARRAY_INT inst);
-
-    public void visitNEWARRAY_LONG(NEWARRAY_LONG inst);
-
-    public void visitNEWARRAY_SHORT(NEWARRAY_SHORT inst);
+    public void visitNEWARRAY(NEWARRAY inst);
 
     public void visitNOP(NOP inst);
 

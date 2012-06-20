@@ -644,35 +644,7 @@ public class PrintInterpreter implements IVisitor {
         System.out.println(inst);
     }
 
-    public void visitNEWARRAY_BOOLEAN(NEWARRAY_BOOLEAN inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_BYTE(NEWARRAY_BYTE inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_CHAR(NEWARRAY_CHAR inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_DOUBLE(NEWARRAY_DOUBLE inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_FLOAT(NEWARRAY_FLOAT inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_INT(NEWARRAY_INT inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_LONG(NEWARRAY_LONG inst) {
-        System.out.println(inst);
-    }
-
-    public void visitNEWARRAY_SHORT(NEWARRAY_SHORT inst) {
+    public void visitNEWARRAY(NEWARRAY inst) {
         System.out.println(inst);
     }
 

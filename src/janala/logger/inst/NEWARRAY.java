@@ -4,17 +4,17 @@
 
 package janala.logger.inst;
 
-public class NEWARRAY_INT extends Instruction {
-    public NEWARRAY_INT(int iid, int mid) {
+public class NEWARRAY extends Instruction {
+    public NEWARRAY(int iid, int mid) {
         super(iid, mid);
     }
 
     public void visit(IVisitor visitor) {
-	visitor.visitNEWARRAY_INT(this);
+	visitor.visitNEWARRAY(this);
     }
 
     @Override
     public String toString() {
-        return "NEWARRAY_INT iid="+iid+" mid="+mid;
+        return "NEWARRAY iid="+iid+" mid="+mid;
     }
 }

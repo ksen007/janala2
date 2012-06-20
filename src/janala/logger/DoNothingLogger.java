@@ -169,35 +169,7 @@ public class DoNothingLogger implements Logger {
         
     }
 
-    public void NEWARRAY_INT(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_BYTE(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_CHAR(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_LONG(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_BOOLEAN(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_DOUBLE(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_FLOAT(int iid, int mid) {
-        
-    }
-
-    public void NEWARRAY_SHORT(int iid, int mid) {
+    public void NEWARRAY(int iid, int mid) {
         
     }
 

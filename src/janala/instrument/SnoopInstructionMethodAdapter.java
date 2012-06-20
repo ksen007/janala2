@@ -624,36 +624,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SIPUSH", "(III)V");
                 break;
             case NEWARRAY:
-                switch (operand) {
-                    case T_INT:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_INT", "(II)V");
-                        break;
-                    case T_BYTE:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_BYTE", "(II)V");
-                        break;
-                    case T_CHAR:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_CHAR", "(II)V");
-                        break;
-                    case T_LONG:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_LONG", "(II)V");
-                        break;
-                    case T_BOOLEAN:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_BOOLEAN", "(II)V");
-                        break;
-                    case T_DOUBLE:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_DOUBLE", "(II)V");
-                        break;
-                    case T_FLOAT:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_FLOAT", "(II)V");
-                        break;
-                    case T_SHORT:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_SHORT", "(II)V");
-                        break;
-                    default:
-                        System.err.println("Unknown new array primitive type "+operand);
-                        System.exit(1);
-
-                }
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY", "(II)V");
                 break;
             default:
                 System.err.println("Unknown int instruction opcode "+opcode);
