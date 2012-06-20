@@ -25,8 +25,8 @@ public class ClassTemplate {
             }
         }
 //        createStaticFields();
-        System.out.println(this.fields);
-        System.out.println(this.staticFields);
+        //System.out.println(this.fields);
+        //System.out.println(this.staticFields);
     }
 
     public ClassTemplate() {
@@ -36,7 +36,7 @@ public class ClassTemplate {
 
     private void addField(String name) {
         fields.addLast(name);
-        System.out.println("Adding field "+name);
+        // System.out.println("Adding field "+name);
     }
 
     public void addFields(ClassTemplate pt) {

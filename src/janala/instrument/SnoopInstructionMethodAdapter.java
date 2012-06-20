@@ -10,9 +10,11 @@ import janala.config.Config;
 import org.objectweb.asm.*;
 
 public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opcodes{
+    boolean isStatic;
 
-    public SnoopInstructionMethodAdapter(MethodVisitor mv) {
+    public SnoopInstructionMethodAdapter(MethodVisitor mv, boolean isStatic) {
         super(mv);
+        this.isStatic = isStatic;
     }
 
     @Override
@@ -544,52 +546,68 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case ILOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ILOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             case LLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LLOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"J","GETVALUE_");
                 break;
             case FLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FLOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"F","GETVALUE_");
                 break;
             case DLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DLOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"D","GETVALUE_");
                 break;
             case ALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ALOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                if (var!=0 || isStatic)
+                    addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
                 break;
             case ISTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ISTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case LSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LSTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case FSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FSTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case DSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DSTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case ASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ASTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case RET:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "RET",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             default:
                 System.err.println("Unknown var instruction opcode "+opcode);
                 System.exit(1);
         }
-        mv.visitVarInsn(opcode, var);
     }
 
     @Override

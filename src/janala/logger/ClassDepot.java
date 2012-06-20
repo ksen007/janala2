@@ -21,7 +21,7 @@ public class ClassDepot {
         ClassTemplate ct = templates.get(cName);
         if (ct != null)
             return ct;
-        System.out.println("Adding to parents of "+cName);
+        //System.out.println("Adding to parents of "+cName);
         ct = new ClassTemplate();
         templates.put(cName,ct);
         Class parent = clazz.getSuperclass();
@@ -29,7 +29,7 @@ public class ClassDepot {
             ClassTemplate pt = getOrCreateTemplate(parent.getName(),parent);
             ct.addFields(pt);
         }
-        System.out.println("Adding to "+cName);
+        //System.out.println("Adding to "+cName);
         ct.populateAllFields(clazz);
         return ct;
     }
