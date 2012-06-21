@@ -16,7 +16,7 @@ public class DoubleTest {
     }
 
     private static long bar(long l, long l1) {
-        if (l - l1 < 0) {
+        if (l <= l1) {
             return 1;
         } else {
             return 0;
