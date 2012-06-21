@@ -99,4 +99,8 @@ public class Frame {
     public Value peek4() {
         return stack.get(stack.size()-4);
     }
+
+    public void clear() {
+        stack.clear();
+    }
 }

@@ -672,6 +672,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 break;
             case INSTANCEOF:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INSTANCEOF", "(IILjava/lang/String;)V");
+                addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             default:
                 System.err.println("Unknown type instruction opcode "+opcode);

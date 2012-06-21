@@ -4,6 +4,7 @@
 
 package janala.interpreters;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
 import janala.logger.ClassNames;
 import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
@@ -21,24 +22,26 @@ public class ConcreteInterpreter implements IVisitor {
     private Stack<Frame> stack;
     private Frame currentFrame;
     private ClassNames cnames;
+    private TIntObjectHashMap<Value> objects;
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
+        objects = new TIntObjectHashMap<Value>();
     }
 
     public void visitAALOAD(AALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete));
+        currentFrame.push(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitAASTORE(AASTORE inst) {
         Value value = currentFrame.pop();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
@@ -69,20 +72,21 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitATHROW(ATHROW inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        // keep the stack unchanged
+//        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitBALOAD(BALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete));
+        currentFrame.push(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitBASTORE(BASTORE inst) {
         Value value = currentFrame.pop();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitBIPUSH(BIPUSH inst) {
@@ -92,18 +96,20 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitCALOAD(CALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete));
+        currentFrame.push(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitCASTORE(CASTORE inst) {
         Value value = currentFrame.pop();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitCHECKCAST(CHECKCAST inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        // do nothing
+        // stack remains unchanged
+//        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitD2F(D2F inst) {
@@ -130,14 +136,14 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitDALOAD(DALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push2(ref.getField(i1.concrete));
+        currentFrame.push2(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitDASTORE(DASTORE inst) {
         Value value = currentFrame.pop2();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitDCMPG(DCMPG inst) {
@@ -252,14 +258,14 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitFALOAD(FALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete));
+        currentFrame.push(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitFASTORE(FASTORE inst) {
         Value value = currentFrame.pop();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitFCMPG(FCMPG inst) {
@@ -332,9 +338,9 @@ public class ConcreteInterpreter implements IVisitor {
         FieldInfo fi = oi.get(inst.fIdx,false);
         ObjectValue ref = (ObjectValue)currentFrame.pop();
         if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
-            currentFrame.push2(ref.getField(fi.fieldId));
+            currentFrame.push2(ref.getField(fi.fieldId,currentFrame));
         } else {
-            currentFrame.push(ref.getField(fi.fieldId));
+            currentFrame.push(ref.getField(fi.fieldId,currentFrame));
         }
     }
 
@@ -349,94 +355,98 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
+        Value peek = currentFrame.peek();
+        if (peek == PlaceHolder.instance) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            currentFrame.pop();
+            currentFrame.push(new ObjectValue(-1,inst.v));
+        } else if (((ObjectValue)peek).address == -1) {
+            if (inst.v == 0) {
+                System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+                currentFrame.pop();
+                currentFrame.push(ObjectValue.NULL);
+            } else {
+                ((ObjectValue)peek).setAddress(inst.v);
+                objects.put(inst.v,peek);
+            }
+        } else if (((ObjectValue)peek).address != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            currentFrame.pop();
+            Value tmp = objects.get(inst.v);
+            if (tmp!=null) {
+                currentFrame.push(tmp);
+            } else if (inst.v==0) {
+                currentFrame.push(ObjectValue.NULL);
+            } else {
+                currentFrame.push(tmp = new ObjectValue(-1,inst.v));
+                objects.put(inst.v,tmp);
+            }
+        }
 //        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
-        if (currentFrame.peek()==PlaceHolder.instance) {
+        if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != (inst.v?1:0)) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
+            
             currentFrame.push(new IntValue(inst.v?1:0));
-            return;
-        }
-        if (((IntValue)currentFrame.peek()).concrete != (inst.v?1:0)) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_byte(GETVALUE_byte inst) {
-        if (currentFrame.peek()==PlaceHolder.instance) {
+        if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
-            return;
-        }
-        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_char(GETVALUE_char inst) {
-        if (currentFrame.peek()==PlaceHolder.instance) {
+        if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
-            return;
-        }
-        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_double(GETVALUE_double inst) {
-        if (currentFrame.peek2()==PlaceHolder.instance) {
+        if (currentFrame.peek2()==PlaceHolder.instance || ((DoubleValue)currentFrame.peek2()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
             currentFrame.pop2();
             currentFrame.push2(new DoubleValue(inst.v));
-            return;
-        }
-        if (((DoubleValue)currentFrame.peek2()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_float(GETVALUE_float inst) {
-        if (currentFrame.peek()==PlaceHolder.instance) {
+        if (currentFrame.peek()==PlaceHolder.instance || ((FloatValue)currentFrame.peek()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new FloatValue(inst.v));
-            return;
-        }
-        if (((FloatValue)currentFrame.peek()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_int(GETVALUE_int inst) {
-        if (currentFrame.peek()==PlaceHolder.instance) {
+        if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
-            return;
-        }
-        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_long(GETVALUE_long inst) {
-        if (currentFrame.peek2()==PlaceHolder.instance) {
+        if (currentFrame.peek2()==PlaceHolder.instance || ((LongValue)currentFrame.peek2()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
             currentFrame.pop2();
             currentFrame.push2(new LongValue(inst.v));
-            return;
-        }
-        if (((LongValue)currentFrame.peek2()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
         }
     }
 
     public void visitGETVALUE_short(GETVALUE_short inst) {
-        if (currentFrame.peek()==PlaceHolder.instance) {
+        if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
+            System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
-            return;
-        }
-        if (((IntValue)currentFrame.peek()).concrete != inst.v) {
-            throw new RuntimeException("Failed to match "+currentFrame.peek2()+" and "+inst.v);
         }
     }
 
@@ -485,7 +495,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIALOAD(IALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete));
+        currentFrame.push(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitIAND(IAND inst) {
@@ -498,7 +508,7 @@ public class ConcreteInterpreter implements IVisitor {
         Value value = currentFrame.pop();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitICONST_0(ICONST_0 inst) {
@@ -532,7 +542,14 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIDIV(IDIV inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        currentFrame.push(i1.IDIV(i2));
+        try {
+            currentFrame.push(i1.IDIV(i2));
+        } catch (Exception e) {
+            System.err.println("User Exception in IDIV");
+            e.printStackTrace();
+            currentFrame.clear();
+            currentFrame.push(PlaceHolder.instance);
+        }
     }
 
     public void visitIFEQ(IFEQ inst) {
@@ -572,19 +589,29 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectValue o1 = (ObjectValue)currentFrame.pop();
+        boolean result = o1.IFNONNULL();
+        System.out.println(result);
     }
 
     public void visitIFNULL(IFNULL inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectValue o1 = (ObjectValue)currentFrame.pop();
+        boolean result = o1.IFNULL();
+        System.out.println(result);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectValue o2 = (ObjectValue)currentFrame.pop();
+        ObjectValue o1 = (ObjectValue)currentFrame.pop();
+        boolean result = o1.IF_ACMPEQ(o2);
+        System.out.println(result);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        ObjectValue o2 = (ObjectValue)currentFrame.pop();
+        ObjectValue o1 = (ObjectValue)currentFrame.pop();
+        boolean result = o1.IF_ACMPNE(o2);
+        System.out.println(result);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
@@ -650,7 +677,8 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitINSTANCEOF(INSTANCEOF inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        currentFrame.pop();
+        currentFrame.push(new IntValue(1)); // could be wrong boolean value
     }
 
     private void setArgumentsAndNewFrame(String desc, boolean isInstance) {
@@ -782,7 +810,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitLALOAD(LALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push2(ref.getField(i1.concrete));
+        currentFrame.push2(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitLAND(LAND inst) {
@@ -795,7 +823,7 @@ public class ConcreteInterpreter implements IVisitor {
         Value value = currentFrame.pop2();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitLCMP(LCMP inst) {
@@ -835,7 +863,14 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitLDIV(LDIV inst) {
         LongValue i2 = (LongValue)currentFrame.pop2();
         LongValue i1 = (LongValue)currentFrame.pop2();
-        currentFrame.push2(i1.LDIV(i2));
+        try {
+            currentFrame.push2(i1.LDIV(i2));
+        } catch (Exception e) {
+            System.err.println("User Exception in LDIV");
+            e.printStackTrace();
+            currentFrame.clear();
+            currentFrame.push(PlaceHolder.instance);
+        }
     }
 
     public void visitLLOAD(LLOAD inst) {
@@ -851,10 +886,6 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitLNEG(LNEG inst) {
         LongValue i1 = (LongValue)currentFrame.pop2();
         currentFrame.push2(i1.LNEG());
-    }
-
-    public void visitLOOKUPSWITCH(LOOKUPSWITCH inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitLOR(LOR inst) {
@@ -908,15 +939,11 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitMONITORENTER(MONITORENTER inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+//        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitMONITOREXIT(MONITOREXIT inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
-    public void visitMULTIANEWARRAY(MULTIANEWARRAY inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+//        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitNEW(NEW inst) {
@@ -951,7 +978,7 @@ public class ConcreteInterpreter implements IVisitor {
             value = currentFrame.pop();
         }
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(fi.fieldId,value);
+        ref.setField(fi.fieldId,value,currentFrame);
     }
 
     public void visitPUTSTATIC(PUTSTATIC inst) {
@@ -967,7 +994,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitRET(RET inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+//        throw new RuntimeException("Unimplemented instruction "+inst);
     }
 
     public void visitRETURN(RETURN inst) {
@@ -976,14 +1003,14 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitSALOAD(SALOAD inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete));
+        currentFrame.push(ref.getField(i1.concrete,currentFrame));
     }
 
     public void visitSASTORE(SASTORE inst) {
         Value value = currentFrame.pop();
         IntValue i = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value);
+        ref.setField(i.concrete,value,currentFrame);
     }
 
     public void visitSIPUSH(SIPUSH inst) {
@@ -997,13 +1024,11 @@ public class ConcreteInterpreter implements IVisitor {
         currentFrame.push(v2);
     }
 
-    public void visitTABLESWITCH(TABLESWITCH inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
-    }
-
     public void visitINVOKEMETHOD_EXCEPTION(INVOKEMETHOD_EXCEPTION inst) {
         stack.pop();
         currentFrame = stack.peek();
+        currentFrame.clear();
+        currentFrame.push(PlaceHolder.instance);  // placeholder for the exception object
     }
 
     public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst) {
@@ -1015,4 +1040,18 @@ public class ConcreteInterpreter implements IVisitor {
             currentFrame.push(old.ret);
         }
     }
+
+    public void visitMULTIANEWARRAY(MULTIANEWARRAY inst) {
+        throw new RuntimeException("Unimplemented instruction "+inst);
+    }
+
+    public void visitLOOKUPSWITCH(LOOKUPSWITCH inst) {
+        throw new RuntimeException("Unimplemented instruction "+inst);
+    }
+
+    public void visitTABLESWITCH(TABLESWITCH inst) {
+        throw new RuntimeException("Unimplemented instruction "+inst);
+    }
+
+
 }
