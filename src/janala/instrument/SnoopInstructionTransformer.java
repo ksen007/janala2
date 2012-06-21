@@ -37,6 +37,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
             ClassReader cr = new ClassReader(cbuf);
             ClassWriter cw = new ClassWriter(cr, 0);
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
+//            ClassVisitor cv = new SnoopInstructionClassAdapter(new TraceClassVisitor(cw,new PrintWriter( System.out )));
             cr.accept(cv, 0);
             System.out.println("<<<<<<<<<<<<<<< end transform "+cname);
             return cw.toByteArray();

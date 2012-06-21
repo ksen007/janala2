@@ -1,1 +1,1 @@
-java -javaagent:lib/iagent.jar  -cp lib/asm-3.3.1.jar:out/test/janala/:out/production/janala/ $*
+java -javaagent:lib/iagent.jar  -cp lib/asm-all-3.3.1.jar:out/test/janala/:out/production/janala/ $*

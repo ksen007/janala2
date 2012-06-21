@@ -4,6 +4,7 @@
 
 package janala.logger;
 
+import janala.interpreters.PlaceHolder;
 import janala.interpreters.Value;
 
 import java.io.Serializable;
@@ -91,7 +92,9 @@ public class ObjectInfo implements Serializable {
     }
 
     public Value getStaticField(int fieldId) {
-        return statics[fieldId];
+        Value v = statics[fieldId];
+        if (v==null) return PlaceHolder.instance;
+        else return v;
     }
 
     public void setField(int fieldId, Value value) {

@@ -10,11 +10,13 @@ import janala.config.Config;
 import org.objectweb.asm.*;
 
 public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opcodes{
-    boolean isStatic;
+    boolean isInit;
+    boolean isSuperInitCalled;
 
-    public SnoopInstructionMethodAdapter(MethodVisitor mv, boolean isStatic) {
+    public SnoopInstructionMethodAdapter(MethodVisitor mv, boolean isInit) {
         super(mv);
-        this.isStatic = isStatic;
+        this.isInit = isInit;
+        this.isSuperInitCalled = false;
     }
 
     @Override
@@ -188,35 +190,51 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case IALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"I","GETVALUE_");
+                return;
             case LALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"J","GETVALUE_");
+                return;
             case FALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"F","GETVALUE_");
+                return;
             case DALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"D","GETVALUE_");
+                return;
             case AALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "AALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
+                return;
             case BALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "BALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"B","GETVALUE_");
+                return;
             case CALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "CALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"C","GETVALUE_");
+                return;
             case SALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"S","GETVALUE_");
+                return;
             case IASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IASTORE",
                         "(II)V");
@@ -571,7 +589,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ALOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                if (var!=0 || isStatic)
+                if (!(var==0 && isInit && !isSuperInitCalled))
                     addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
                 break;
             case ISTORE:
@@ -737,6 +755,9 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case INVOKESPECIAL:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKESPECIAL",
                         "(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+                if (name.equals("<init>")) {
+                    isSuperInitCalled = true;
+                }
                 break;
             case INVOKESTATIC:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKESTATIC",

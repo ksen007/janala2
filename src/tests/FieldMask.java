@@ -39,6 +39,7 @@ class A1 {
 
 class B1 extends A1 {
     public B1() {
+        System.out.println(System.identityHashCode(this));
         x = 3;
     }
     int x = 2;

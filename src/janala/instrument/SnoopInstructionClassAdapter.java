@@ -19,7 +19,7 @@ public class SnoopInstructionClassAdapter extends ClassAdapter {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
         if (mv != null) {
             System.out.println("******************* "+((access & Opcodes.ACC_STATIC)>0));
-            mv = new SnoopInstructionMethodAdapter(mv,(access & Opcodes.ACC_STATIC)>0);
+            mv = new SnoopInstructionMethodAdapter(mv,name.equals("<init>"));
         }
         System.out.println("****************> "+name);
 
