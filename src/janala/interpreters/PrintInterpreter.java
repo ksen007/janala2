@@ -699,4 +699,8 @@ public class PrintInterpreter implements IVisitor {
     public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst) {
         System.out.println(inst);
     }
+
+    public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
+        System.out.println(inst);
+    }
 }

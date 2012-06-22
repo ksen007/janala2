@@ -693,4 +693,8 @@ public class DoNothingLogger implements Logger {
         
     }
 
+    public void MAKE_SYMBOLIC() {
+        
+    }
+
 }

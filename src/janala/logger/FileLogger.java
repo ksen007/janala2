@@ -744,5 +744,9 @@ log(new NEW(iid, mid, type, cIdx) );
         log (new INVOKEMETHOD_END());
     }
 
+    public void MAKE_SYMBOLIC() {
+        log (new MAKE_SYMBOLIC());
+    }
+
 
 }

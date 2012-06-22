@@ -23,6 +23,7 @@ public class ConcreteInterpreter implements IVisitor {
     private Frame currentFrame;
     private ClassNames cnames;
     private TIntObjectHashMap<Value> objects;
+    private int symbol = 1;
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
@@ -45,7 +46,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
-        currentFrame.push(ObjectValue.NULL);
+        currentFrame.push(new ObjectValue(0,0));
     }
 
     public void visitALOAD(ALOAD inst) {
@@ -1038,6 +1039,14 @@ public class ConcreteInterpreter implements IVisitor {
             currentFrame.push2(old.ret);
         } else if (old.nReturnWords==1) {
             currentFrame.push(old.ret);
+        }
+    }
+
+    public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
+        if (currentFrame.peek()==PlaceHolder.instance) {
+            currentFrame.peek2().MAKE_SYMBOLIC(symbol++);
+        } else {
+            currentFrame.peek().MAKE_SYMBOLIC(symbol++);
         }
     }
 

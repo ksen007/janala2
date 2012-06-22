@@ -88,6 +88,8 @@ public class SymbolicInt {
         SymbolicInt tmp = new SymbolicInt(this);
         SymbolicInt e = (SymbolicInt) l;
         for ( TIntLongIterator it = e.linear.iterator(); it.hasNext(); ) {
+            it.advance();
+
             int integer = it.key();
             long coeff = linear.get(integer);
             long toadd;
@@ -133,6 +135,8 @@ public class SymbolicInt {
         if (l == 1) return this;
         SymbolicInt tmp = new SymbolicInt();
         for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
+            it.advance();
+            
             int integer = it.key();
             tmp.linear.put(integer, l * it.value());
         }
@@ -161,6 +165,8 @@ public class SymbolicInt {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
+            it.advance();
+            
             int integer = it.key();
             long l = it.value();
             if (first) {
@@ -236,6 +242,8 @@ public class SymbolicInt {
         }
         out.print(" (+ ");
         for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
+            it.advance();
+            
             int key = it.key();
             long val = it.value();
             if (val < 0) {

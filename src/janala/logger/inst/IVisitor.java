@@ -345,4 +345,6 @@ public interface IVisitor {
     public void visitTABLESWITCH(TABLESWITCH inst);
 
     public void visitINVOKEMETHOD_END(INVOKEMETHOD_END inst);
+
+    public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst);
 }

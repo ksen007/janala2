@@ -10,4 +10,7 @@ package janala.interpreters;
  * Time: 8:27 AM
  */
 public class Value {
+    public void MAKE_SYMBOLIC(int symbol) {
+
+    }
 }

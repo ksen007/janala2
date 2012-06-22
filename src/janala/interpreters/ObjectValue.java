@@ -33,11 +33,11 @@ public class ObjectValue extends Value {
     }
 
     public boolean IFNULL() {
-        return (this==NULL);
+        return (this.address==0);
     }
 
     public boolean IFNONNULL() {
-        return (this!=NULL);
+        return (this.address!=0);
     }
 
     public Value getField(int fieldId, Frame currentFrame) {

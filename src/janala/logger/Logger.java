@@ -348,4 +348,6 @@ public interface Logger {
     public void INVOKEMETHOD_EXCEPTION();
 
     public void INVOKEMETHOD_END();
+
+    public void MAKE_SYMBOLIC();
 }

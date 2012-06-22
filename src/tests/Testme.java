@@ -4,6 +4,8 @@
 
 package tests;
 
+import janala.Main;
+
 public class Testme {
 
     public static void testme(int x,int y){
@@ -22,7 +24,9 @@ public class Testme {
 
     public static void main(String[] args){
         int x = 22;
+        Main.MakeSymbolic(x);
         int y = 11;
+        Main.MakeSymbolic(y);
         testme(x,y);
     }
 }

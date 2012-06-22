@@ -743,6 +743,9 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+        if (owner.equals("janala/Main") && name.equals("MakeSymbolic")) {
+            mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "MAKE_SYMBOLIC", "()V");
+        }
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitLdcInsn(owner);

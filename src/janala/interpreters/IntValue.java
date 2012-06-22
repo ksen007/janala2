@@ -24,7 +24,7 @@ public class IntValue extends Value {
         symbolic = new SymbolicInt(symbol);
     }
 
-    public Value IINC(int increment) {
+    public IntValue IINC(int increment) {
         IntValue ret = new IntValue(concrete+increment);
         if (symbolic!=null) {
             ret.symbolic = symbolic.add(increment);
@@ -303,7 +303,7 @@ public class IntValue extends Value {
     }
 
     public LongValue I2L() {
-        return new LongValue((long)concrete);
+        return new LongValue((long)concrete); //@todo: make sure that symbolic values flow
     }
 
     public FloatValue I2F() {
