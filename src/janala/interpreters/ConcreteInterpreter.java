@@ -591,27 +591,27 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitIFNONNULL(IFNONNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        boolean result = o1.IFNONNULL();
+        PointerConstraint result = o1.IFNONNULL();
         System.out.println(result);
     }
 
     public void visitIFNULL(IFNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        boolean result = o1.IFNULL();
+        PointerConstraint result = o1.IFNULL();
         System.out.println(result);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        boolean result = o1.IF_ACMPEQ(o2);
+        PointerConstraint result = o1.IF_ACMPEQ(o2);
         System.out.println(result);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        boolean result = o1.IF_ACMPNE(o2);
+        PointerConstraint result = o1.IF_ACMPNE(o2);
         System.out.println(result);
     }
 

@@ -12,32 +12,40 @@ package janala.interpreters;
 public class ObjectValue extends Value {
     final public static ObjectValue NULL = new ObjectValue(0,0);
     Value[] concrete;
+    int symbolic;
     int address; // address 0 is null, address -1 is uninitialized address
 
     public ObjectValue(int nFields) {
         concrete = new Value[nFields];
         address = -1;
+        symbolic = -1;
     }
 
     public ObjectValue(int i, int v) {
         concrete = null;
         address = v;
+        symbolic = (address==0?0:-1);
     }
 
-    public boolean IF_ACMPEQ(ObjectValue o2) {
-        return (this==o2);
+    public void MAKE_SYMBOLIC(int symbol) {
+        symbolic = symbol;
     }
 
-    public boolean IF_ACMPNE(ObjectValue o2) {
-        return (this!=o2);
+
+    public PointerConstraint IF_ACMPEQ(ObjectValue o2) {
+        return new PointerConstraint(symbolic,o2.symbolic,true,this==o2);
     }
 
-    public boolean IFNULL() {
-        return (this.address==0);
+    public PointerConstraint IF_ACMPNE(ObjectValue o2) {
+        return new PointerConstraint(symbolic,o2.symbolic,false,this!=o2);
     }
 
-    public boolean IFNONNULL() {
-        return (this.address!=0);
+    public PointerConstraint IFNULL() {
+        return new PointerConstraint(symbolic,0,true,this.address==0);
+    }
+
+    public PointerConstraint IFNONNULL() {
+        return new PointerConstraint(symbolic,0,true,this.address!=0);
     }
 
     public Value getField(int fieldId, Frame currentFrame) {

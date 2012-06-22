@@ -20,6 +20,11 @@ public class IntValue extends Value {
         symbolic = null;
     }
 
+    public IntValue(int i, SymbolicInt symbolic) {
+        concrete = i;
+        this.symbolic = symbolic;
+    }
+
     public void MAKE_SYMBOLIC(int symbol) {
         symbolic = new SymbolicInt(symbol);
     }
@@ -303,7 +308,7 @@ public class IntValue extends Value {
     }
 
     public LongValue I2L() {
-        return new LongValue((long)concrete); //@todo: make sure that symbolic values flow
+        return new LongValue((long)concrete,symbolic);
     }
 
     public FloatValue I2F() {
@@ -315,15 +320,15 @@ public class IntValue extends Value {
     }
 
     public IntValue I2B() {
-        return new IntValue((byte)concrete);
+        return new IntValue((byte)concrete,symbolic);
     }
 
     public IntValue I2C() {
-        return new IntValue((char)concrete);
+        return new IntValue((char)concrete,symbolic);
     }
 
     public IntValue I2S() {
-        return new IntValue((short)concrete);
+        return new IntValue((short)concrete,symbolic);
     }
 
     @Override

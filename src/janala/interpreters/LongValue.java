@@ -18,6 +18,11 @@ public class LongValue extends Value {
         symbolic = null;
     }
 
+    public LongValue(long concrete, SymbolicInt symbolic) {
+        this.concrete = concrete;
+        this.symbolic = symbolic;
+    }
+
     public void MAKE_SYMBOLIC(int symbol) {
          symbolic = new SymbolicInt(symbol);
      }
@@ -113,7 +118,7 @@ public class LongValue extends Value {
     }
 
     public IntValue L2I() {
-        return new IntValue((int)concrete);
+        return new IntValue((int)concrete,symbolic);
     }
 
     public FloatValue L2F() {
