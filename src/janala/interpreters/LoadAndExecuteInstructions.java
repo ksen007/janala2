@@ -33,7 +33,7 @@ public class LoadAndExecuteInstructions {
             inputStream = new ObjectInputStream(new FileInputStream(Config.traceFileName));
             Instruction inst;
             while((inst  = (Instruction)inputStream.readObject())!=null) {
-                System.out.println(inst);
+//                System.out.println(inst);
                 inst.visit(intp);
             }
             inputStream.close();

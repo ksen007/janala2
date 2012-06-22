@@ -4,6 +4,8 @@
 
 package tests;
 
+import janala.Main;
+
 public class Struct {
     public int x = 0;
     public Struct next;
@@ -16,7 +18,7 @@ public class Struct {
         if(y>0){
             if(p!=null){
                 if(f(y)==p.x){
-                    if(p.next!=p) System.out.println("ERROR");
+                    System.out.println("ERROR");
                 }
             }
         }
@@ -24,7 +26,11 @@ public class Struct {
 
     public static void main(String[] args) {
         Struct s = new Struct();
+        Main.MakeSymbolic(s);
+        s.x = 5;
+        Main.MakeSymbolic(s.x);
         int y = 2;
+        Main.MakeSymbolic(y);
         testme(s,y);
     }
 }
