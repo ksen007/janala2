@@ -32,20 +32,40 @@ public class ObjectValue extends Value {
     }
 
 
-    public PointerConstraint IF_ACMPEQ(ObjectValue o2) {
-        return new PointerConstraint(symbolic,o2.symbolic,true,this==o2);
+    public ConstraintAndResult IF_ACMPEQ(ObjectValue o2) {
+        boolean result = this==o2;
+        if (symbolic!=-1 && o2.symbolic!=-1) {
+            return new ConstraintAndResult(new PointerConstraint(symbolic,o2.symbolic,result),result);
+        } else {
+            return new ConstraintAndResult(null,result);
+        }
     }
 
-    public PointerConstraint IF_ACMPNE(ObjectValue o2) {
-        return new PointerConstraint(symbolic,o2.symbolic,false,this!=o2);
+    public ConstraintAndResult IF_ACMPNE(ObjectValue o2) {
+        boolean result = this!=o2;
+        if (symbolic!=-1 && o2.symbolic!=-1) {
+            return new ConstraintAndResult(new PointerConstraint(symbolic,o2.symbolic,!result),result);
+        } else {
+            return new ConstraintAndResult(null,result);
+        }
     }
 
-    public PointerConstraint IFNULL() {
-        return new PointerConstraint(symbolic,0,true,this.address==0);
+    public ConstraintAndResult IFNULL() {
+        boolean result = this.address==0;
+        if (symbolic!=-1) {
+            return new ConstraintAndResult(new PointerConstraint(symbolic,0,result),result);
+        } else {
+            return new ConstraintAndResult(null,result);
+        }
     }
 
-    public PointerConstraint IFNONNULL() {
-        return new PointerConstraint(symbolic,0,true,this.address!=0);
+    public ConstraintAndResult IFNONNULL() {
+        boolean result = this.address!=0;
+        if (symbolic!=-1) {
+            return new ConstraintAndResult(new PointerConstraint(symbolic,0,!result),result);
+        } else {
+            return new ConstraintAndResult(null,result);
+        }
     }
 
     public Value getField(int fieldId, Frame currentFrame) {

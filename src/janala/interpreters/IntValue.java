@@ -37,182 +37,200 @@ public class IntValue extends Value {
         return ret;
     }
 
-    public IntValue IFEQ() {
+    public ConstraintAndResult IFEQ() {
         if (symbolic==null) {
-            return (concrete==0)?TRUE:FALSE;
+            return (concrete==0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            IntValue ret = new IntValue((concrete==0)?1:0);
-            ret.symbolic = symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ);
-            return ret;
+            boolean result = concrete==0;
+            return new ConstraintAndResult(result?
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ):
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.NE),result);
         }
     }
 
-    public IntValue IFNE() {
+    public ConstraintAndResult IFNE() {
         if (symbolic==null) {
-            return (concrete!=0)?TRUE:FALSE;
+            return (concrete!=0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            IntValue ret = new IntValue((concrete!=0)?1:0);
-            ret.symbolic = symbolic.setop(SymbolicInt.COMPARISON_OPS.NE);
-            return ret;
+            boolean result = concrete!=0;
+            return new ConstraintAndResult(result?
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.NE):
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ),result);
         }
     }
 
-    public IntValue IFLT() {
+    public ConstraintAndResult IFLT() {
         if (symbolic==null) {
-            return (concrete<0)?TRUE:FALSE;
+            return (concrete<0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            IntValue ret = new IntValue((concrete<0)?1:0);
-            ret.symbolic = symbolic.setop(SymbolicInt.COMPARISON_OPS.LT);
-            return ret;
+            boolean result = concrete<0;
+            return new ConstraintAndResult(result?
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.LT):
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.GE),result);
         }
     }
 
-    public IntValue IFGE() {
+    public ConstraintAndResult IFGE() {
         if (symbolic==null) {
-            return (concrete>=0)?TRUE:FALSE;
+            return (concrete>=0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            IntValue ret = new IntValue((concrete>=0)?1:0);
-            ret.symbolic = symbolic.setop(SymbolicInt.COMPARISON_OPS.GE);
-            return ret;
+            boolean result = concrete>=0;
+            return new ConstraintAndResult(result?
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.GE):
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.LT),result);
         }
     }
 
-    public IntValue IFGT() {
+    public ConstraintAndResult IFGT() {
         if (symbolic==null) {
-            return (concrete>0)?TRUE:FALSE;
+            return (concrete>0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            IntValue ret = new IntValue((concrete>0)?1:0);
-            ret.symbolic = symbolic.setop(SymbolicInt.COMPARISON_OPS.GT);
-            return ret;
+            boolean result = concrete>0;
+            return new ConstraintAndResult(result?
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.GT):
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.LE),result);
         }
     }
 
-    public IntValue IFLE() {
+    public ConstraintAndResult IFLE() {
         if (symbolic==null) {
-            return (concrete<=0)?TRUE:FALSE;
+            return (concrete<=0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            IntValue ret = new IntValue((concrete<=0)?1:0);
-            ret.symbolic = symbolic.setop(SymbolicInt.COMPARISON_OPS.LE);
-            return ret;
+            boolean result = concrete<=0;
+            return new ConstraintAndResult(result?
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.LE):
+                    symbolic.setop(SymbolicInt.COMPARISON_OPS.GT),result);
         }
     }
 
-    public IntValue IF_ICMPEQ(IntValue i2) {
+    public ConstraintAndResult IF_ICMPEQ(IntValue i2) {
+        boolean result = (concrete==i2.concrete);
+        SymbolicInt.COMPARISON_OPS op = result?SymbolicInt.COMPARISON_OPS.EQ:SymbolicInt.COMPARISON_OPS.NE;
         if (symbolic==null && i2.symbolic==null) {
-            return (concrete==i2.concrete)?TRUE:FALSE;
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            IntValue ret = new IntValue((concrete==i2.concrete)?1:0);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
             SymbolicInt tmp = symbolic.subtract(i2.symbolic);
             if (tmp!=null)
-                ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.EQ);
+                ret.constraint = tmp.setop(op);
             return ret;
         } else if (symbolic!=null) {
-            IntValue ret = new IntValue((concrete==i2.concrete)?1:0);
-            ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.EQ);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = symbolic.subtract(i2.concrete).setop(op);
             return ret;
         } else {
-            IntValue ret = new IntValue((concrete==i2.concrete)?1:0);
-            ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.EQ);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = i2.symbolic.subtractFrom(concrete).setop(op);
             return ret;
         }
     }
 
-    public IntValue IF_ICMPNE(IntValue i2) {
+    public ConstraintAndResult IF_ICMPNE(IntValue i2) {
+        boolean result = (concrete!=i2.concrete);
+        SymbolicInt.COMPARISON_OPS op = result?SymbolicInt.COMPARISON_OPS.NE:SymbolicInt.COMPARISON_OPS.EQ;
         if (symbolic==null && i2.symbolic==null) {
-            return (concrete!=i2.concrete)?TRUE:FALSE;
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            IntValue ret = new IntValue((concrete!=i2.concrete)?1:0);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
             SymbolicInt tmp = symbolic.subtract(i2.symbolic);
             if (tmp!=null)
-                ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.NE);
+                ret.constraint = tmp.setop(op);
             return ret;
         } else if (symbolic!=null) {
-            IntValue ret = new IntValue((concrete!=i2.concrete)?1:0);
-            ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.NE);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = symbolic.subtract(i2.concrete).setop(op);
             return ret;
         } else {
-            IntValue ret = new IntValue((concrete!=i2.concrete)?1:0);
-            ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.NE);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = i2.symbolic.subtractFrom(concrete).setop(op);
             return ret;
         }
     }
 
-    public IntValue IF_ICMPLT(IntValue i2) {
+    public ConstraintAndResult IF_ICMPLT(IntValue i2) {
+        boolean result = (concrete<i2.concrete);
+        SymbolicInt.COMPARISON_OPS op = result?SymbolicInt.COMPARISON_OPS.LT:SymbolicInt.COMPARISON_OPS.GE;
         if (symbolic==null && i2.symbolic==null) {
-            return (concrete<i2.concrete)?TRUE:FALSE;
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            IntValue ret = new IntValue((concrete<i2.concrete)?1:0);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
             SymbolicInt tmp = symbolic.subtract(i2.symbolic);
             if (tmp!=null)
-                ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.LT);
+                ret.constraint = tmp.setop(op);
             return ret;
         } else if (symbolic!=null) {
-            IntValue ret = new IntValue((concrete<i2.concrete)?1:0);
-            ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.LT);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = symbolic.subtract(i2.concrete).setop(op);
             return ret;
         } else {
-            IntValue ret = new IntValue((concrete<i2.concrete)?1:0);
-            ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.LT);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = i2.symbolic.subtractFrom(concrete).setop(op);
             return ret;
         }
     }
 
-    public IntValue IF_ICMPGE(IntValue i2) {
+    public ConstraintAndResult IF_ICMPGE(IntValue i2) {
+        boolean result = (concrete>=i2.concrete);
+        SymbolicInt.COMPARISON_OPS op = result?SymbolicInt.COMPARISON_OPS.GE:SymbolicInt.COMPARISON_OPS.LT;
         if (symbolic==null && i2.symbolic==null) {
-            return (concrete>=i2.concrete)?TRUE:FALSE;
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            IntValue ret = new IntValue((concrete>=i2.concrete)?1:0);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
             SymbolicInt tmp = symbolic.subtract(i2.symbolic);
             if (tmp!=null)
-                ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.GE);
+                ret.constraint = tmp.setop(op);
             return ret;
         } else if (symbolic!=null) {
-            IntValue ret = new IntValue((concrete>=i2.concrete)?1:0);
-            ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.GE);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = symbolic.subtract(i2.concrete).setop(op);
             return ret;
         } else {
-            IntValue ret = new IntValue((concrete>=i2.concrete)?1:0);
-            ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.GE);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = i2.symbolic.subtractFrom(concrete).setop(op);
             return ret;
         }
     }
 
-    public IntValue IF_ICMPGT(IntValue i2) {
+    public ConstraintAndResult IF_ICMPGT(IntValue i2) {
+        boolean result = (concrete>i2.concrete);
+        SymbolicInt.COMPARISON_OPS op = result?SymbolicInt.COMPARISON_OPS.GT:SymbolicInt.COMPARISON_OPS.LE;
         if (symbolic==null && i2.symbolic==null) {
-            return (concrete>i2.concrete)?TRUE:FALSE;
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            IntValue ret = new IntValue((concrete>i2.concrete)?1:0);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
             SymbolicInt tmp = symbolic.subtract(i2.symbolic);
             if (tmp!=null)
-                ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.GT);
+                ret.constraint = tmp.setop(op);
             return ret;
         } else if (symbolic!=null) {
-            IntValue ret = new IntValue((concrete>i2.concrete)?1:0);
-            ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.GT);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = symbolic.subtract(i2.concrete).setop(op);
             return ret;
         } else {
-            IntValue ret = new IntValue((concrete>i2.concrete)?1:0);
-            ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.GT);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = i2.symbolic.subtractFrom(concrete).setop(op);
             return ret;
         }
     }
 
-    public IntValue IF_ICMPLE(IntValue i2) {
+    public ConstraintAndResult IF_ICMPLE(IntValue i2) {
+        boolean result = (concrete<=i2.concrete);
+        SymbolicInt.COMPARISON_OPS op = result?SymbolicInt.COMPARISON_OPS.LE:SymbolicInt.COMPARISON_OPS.GT;
         if (symbolic==null && i2.symbolic==null) {
-            return (concrete<=i2.concrete)?TRUE:FALSE;
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            IntValue ret = new IntValue((concrete<=i2.concrete)?1:0);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
             SymbolicInt tmp = symbolic.subtract(i2.symbolic);
             if (tmp!=null)
-                ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.LE);
+                ret.constraint = tmp.setop(op);
             return ret;
         } else if (symbolic!=null) {
-            IntValue ret = new IntValue((concrete<=i2.concrete)?1:0);
-            ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.LE);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = symbolic.subtract(i2.concrete).setop(op);
             return ret;
         } else {
-            IntValue ret = new IntValue((concrete<=i2.concrete)?1:0);
-            ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.LE);
+            ConstraintAndResult ret = new ConstraintAndResult(null,result);
+            ret.constraint = i2.symbolic.subtractFrom(concrete).setop(op);
             return ret;
         }
     }

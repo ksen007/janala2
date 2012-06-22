@@ -11,7 +11,7 @@ import gnu.trove.map.hash.TIntLongHashMap;
 
 import java.io.PrintStream;
 
-public class SymbolicInt {
+public class SymbolicInt extends Constraint {
     private TIntLongHashMap linear;
     private long constant;
     public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};

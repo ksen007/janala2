@@ -555,105 +555,105 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitIFEQ(IFEQ inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IFEQ();
+        ConstraintAndResult result = i1.IFEQ();
         System.out.println(result);
     }
 
     public void visitIFGE(IFGE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IFGE();
+        ConstraintAndResult result = i1.IFGE();
         System.out.println(result);
     }
 
     public void visitIFGT(IFGT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IFGT();
+        ConstraintAndResult result = i1.IFGT();
         System.out.println(result);
     }
 
     public void visitIFLE(IFLE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IFLE();
+        ConstraintAndResult result = i1.IFLE();
         System.out.println(result);
     }
 
     public void visitIFLT(IFLT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IFLT();
+        ConstraintAndResult result = i1.IFLT();
         System.out.println(result);
     }
 
     public void visitIFNE(IFNE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IFNE();
+        ConstraintAndResult result = i1.IFNE();
         System.out.println(result);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        PointerConstraint result = o1.IFNONNULL();
+        ConstraintAndResult result = o1.IFNONNULL();
         System.out.println(result);
     }
 
     public void visitIFNULL(IFNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        PointerConstraint result = o1.IFNULL();
+        ConstraintAndResult result = o1.IFNULL();
         System.out.println(result);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        PointerConstraint result = o1.IF_ACMPEQ(o2);
+        ConstraintAndResult result = o1.IF_ACMPEQ(o2);
         System.out.println(result);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        PointerConstraint result = o1.IF_ACMPNE(o2);
+        ConstraintAndResult result = o1.IF_ACMPNE(o2);
         System.out.println(result);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IF_ICMPEQ(i2);
+        ConstraintAndResult result = i1.IF_ICMPEQ(i2);
         System.out.println(result);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IF_ICMPGE(i2);
+        ConstraintAndResult result = i1.IF_ICMPGE(i2);
         System.out.println(result);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IF_ICMPGT(i2);
+        ConstraintAndResult result = i1.IF_ICMPGT(i2);
         System.out.println(result);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IF_ICMPLE(i2);
+        ConstraintAndResult result = i1.IF_ICMPLE(i2);
         System.out.println(result);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IF_ICMPLT(i2);
+        ConstraintAndResult result = i1.IF_ICMPLT(i2);
         System.out.println(result);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        IntValue result = i1.IF_ICMPNE(i2);
+        ConstraintAndResult result = i1.IF_ICMPNE(i2);
         System.out.println(result);
     }
 
