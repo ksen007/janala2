@@ -14,6 +14,12 @@ import java.io.PrintStream;
 public class SymbolicInt extends Constraint {
     private TIntLongHashMap linear;
     private long constant;
+
+    @Override
+    public void accept(ConstraintVisitor v) {
+        v.visitSymbolicInt(this);
+    }
+
     public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};
     private COMPARISON_OPS op;
 

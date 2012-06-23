@@ -29,4 +29,9 @@ public class PointerConstraint extends Constraint {
             sb.append("null");
         return sb.toString();
     }
+
+    @Override
+    public void accept(ConstraintVisitor v) {
+        v.visitPointerConstraint(this);
+    }
 }

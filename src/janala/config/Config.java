@@ -9,4 +9,5 @@ public class Config {
             "janala/logger/DJVM");
     public static String traceFileName = System.getProperty("janala.trace","trace");
     public static String traceAuxFileName = System.getProperty("janala.trace.aux","trace.aux");
+    public static String history = System.getProperty("janala.history","history");
 }

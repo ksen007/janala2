@@ -23,21 +23,22 @@ public class LoadAndExecuteInstructions {
     public static void main(String[] args) {
         ObjectInputStream inputStream = null;
 
+        IVisitor intp = null;
         try {
             inputStream = new ObjectInputStream(new FileInputStream(Config.traceAuxFileName));
             ClassNames cnames = (ClassNames)inputStream.readObject();
             inputStream.close();
             cnames.init();
 
-            IVisitor intp = new ConcreteInterpreter(cnames);
+            intp = new ConcreteInterpreter(cnames);
             inputStream = new ObjectInputStream(new FileInputStream(Config.traceFileName));
             Instruction inst;
             while((inst  = (Instruction)inputStream.readObject())!=null) {
-//                System.out.println(inst);
                 inst.visit(intp);
             }
             inputStream.close();
         } catch (EOFException e) {
+            ((ConcreteInterpreter)intp).endExecution();
             System.out.println("Read all instructions");
         } catch (IOException e) {
             e.printStackTrace();

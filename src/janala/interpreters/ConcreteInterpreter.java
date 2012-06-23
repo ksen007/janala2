@@ -9,6 +9,8 @@ import janala.logger.ClassNames;
 import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
 import janala.logger.inst.*;
+import janala.solvers.ChocoSolver;
+import janala.solvers.History;
 import org.objectweb.asm.Type;
 
 import java.util.Stack;
@@ -24,12 +26,18 @@ public class ConcreteInterpreter implements IVisitor {
     private ClassNames cnames;
     private TIntObjectHashMap<Value> objects;
     private int symbol = 1;
+    private History history;
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
+        history = History.readHistory(new ChocoSolver());
+    }
+
+    public void endExecution() {
+        history.solveAndSave();
     }
 
     public void visitAALOAD(AALOAD inst) {
@@ -556,105 +564,121 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFEQ(IFEQ inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFEQ();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFGE(IFGE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFGE();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFGT(IFGT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFGT();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFLE(IFLE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFLE();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFLT(IFLT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFLT();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFNE(IFNE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFNE();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IFNONNULL();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIFNULL(IFNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IFNULL();
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IF_ACMPEQ(o2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IF_ACMPNE(o2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPEQ(i2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPGE(i2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPGT(i2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPLE(i2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPLT(i2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPNE(i2);
-        System.out.println(result);
+        history.checkAndSetBranch(result);
+//        System.out.println(result);
     }
 
     public void visitIINC(IINC inst) {

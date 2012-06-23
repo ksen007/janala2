@@ -7,8 +7,9 @@ package janala.interpreters;
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/22/12
- * Time: 12:23 PM
+ * Time: 4:31 PM
  */
-public abstract class Constraint {
-    public abstract void accept(ConstraintVisitor v);
+public interface ConstraintVisitor {
+    void visitSymbolicInt(SymbolicInt c);
+    void visitPointerConstraint(PointerConstraint c);
 }

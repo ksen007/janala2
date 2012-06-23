@@ -10,10 +10,11 @@ package janala.interpreters;
  * Time: 12:29 PM
  */
 public class ConstraintAndResult {
-    public Constraint constraint;
-    public boolean result;
     public final static ConstraintAndResult TRUE = new ConstraintAndResult(null,true);
     public final static ConstraintAndResult FALSE = new ConstraintAndResult(null,false);
+
+    public Constraint constraint;
+    public boolean result;
 
     public ConstraintAndResult(Constraint constraint, boolean result) {
         this.constraint = constraint;
