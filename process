@@ -1,0 +1,2 @@
+java -cp out/test/janala/:out/production/janala/ janala.interpreters.LoadAndExecuteInstructions
+

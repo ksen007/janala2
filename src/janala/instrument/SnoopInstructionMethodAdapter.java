@@ -1,45 +1,22 @@
+/*
+ * Author: Koushik Sen (ksen@cs.berkeley.edu)
+ */
+
 package janala.instrument;
 
-import janala.analysis.ClassDepot;
+import janala.logger.ClassNames;
+import janala.logger.ObjectInfo;
 import janala.config.Config;
 import org.objectweb.asm.*;
 
-/**
- * Copyright (c) 2006-2010,
- * Koushik Sen    <ksen@cs.berkeley.edu>
- * All rights reserved.
- * <p/>
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- * <p/>
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- * <p/>
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- * <p/>
- * 3. The names of the contributors may not be used to endorse or promote
- * products derived from this software without specific prior written
- * permission.
- * <p/>
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
- * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opcodes{
+    boolean isInit;
+    boolean isSuperInitCalled;
 
-    public SnoopInstructionMethodAdapter(MethodVisitor mv) {
+    public SnoopInstructionMethodAdapter(MethodVisitor mv, boolean isInit) {
         super(mv);
+        this.isInit = isInit;
+        this.isSuperInitCalled = false;
     }
 
     @Override
@@ -93,47 +70,47 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case Type.DOUBLE:
                 //mv.visitInsn(DCONST_1);
                 mv.visitInsn(DUP2);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(D)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"double", "(D)V");
                 break;
             case Type.LONG:
                 //mv.visitInsn(LCONST_1);
                 mv.visitInsn(DUP2);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(J)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"long", "(J)V");
                 break;
             case Type.ARRAY:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(Ljava/lang/Object;)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"Object", "(Ljava/lang/Object;)V");
                 break;
             case Type.BOOLEAN:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(Z)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"boolean", "(Z)V");
                 break;
             case Type.BYTE:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(B)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"byte", "(B)V");
                 break;
             case Type.CHAR:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(C)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"char", "(C)V");
                 break;
             case Type.FLOAT:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(F)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"float", "(F)V");
                 break;
             case Type.INT:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(I)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"int", "(I)V");
                 break;
             case Type.OBJECT:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(Ljava/lang/Object;)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"Object", "(Ljava/lang/Object;)V");
                 break;
             case Type.SHORT:
                 mv.visitInsn(DUP);
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "(S)V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"short", "(S)V");
                 break;
             case Type.VOID:
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"VALUE", "()V");
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, methodNamePrefix+"void", "()V");
                 break;
             default:
                 System.err.println("Unknown field or method descriptor "+desc);
@@ -213,35 +190,51 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case IALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"I","GETVALUE_");
+                return;
             case LALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"J","GETVALUE_");
+                return;
             case FALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"F","GETVALUE_");
+                return;
             case DALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"D","GETVALUE_");
+                return;
             case AALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "AALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
+                return;
             case BALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "BALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"B","GETVALUE_");
+                return;
             case CALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "CALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"C","GETVALUE_");
+                return;
             case SALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SALOAD",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addValueReadInsn(mv,"S","GETVALUE_");
+                return;
             case IASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IASTORE",
                         "(II)V");
@@ -571,52 +564,68 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case ILOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ILOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             case LLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LLOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"J","GETVALUE_");
                 break;
             case FLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FLOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"F","GETVALUE_");
                 break;
             case DLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DLOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                addValueReadInsn(mv,"D","GETVALUE_");
                 break;
             case ALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ALOAD",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
+                if (!(var==0 && isInit && !isSuperInitCalled))
+                    addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
                 break;
             case ISTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ISTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case LSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LSTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case FSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FSTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case DSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DSTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case ASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ASTORE",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             case RET:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "RET",
                         "(III)V");
+                mv.visitVarInsn(opcode, var);
                 break;
             default:
                 System.err.println("Unknown var instruction opcode "+opcode);
                 System.exit(1);
         }
-        mv.visitVarInsn(opcode, var);
     }
 
     @Override
@@ -633,36 +642,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SIPUSH", "(III)V");
                 break;
             case NEWARRAY:
-                switch (operand) {
-                    case T_INT:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_INT", "(II)V");
-                        break;
-                    case T_BYTE:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_BYTE", "(II)V");
-                        break;
-                    case T_CHAR:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_CHAR", "(II)V");
-                        break;
-                    case T_LONG:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_LONG", "(II)V");
-                        break;
-                    case T_BOOLEAN:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_BOOLEAN", "(II)V");
-                        break;
-                    case T_DOUBLE:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_DOUBLE", "(II)V");
-                        break;
-                    case T_FLOAT:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_FLOAT", "(II)V");
-                        break;
-                    case T_SHORT:
-                        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY_SHORT", "(II)V");
-                        break;
-                    default:
-                        System.err.println("Unknown new array primitive type "+operand);
-                        System.exit(1);
-
-                }
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY", "(II)V");
                 break;
             default:
                 System.err.println("Unknown int instruction opcode "+opcode);
@@ -677,12 +657,12 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitLdcInsn(type);
-        String dottedType = type.replace('/','.');
         switch (opcode) {
             case NEW:
-                addBipushInsn(mv,ClassDepot.instance.nFields(dottedType));
-                addBipushInsn(mv,ClassDepot.instance.nStaticFields(dottedType));
-                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEW", "(IILjava/lang/String;II)V");
+                int cIdx = ClassNames.instance.get(type);
+                addBipushInsn(mv,cIdx);
+
+                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEW", "(IILjava/lang/String;I)V");
                 break;
             case ANEWARRAY:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ANEWARRAY", "(IILjava/lang/String;)V");
@@ -692,6 +672,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 break;
             case INSTANCEOF:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INSTANCEOF", "(IILjava/lang/String;)V");
+                addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             default:
                 System.err.println("Unknown type instruction opcode "+opcode);
@@ -703,45 +684,54 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
     public void visitFieldInsn(int opcode, String owner, String name, String desc) {
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
-
-        String dottedOwner = owner.replace('/','.');
+        int cIdx = ClassNames.instance.get(owner);
+        ObjectInfo tmp = ClassNames.instance.get(cIdx);
+        addBipushInsn(mv,cIdx);
 //        mv.visitLdcInsn(owner);
 //        mv.visitLdcInsn(name);
+//        System.out.println("*************************** Idx ");
         switch (opcode) {
             case GETSTATIC:
-                addBipushInsn(mv,ClassDepot.instance.getStaticFieldIndex(dottedOwner,name));
+                int fIdx = tmp.get(owner,name,true);
+                addBipushInsn(mv,fIdx);
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GETSTATIC",
-                        "(IIILjava/lang/String;)V");
+                        "(IIIILjava/lang/String;)V");
 
+                //System.out.println("Idx "+ ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
-                addValueReadInsn(mv,desc,"GETFIELDORSTATIC_");
+                addValueReadInsn(mv,desc,"GETVALUE_");
                 break;
             case PUTSTATIC:
-                addBipushInsn(mv,ClassDepot.instance.getStaticFieldIndex(dottedOwner,name));
+                fIdx = tmp.get(owner,name,true);
+                addBipushInsn(mv,fIdx);
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "PUTSTATIC",
-                        "(IIILjava/lang/String;)V");
+                        "(IIIILjava/lang/String;)V");
+                //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 break;
             case GETFIELD:
-                addBipushInsn(mv,ClassDepot.instance.getFieldIndex(dottedOwner,name));
+                fIdx = tmp.get(owner,name,false);
+                addBipushInsn(mv,fIdx);
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GETFIELD",
-                        "(IIILjava/lang/String;)V");
+                        "(IIIILjava/lang/String;)V");
+                //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
-                addValueReadInsn(mv,desc,"GETFIELDORSTATIC_");
+                addValueReadInsn(mv,desc,"GETVALUE_");
                 break;
             case PUTFIELD:
-                addBipushInsn(mv,ClassDepot.instance.getFieldIndex(dottedOwner,name));
-                mv.visitLdcInsn(desc);
+                fIdx = tmp.get(owner,name,false);
+                addBipushInsn(mv,fIdx);
                 mv.visitLdcInsn(desc);
 
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "PUTFIELD",
-                        "(IIILjava/lang/String;)V");
+                        "(IIIILjava/lang/String;)V");
+                //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
                 break;
             default:
@@ -753,6 +743,9 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+        if (owner.equals("janala/Main") && name.equals("MakeSymbolic")) {
+            mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "MAKE_SYMBOLIC", "()V");
+        }
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitLdcInsn(owner);
@@ -766,6 +759,9 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case INVOKESPECIAL:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKESPECIAL",
                         "(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+                if (name.equals("<init>")) {
+                    isSuperInitCalled = true;
+                }
                 break;
             case INVOKESTATIC:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKESTATIC",
@@ -788,14 +784,12 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         mv.visitMethodInsn(opcode, owner, name, desc);
         mv.visitJumpInsn(GOTO,end);
         mv.visitLabel(handler);
-
-        //addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
-        //saddBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKEMETHOD_EXCEPTION", "()V");
         mv.visitInsn(ATHROW);
-
         mv.visitLabel(end);
-        addValueReadInsn(mv,desc,"INVOKEMETHOD_");
+        
+        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKEMETHOD_END", "()V");
+        addValueReadInsn(mv,desc,"GETVALUE_");
 
         mv.visitTryCatchBlock(begin,handler,handler,null);
     }
