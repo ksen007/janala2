@@ -15,7 +15,7 @@ public class NonLinear {
         public static void main(String[] args){
             int x, y, z;
 
-            x = 2;
+            x = Main.readInt(0);
             Main.MakeSymbolic(x);
 
             if((x+1)*(x+1)>=6)

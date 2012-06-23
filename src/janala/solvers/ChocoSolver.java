@@ -39,6 +39,7 @@ public class ChocoSolver extends Solver {
     @Override
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
+        this.first = true;
     }
 
     private void initSolver(Constraint c) {
@@ -56,8 +57,8 @@ public class ChocoSolver extends Solver {
     }
 
     public void visitSymbolicInt(SymbolicInt c) {
-        System.out.println(c);
         initSolver(c);
+        System.out.println(c);
         boolean first2 = true;
         IntegerExpressionVariable old = null;
         for ( TIntLongIterator it = c.linear.iterator(); it.hasNext(); ) {
@@ -92,8 +93,8 @@ public class ChocoSolver extends Solver {
     }
 
     public void visitPointerConstraint(PointerConstraint c) {
-        System.out.println(c);
         initSolver(c);
+        System.out.println(c);
         if (c.first>0 && c.second>0) {
             m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],vars[c.second-1]):Choco.not(Choco.eq(vars[c.first-1],vars[c.second-1])));
         } else if (c.first>0) {
@@ -118,10 +119,10 @@ public class ChocoSolver extends Solver {
                         IntDomainVar var = s.getVar(vars[i]);
                         if (var!=null) {
                             out.println(var.getVal());
-                            System.out.println(var.getVal());
+                            //System.out.println(var.getVal());
                         } else {
                             out.println(inputs.get(i).getConcrete());
-                            System.out.println(inputs.get(i).getConcrete());
+                            //System.out.println(inputs.get(i).getConcrete());
                         }
                     }
                     out.close();
@@ -131,6 +132,7 @@ public class ChocoSolver extends Solver {
                 }
                 return true;
             } else {
+                System.out.println("-- Infeasible");
                 return false;
             }
 

@@ -369,12 +369,12 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
         Value peek = currentFrame.peek();
         if (peek == PlaceHolder.instance) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new ObjectValue(100 /*ignored */,inst.v));
         } else if (((ObjectValue)peek).address == -1) {
             if (inst.v == 0) {
-                System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+                //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
                 currentFrame.pop();
                 currentFrame.push(ObjectValue.NULL);
             } else {
@@ -382,7 +382,7 @@ public class ConcreteInterpreter implements IVisitor {
                 objects.put(inst.v,peek);
             }
         } else if (((ObjectValue)peek).address != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             Value tmp = objects.get(inst.v);
             if (tmp!=null) {
@@ -399,7 +399,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != (inst.v?1:0)) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             
             currentFrame.push(new IntValue(inst.v?1:0));
@@ -408,7 +408,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_byte(GETVALUE_byte inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -416,7 +416,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_char(GETVALUE_char inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -424,7 +424,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_double(GETVALUE_double inst) {
         if (currentFrame.peek2()==PlaceHolder.instance || ((DoubleValue)currentFrame.peek2()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
             currentFrame.pop2();
             currentFrame.push2(new DoubleValue(inst.v));
         }
@@ -432,7 +432,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_float(GETVALUE_float inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((FloatValue)currentFrame.peek()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new FloatValue(inst.v));
         }
@@ -440,7 +440,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_int(GETVALUE_int inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -448,7 +448,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_long(GETVALUE_long inst) {
         if (currentFrame.peek2()==PlaceHolder.instance || ((LongValue)currentFrame.peek2()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
             currentFrame.pop2();
             currentFrame.push2(new LongValue(inst.v));
         }
@@ -456,7 +456,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_short(GETVALUE_short inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
+            //System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }

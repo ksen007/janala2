@@ -40,6 +40,7 @@ public class FileLogger extends Thread implements Logger {
             outputStream.writeObject(ClassNames.instance);
             //System.out.println(ClassNames.instance);
             outputStream.close();
+            //Runtime.getRuntime().exec("java -cp lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:out/production/janala/ janala.interpreters.LoadAndExecuteInstructions");
 
         } catch (IOException e) {
             e.printStackTrace();

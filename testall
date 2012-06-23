@@ -1,0 +1,3 @@
+./concolic 4 tests.Testme
+./concolic 2 tests.NonLinear
+./concolic 29 tests.QSort

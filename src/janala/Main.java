@@ -55,8 +55,10 @@ public class Main {
     static public int readInt(int x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Integer.parseInt(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -64,8 +66,10 @@ public class Main {
     static public long readLong(long x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Long.parseLong(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -73,8 +77,10 @@ public class Main {
     static public char readChar(char x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return input.charAt(0);
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -82,8 +88,10 @@ public class Main {
     static public short readShort(short x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Short.parseShort(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -91,8 +99,10 @@ public class Main {
     static public byte readByte(byte x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Byte.parseByte(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -100,8 +110,10 @@ public class Main {
     static public float readFloat(float x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Float.parseFloat(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -109,16 +121,21 @@ public class Main {
     static public double readDouble(double x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Double.parseDouble(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
 
     static public String readString(String x) {
         if (index < inputs.size()) {
-            return inputs.get(index++);
+            String input = inputs.get(index++);
+            System.out.println(input);
+            return input;
         } else {
+            System.out.println(x);
             return x;
         }
     }
@@ -126,8 +143,10 @@ public class Main {
     static public int readObject(int x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
+            System.out.println(input);
             return Integer.parseInt(input);
         } else {
+            System.out.println(x);
             return x;
         }
     }
