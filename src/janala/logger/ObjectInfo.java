@@ -4,6 +4,7 @@
 
 package janala.logger;
 
+import janala.interpreters.ClassDepot;
 import janala.interpreters.PlaceHolder;
 import janala.interpreters.Value;
 

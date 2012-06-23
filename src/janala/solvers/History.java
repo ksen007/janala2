@@ -35,7 +35,10 @@ public class History {
 
         try {
             inputStream = new ObjectInputStream(new FileInputStream(Config.history));
-            ret.history = (ArrayList<BranchElement>)inputStream.readObject();
+            Object tmp = inputStream.readObject();
+            if (tmp instanceof ArrayList) {
+                ret.history = (ArrayList)tmp;
+            }
         } catch (Exception e) {
         } finally {
             try {

@@ -4,6 +4,8 @@
 
 package janala.logger;
 
+import janala.interpreters.ClassDepot;
+
 import java.io.Serializable;
 
 /**

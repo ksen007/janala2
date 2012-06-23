@@ -23,9 +23,9 @@ public class Testme {
     }
 
     public static void main(String[] args){
-        int x = 22;
+        int x = Main.readInt(22);
         Main.MakeSymbolic(x);
-        int y = 11;
+        int y = Main.readInt(11);
         Main.MakeSymbolic(y);
         testme(x,y);
     }

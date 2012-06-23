@@ -2,7 +2,7 @@
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
 
-package janala.logger;
+package janala.interpreters;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
