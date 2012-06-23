@@ -12,6 +12,11 @@ package janala.interpreters;
 public class DoubleValue extends Value{
     double concrete;
 
+    @Override
+    public Object getConcrete() {
+        return concrete;
+    }
+
     public DoubleValue(double concrete) {
         this.concrete = concrete;
     }

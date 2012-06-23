@@ -78,11 +78,11 @@ public class History {
         index++;
     }
 
-    public void solveAndSave() {
+    public void solveAndSave(ArrayList<Object> inputs) {
         for (int i=index-1; i>=0; i--) {
             BranchElement current = history.get(i);
             if (!current.done && current.pathConstraintIndex != -1) {
-                if (solveAt(current.pathConstraintIndex)) {
+                if (solveAt(current.pathConstraintIndex,inputs)) {
                     writeHistory(i);
                     return;
                 }
@@ -91,7 +91,8 @@ public class History {
         removeHistory();
     }
 
-    private boolean solveAt(int pathConstraintIndex) {
+    private boolean solveAt(int pathConstraintIndex, ArrayList<Object> inputs) {
+        solver.setInputs(inputs);
         for (int i=pathConstraintIndex; i>=0; i--) {
             pathConstraint.get(i).accept(solver);
         }

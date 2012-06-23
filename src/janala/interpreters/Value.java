@@ -13,4 +13,8 @@ public class Value {
     public void MAKE_SYMBOLIC(int symbol) {
 
     }
+
+    public Object getConcrete() {
+        return null;
+    }
 }

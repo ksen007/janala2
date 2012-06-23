@@ -13,6 +13,7 @@ import janala.solvers.ChocoSolver;
 import janala.solvers.History;
 import org.objectweb.asm.Type;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 /**
@@ -27,6 +28,7 @@ public class ConcreteInterpreter implements IVisitor {
     private TIntObjectHashMap<Value> objects;
     private int symbol = 1;
     private History history;
+    private ArrayList<Object> inputs;
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
@@ -34,10 +36,11 @@ public class ConcreteInterpreter implements IVisitor {
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
         history = History.readHistory(new ChocoSolver());
+        inputs = new ArrayList<Object>();
     }
 
     public void endExecution() {
-        history.solveAndSave();
+        history.solveAndSave(inputs);
     }
 
     public void visitAALOAD(AALOAD inst) {
@@ -1069,8 +1072,10 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
         if (currentFrame.peek()==PlaceHolder.instance) {
             currentFrame.peek2().MAKE_SYMBOLIC(symbol++);
+            inputs.add(currentFrame.peek2());
         } else {
             currentFrame.peek().MAKE_SYMBOLIC(symbol++);
+            inputs.add(currentFrame.peek());
         }
     }
 

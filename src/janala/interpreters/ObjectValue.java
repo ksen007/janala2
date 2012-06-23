@@ -15,6 +15,11 @@ public class ObjectValue extends Value {
     int symbolic;
     int address; // address 0 is null, address -1 is uninitialized address
 
+    @Override
+    public Object getConcrete() {
+        return address;
+    }
+
     public ObjectValue(int nFields) {
         concrete = new Value[nFields];
         address = -1;

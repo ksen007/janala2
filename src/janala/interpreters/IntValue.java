@@ -15,6 +15,11 @@ public class IntValue extends Value {
     final static public IntValue TRUE = new IntValue(1);
     final static public IntValue FALSE = new IntValue(0);
 
+    @Override
+    public Object getConcrete() {
+        return concrete;
+    }
+
     public IntValue(int i) {
         concrete = i;
         symbolic = null;

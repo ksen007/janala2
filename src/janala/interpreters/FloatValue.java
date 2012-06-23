@@ -12,6 +12,11 @@ package janala.interpreters;
 public class FloatValue extends Value{
     float concrete;
 
+    @Override
+    public Object getConcrete() {
+        return concrete;
+    }
+
     public FloatValue(float concrete) {
         this.concrete = concrete;
     }

@@ -12,16 +12,17 @@ import gnu.trove.map.hash.TIntLongHashMap;
 import java.io.PrintStream;
 
 public class SymbolicInt extends Constraint {
-    private TIntLongHashMap linear;
-    private long constant;
+    public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};
+
+    public COMPARISON_OPS op;
+    public TIntLongHashMap linear;
+    public long constant;
 
     @Override
     public void accept(ConstraintVisitor v) {
         v.visitSymbolicInt(this);
     }
 
-    public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};
-    private COMPARISON_OPS op;
 
     public boolean equals(Object o) {
         if (this == o)

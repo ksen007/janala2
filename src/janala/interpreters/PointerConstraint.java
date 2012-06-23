@@ -10,9 +10,9 @@ package janala.interpreters;
  * Time: 5:59 PM
  */
 public class PointerConstraint extends Constraint {
-    int first;
-    int second;
-    boolean isEqual;
+    public int first;
+    public int second;
+    public boolean isEqual;
 
     public PointerConstraint(int first, int second, boolean equal) {
         this.first = first;

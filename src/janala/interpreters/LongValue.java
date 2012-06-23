@@ -13,6 +13,11 @@ public class LongValue extends Value {
     SymbolicInt symbolic;
     long concrete;
 
+    @Override
+    public Object getConcrete() {
+        return concrete;
+    }
+
     public LongValue(long concrete) {
         this.concrete = concrete;
         symbolic = null;
