@@ -16,7 +16,7 @@ import java.security.ProtectionDomain;
 public class SnoopInstructionTransformer implements ClassFileTransformer {
 
 	public static void premain(String agentArgs, Instrumentation inst) {
-        System.out.println("calling premain");
+        //System.out.println("calling premain");
 		inst.addTransformer(new SnoopInstructionTransformer());
 	}
 
@@ -33,13 +33,13 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
                 && !cname.startsWith("sun/reflect")
                 && !cname.startsWith("com/apple/java")
                 && !cname.startsWith("java/lang")) {
-            System.out.println(">>>>>>>>>>>>>>> transform "+cname);
+            //System.out.println(">>>>>>>>>>>>>>> transform "+cname);
             ClassReader cr = new ClassReader(cbuf);
             ClassWriter cw = new ClassWriter(cr, 0);
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
 //            ClassVisitor cv = new SnoopInstructionClassAdapter(new TraceClassVisitor(cw,new PrintWriter( System.out )));
             cr.accept(cv, 0);
-            System.out.println("<<<<<<<<<<<<<<< end transform "+cname);
+            //System.out.println("<<<<<<<<<<<<<<< end transform "+cname);
             return cw.toByteArray();
         } else {
             //System.out.println("--------------- skipping "+cname);

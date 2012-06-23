@@ -28,7 +28,7 @@ public class ConcreteInterpreter implements IVisitor {
     private TIntObjectHashMap<Value> objects;
     private int symbol = 1;
     private History history;
-    private ArrayList<Object> inputs;
+    private ArrayList<Value> inputs;
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
@@ -36,7 +36,7 @@ public class ConcreteInterpreter implements IVisitor {
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
         history = History.readHistory(new ChocoSolver());
-        inputs = new ArrayList<Object>();
+        inputs = new ArrayList<Value>();
     }
 
     public void endExecution() {
@@ -371,7 +371,7 @@ public class ConcreteInterpreter implements IVisitor {
         if (peek == PlaceHolder.instance) {
             System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
-            currentFrame.push(new ObjectValue(-1,inst.v));
+            currentFrame.push(new ObjectValue(100 /*ignored */,inst.v));
         } else if (((ObjectValue)peek).address == -1) {
             if (inst.v == 0) {
                 System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
@@ -390,7 +390,7 @@ public class ConcreteInterpreter implements IVisitor {
             } else if (inst.v==0) {
                 currentFrame.push(ObjectValue.NULL);
             } else {
-                currentFrame.push(tmp = new ObjectValue(-1,inst.v));
+                currentFrame.push(tmp = new ObjectValue(100,inst.v));
                 objects.put(inst.v,tmp);
             }
         }

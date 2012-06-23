@@ -10,10 +10,13 @@ import choco.cp.solver.CPSolver;
 import choco.kernel.model.variables.integer.IntegerConstantVariable;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import choco.kernel.model.variables.integer.IntegerVariable;
+import choco.kernel.solver.variables.integer.IntDomainVar;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
+import janala.interpreters.Constraint;
 import janala.interpreters.PointerConstraint;
 import janala.interpreters.SymbolicInt;
+import janala.interpreters.Value;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -29,16 +32,16 @@ import static janala.interpreters.SymbolicInt.COMPARISON_OPS;
  */
 public class ChocoSolver extends Solver {
     boolean first = true;
-    ArrayList<Object> inputs;
+    ArrayList<Value> inputs;
     IntegerVariable[] vars;
     CPModel m;
 
     @Override
-    public void setInputs(ArrayList<Object> inputs) {
+    public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
     }
 
-    public void visitSymbolicInt(SymbolicInt c) {
+    private void initSolver(Constraint c) {
         if (first) {
             first = false;
             this.m = new CPModel();
@@ -46,10 +49,15 @@ public class ChocoSolver extends Solver {
             vars = new IntegerVariable[len];
             for(int i=0; i<len; i++) {
                 vars[i] = Choco.makeIntVar("x"+i);
+                //m.addVariable(vars[i]);
             }
             c.not();
         }
+    }
+
+    public void visitSymbolicInt(SymbolicInt c) {
         System.out.println(c);
+        initSolver(c);
         boolean first2 = true;
         IntegerExpressionVariable old = null;
         for ( TIntLongIterator it = c.linear.iterator(); it.hasNext(); ) {
@@ -85,6 +93,14 @@ public class ChocoSolver extends Solver {
 
     public void visitPointerConstraint(PointerConstraint c) {
         System.out.println(c);
+        initSolver(c);
+        if (c.first>0 && c.second>0) {
+            m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],vars[c.second-1]):Choco.not(Choco.eq(vars[c.first-1],vars[c.second-1])));
+        } else if (c.first>0) {
+            m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],c.second):Choco.not(Choco.eq(vars[c.first-1],c.second)));
+        } else if (c.second>0) {
+            m.addConstraint(c.isEqual?Choco.eq(vars[c.second-1],c.first):Choco.not(Choco.eq(vars[c.second-1],c.first)));
+        }
     }
 
     @Override
@@ -99,7 +115,14 @@ public class ChocoSolver extends Solver {
                             new BufferedOutputStream(
                                     new FileOutputStream(Config.inputs)));
                     for(int i=0; i<vars.length; i++) {
-                        out.println(s.getVar(vars[i]).getVal());
+                        IntDomainVar var = s.getVar(vars[i]);
+                        if (var!=null) {
+                            out.println(var.getVal());
+                            System.out.println(var.getVal());
+                        } else {
+                            out.println(inputs.get(i).getConcrete());
+                            System.out.println(inputs.get(i).getConcrete());
+                        }
                     }
                     out.close();
                 } catch (Exception e) {

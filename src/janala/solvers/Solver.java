@@ -5,6 +5,7 @@
 package janala.solvers;
 
 import janala.interpreters.ConstraintVisitor;
+import janala.interpreters.Value;
 
 import java.util.ArrayList;
 
@@ -15,5 +16,5 @@ import java.util.ArrayList;
  */
 public abstract class Solver implements ConstraintVisitor {
     public abstract boolean solve();
-    public abstract void setInputs(ArrayList<Object> inputs);
+    public abstract void setInputs(ArrayList<Value> inputs);
 }

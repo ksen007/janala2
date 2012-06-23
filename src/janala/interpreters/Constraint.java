@@ -11,4 +11,5 @@ package janala.interpreters;
  */
 public abstract class Constraint {
     public abstract void accept(ConstraintVisitor v);
+    public abstract void not();
 }

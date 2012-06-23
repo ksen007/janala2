@@ -25,12 +25,19 @@ public class Struct {
     }
 
     public static void main(String[] args) {
-        Struct s = new Struct();
-        Main.MakeSymbolic(s);
-        s.x = 5;
-        Main.MakeSymbolic(s.x);
-        int y = 2;
+        int y = Main.readInt(0);
         Main.MakeSymbolic(y);
+        Struct s;
+        int isNull = Main.readObject(0);
+        if (isNull==0) {
+            s = null;
+            Main.MakeSymbolic(s);
+        } else {
+            s = new Struct();
+            Main.MakeSymbolic(s);
+            s.x = Main.readInt(0);
+            Main.MakeSymbolic(s.x);
+        }
         testme(s,y);
     }
 }

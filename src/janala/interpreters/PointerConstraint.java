@@ -20,6 +20,10 @@ public class PointerConstraint extends Constraint {
         isEqual = equal;
     }
 
+    public void not() {
+        isEqual = !isEqual;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -7,6 +7,7 @@ package janala.solvers;
 import janala.config.Config;
 import janala.interpreters.Constraint;
 import janala.interpreters.ConstraintAndResult;
+import janala.interpreters.Value;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class History {
         index++;
     }
 
-    public void solveAndSave(ArrayList<Object> inputs) {
+    public void solveAndSave(ArrayList<Value> inputs) {
         for (int i=index-1; i>=0; i--) {
             BranchElement current = history.get(i);
             if (!current.done && current.pathConstraintIndex != -1) {
@@ -91,7 +92,7 @@ public class History {
         removeHistory();
     }
 
-    private boolean solveAt(int pathConstraintIndex, ArrayList<Object> inputs) {
+    private boolean solveAt(int pathConstraintIndex, ArrayList<Value> inputs) {
         solver.setInputs(inputs);
         for (int i=pathConstraintIndex; i>=0; i--) {
             pathConstraint.get(i).accept(solver);
@@ -102,6 +103,7 @@ public class History {
     private void removeHistory() {
         File f = new File(Config.history);
         f.delete();
+        System.out.println("Done with search");
     }
 
     private void writeHistory(int i) {
