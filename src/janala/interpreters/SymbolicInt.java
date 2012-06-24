@@ -275,24 +275,4 @@ public class SymbolicInt extends Constraint {
         out.print(") 0)");
     }
 
-    public int[] getSymbols() {
-        return linear.keys();
-    }
-
-    public long[] getCoeffs() {
-        return linear.values();
-    }
-
-    public COMPARISON_OPS getOp() {
-        return op;
-    }
-
-    public int getSize() {
-        return linear.size();
-    }
-
-    public double getConstant() {
-        return (double) constant;
-    }
-
 }
