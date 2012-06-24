@@ -1,3 +1,5 @@
 ./concolic 4 tests.Testme
-./concolic 2 tests.NonLinear
+./concolic 3 tests.NonLinear
+./concolic 3 tests.BoolTest
+./concolic 5 tests.BoolTest2
 ./concolic 29 tests.QSort

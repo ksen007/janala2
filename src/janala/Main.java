@@ -107,6 +107,18 @@ public class Main {
         }
     }
 
+    static public boolean readBool(boolean x) {
+        if (index < inputs.size()) {
+            String input = inputs.get(index++);
+            boolean ret = Integer.parseInt(input)!=0;
+            System.out.println(ret);
+            return ret;
+        } else {
+            System.out.println(x);
+            return x;
+        }
+    }
+
     static public float readFloat(float x) {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
