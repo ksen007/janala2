@@ -16,7 +16,9 @@ public class StringEquals {
         String s = "Hello";
         Main.MakeSymbolic(s);
 
-        if (s.equals("World")) {
+        boolean b = s.equals("World");
+        boolean c = b && b;
+        if (c) {
             System.out.println("Hello world");
         } else {
             System.out.println("else");

@@ -30,13 +30,12 @@ import static janala.interpreters.SymbolicInt.COMPARISON_OPS;
  * Date: 6/22/12
  * Time: 4:34 PM
  */
-public class ChocoSolver extends Solver {
+public class ChocoSolver implements Solver {
     boolean first = true;
     ArrayList<Value> inputs;
     IntegerVariable[] vars;
     CPModel m;
 
-    @Override
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
         this.first = true;
@@ -104,7 +103,6 @@ public class ChocoSolver extends Solver {
         }
     }
 
-    @Override
     public boolean solve() {
         if (m!=null) {
             CPSolver s = new CPSolver();

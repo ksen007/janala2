@@ -230,10 +230,10 @@ public class SymbolicInt extends Constraint {
     public void print(PrintStream out) {
         out.print("(");
         if (op == COMPARISON_OPS.EQ) {
-            out.print("==");
+            out.print("=");
         } else
         if (op == COMPARISON_OPS.NE) {
-            out.print("!=");
+            out.print("/=");
         } else
         if (op == COMPARISON_OPS.LE) {
             out.print("<=");

@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Date: 6/22/12
  * Time: 4:42 PM
  */
-public abstract class Solver implements ConstraintVisitor {
-    public abstract boolean solve();
-    public abstract void setInputs(ArrayList<Value> inputs);
+public interface Solver extends ConstraintVisitor {
+    public boolean solve();
+    public void setInputs(ArrayList<Value> inputs);
 }
