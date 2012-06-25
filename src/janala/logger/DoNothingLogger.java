@@ -697,4 +697,8 @@ public class DoNothingLogger implements Logger {
         
     }
 
+    public void SPECIAL(int i) {
+        
+    }
+
 }

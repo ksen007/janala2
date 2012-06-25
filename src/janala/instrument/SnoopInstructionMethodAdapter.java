@@ -119,6 +119,11 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         
     }
 
+    private void addSpecialInsn(MethodVisitor mv, int val) {
+        addBipushInsn(mv, val);
+        mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SPECIAL", "(I)V");
+    }
+
     @Override
     public void visitInsn(int opcode) {
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
@@ -191,82 +196,106 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"I","GETVALUE_");
                 return;
             case LALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"J","GETVALUE_");
                 return;
             case FALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"F","GETVALUE_");
                 return;
             case DALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"D","GETVALUE_");
                 return;
             case AALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "AALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
                 return;
             case BALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "BALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"B","GETVALUE_");
                 return;
             case CALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "CALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"C","GETVALUE_");
                 return;
             case SALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SALOAD",
                         "(II)V");
                 mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"S","GETVALUE_");
                 return;
             case IASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case LASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case FASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case DASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case AASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "AASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case BASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "BASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case CASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "CASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case SASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "SASTORE",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case POP:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "POP", "(II)V");
                 break;
@@ -352,11 +381,15 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case IDIV:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IDIV",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case LDIV:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LDIV",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case FDIV:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FDIV",
                         "(II)V");
@@ -368,11 +401,15 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case IREM:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IREM",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case LREM:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LREM",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case FREM:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FREM",
                         "(II)V");
@@ -535,7 +572,9 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case ARRAYLENGTH:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ARRAYLENGTH",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case ATHROW:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ATHROW",
                         "(II)V");
@@ -543,11 +582,15 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case MONITORENTER:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "MONITORENTER",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             case MONITOREXIT:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "MONITOREXIT",
                         "(II)V");
-                break;
+                mv.visitInsn(opcode);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             default:
                 System.err.println("Unknown instruction opcode "+opcode);
                 System.exit(1);
@@ -565,30 +608,35 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ILOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             case LLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LLOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"J","GETVALUE_");
                 break;
             case FLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FLOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"F","GETVALUE_");
                 break;
             case DLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DLOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"D","GETVALUE_");
                 break;
             case ALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ALOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 if (!(var==0 && isInit && !isSuperInitCalled))
                     addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
                 break;
@@ -596,31 +644,37 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ISTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case LSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LSTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case FSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FSTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case DSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DSTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case ASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ASTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case RET:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "RET",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             default:
                 System.err.println("Unknown var instruction opcode "+opcode);
@@ -643,7 +697,9 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 break;
             case NEWARRAY:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEWARRAY", "(II)V");
-                break;
+                mv.visitIntInsn(opcode, operand);
+                addSpecialInsn(mv,0); // for non-exceptional path
+                return;
             default:
                 System.err.println("Unknown int instruction opcode "+opcode);
                 System.exit(1);
@@ -651,9 +707,37 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         mv.visitIntInsn(opcode, operand);
     }
 
+//    @Override
+//    public void visitTypeInsn(int opcode, String type) {
+//        mv.visitTypeInsn(opcode, type);
+//        addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
+//        addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
+//        mv.visitLdcInsn(type);
+//        switch (opcode) {
+//            case NEW:
+//                int cIdx = ClassNames.instance.get(type);
+//                addBipushInsn(mv,cIdx);
+//
+//                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEW", "(IILjava/lang/String;I)V");
+//                break;
+//            case ANEWARRAY:
+//                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ANEWARRAY", "(IILjava/lang/String;)V");
+//                break;
+//            case CHECKCAST:
+//                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "CHECKCAST", "(IILjava/lang/String;)V");
+//                break;
+//            case INSTANCEOF:
+//                mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INSTANCEOF", "(IILjava/lang/String;)V");
+//                addValueReadInsn(mv,"I","GETVALUE_");
+//                break;
+//            default:
+//                System.err.println("Unknown type instruction opcode "+opcode);
+//                System.exit(1);
+//        }
+//    }
+
     @Override
     public void visitTypeInsn(int opcode, String type) {
-        mv.visitTypeInsn(opcode, type);
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         mv.visitLdcInsn(type);
@@ -661,17 +745,24 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
             case NEW:
                 int cIdx = ClassNames.instance.get(type);
                 addBipushInsn(mv,cIdx);
-
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "NEW", "(IILjava/lang/String;I)V");
+                mv.visitTypeInsn(opcode, type);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case ANEWARRAY:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ANEWARRAY", "(IILjava/lang/String;)V");
+                mv.visitTypeInsn(opcode, type);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case CHECKCAST:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "CHECKCAST", "(IILjava/lang/String;)V");
+                mv.visitTypeInsn(opcode, type);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case INSTANCEOF:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INSTANCEOF", "(IILjava/lang/String;)V");
+                mv.visitTypeInsn(opcode, type);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             default:
@@ -680,6 +771,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         }
     }
 
+
     @Override
     public void visitFieldInsn(int opcode, String owner, String name, String desc) {
         addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid());
@@ -687,9 +779,6 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         int cIdx = ClassNames.instance.get(owner);
         ObjectInfo tmp = ClassNames.instance.get(cIdx);
         addBipushInsn(mv,cIdx);
-//        mv.visitLdcInsn(owner);
-//        mv.visitLdcInsn(name);
-//        System.out.println("*************************** Idx ");
         switch (opcode) {
             case GETSTATIC:
                 int fIdx = tmp.get(owner,name,true);
@@ -701,6 +790,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
                 //System.out.println("Idx "+ ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,desc,"GETVALUE_");
                 break;
             case PUTSTATIC:
@@ -712,6 +802,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                         "(IIIILjava/lang/String;)V");
                 //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case GETFIELD:
                 fIdx = tmp.get(owner,name,false);
@@ -722,6 +813,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                         "(IIIILjava/lang/String;)V");
                 //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,desc,"GETVALUE_");
                 break;
             case PUTFIELD:
@@ -733,6 +825,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                         "(IIIILjava/lang/String;)V");
                 //System.out.println("Idx "+ClassDepot.instance.getStaticFieldIndex(owner.replace('/','.'),name));
                 mv.visitFieldInsn(opcode, owner, name, desc);
+                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             default:
                 System.err.println("Unknown field access opcode "+opcode);
@@ -802,64 +895,97 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         switch (opcode) {
             case IFEQ:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFEQ", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IFNE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFNE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IFLT:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFLT", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IFGE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFGE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IFGT:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFGT", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IFLE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFLE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPEQ:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ICMPEQ", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPNE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ICMPNE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPLT:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ICMPLT", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPGE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ICMPGE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPGT:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ICMPGT", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPLE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ICMPLE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ACMPEQ:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ACMPEQ", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ACMPNE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IF_ACMPNE", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case GOTO:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "GOTO", "(III)V");
+                mv.visitJumpInsn(opcode, label);
                 break;
             case JSR:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "JSR", "(III)V");
+                mv.visitJumpInsn(opcode, label);
                 break;
             case IFNULL:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFNULL", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             case IFNONNULL:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "IFNONNULL", "(III)V");
+                mv.visitJumpInsn(opcode, label);
+                addSpecialInsn(mv,1); // for true path
                 break;
             default:
                 System.err.println("Unknown jump opcode "+opcode);
                 System.exit(1);
         }
 
-        mv.visitJumpInsn(opcode, label);
     }
 
     @Override
@@ -951,6 +1077,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv, dims);
         mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "MULTIANEWARRAY", "(IILjava/lang/String;I)V");
         mv.visitMultiANewArrayInsn(desc, dims);
+        addSpecialInsn(mv,0); // for non-exceptional path
     }
 
     @Override

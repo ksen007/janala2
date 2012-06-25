@@ -703,4 +703,8 @@ public class PrintInterpreter implements IVisitor {
     public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
         System.out.println(inst);
     }
+
+    public void visitSPECIAL(SPECIAL inst) {
+        System.out.println(inst);
+    }
 }

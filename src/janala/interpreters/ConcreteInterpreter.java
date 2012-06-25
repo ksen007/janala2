@@ -5,11 +5,11 @@
 package janala.interpreters;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import janala.config.Config;
 import janala.logger.ClassNames;
 import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
 import janala.logger.inst.*;
+import janala.solvers.ChocoSolver;
 import janala.solvers.History;
 import org.objectweb.asm.Type;
 
@@ -35,7 +35,7 @@ public class ConcreteInterpreter implements IVisitor {
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
-        history = History.readHistory(Config.solver);
+        history = History.readHistory(new ChocoSolver());
         inputs = new ArrayList<Value>();
     }
 
@@ -1077,6 +1077,10 @@ public class ConcreteInterpreter implements IVisitor {
             currentFrame.peek().MAKE_SYMBOLIC(symbol++);
             inputs.add(currentFrame.peek());
         }
+    }
+
+    public void visitSPECIAL(SPECIAL inst) {
+        
     }
 
     public void visitMULTIANEWARRAY(MULTIANEWARRAY inst) {

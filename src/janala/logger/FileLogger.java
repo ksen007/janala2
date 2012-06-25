@@ -749,5 +749,9 @@ log(new NEW(iid, mid, type, cIdx) );
         log (new MAKE_SYMBOLIC());
     }
 
+    public void SPECIAL(int i) {
+        log(new SPECIAL(i));
+    }
+
 
 }

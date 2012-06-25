@@ -350,4 +350,6 @@ public interface Logger {
     public void INVOKEMETHOD_END();
 
     public void MAKE_SYMBOLIC();
+
+    public void SPECIAL(int i);
 }

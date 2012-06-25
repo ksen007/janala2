@@ -685,6 +685,11 @@ public class DJVM {
         intp.INVOKEMETHOD_END();
     }
 
+    public static void SPECIAL(int i) {
+        intp.SPECIAL(i);
+    }
+
+
     public static void MAKE_SYMBOLIC() {
         intp.MAKE_SYMBOLIC();
     }

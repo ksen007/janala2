@@ -716,4 +716,8 @@ public class PrintLogger implements Logger {
     public void MAKE_SYMBOLIC() {
         System.out.println("MAKE_SYMBOLIC");
     }
+
+    public void SPECIAL(int i) {
+        System.out.println("SPECIAL i="+i);
+    }
 }
