@@ -29,6 +29,7 @@ public class ConcreteInterpreter implements IVisitor {
     private int symbol = 1;
     private History history;
     private ArrayList<Value> inputs;
+    private Instruction next;
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
@@ -1081,6 +1082,10 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitSPECIAL(SPECIAL inst) {
         
+    }
+
+    public void setNext(Instruction next) {
+        this.next = next;
     }
 
     public void visitMULTIANEWARRAY(MULTIANEWARRAY inst) {

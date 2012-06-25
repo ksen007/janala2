@@ -707,4 +707,8 @@ public class PrintInterpreter implements IVisitor {
     public void visitSPECIAL(SPECIAL inst) {
         System.out.println(inst);
     }
+
+    public void setNext(Instruction next) {
+        
+    }
 }

@@ -349,4 +349,6 @@ public interface IVisitor {
     public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst);
 
     public void visitSPECIAL(SPECIAL inst);
+
+    public void setNext(Instruction next);
 }

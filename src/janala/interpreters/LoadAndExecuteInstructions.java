@@ -20,6 +20,17 @@ import java.io.ObjectInputStream;
  * Time: 12:22 PM
  */
 public class LoadAndExecuteInstructions {
+    private static Instruction readInst(ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
+        Instruction inst;
+
+        try {
+            inst  = (Instruction)inputStream.readObject();
+        } catch (EOFException e) {
+            inst = null;
+        }
+        return inst;
+    }
+
     public static void main(String[] args) {
         ObjectInputStream inputStream = null;
 
@@ -32,14 +43,18 @@ public class LoadAndExecuteInstructions {
 
             intp = new ConcreteInterpreter(cnames);
             inputStream = new ObjectInputStream(new FileInputStream(Config.traceFileName));
-            Instruction inst;
-            while((inst  = (Instruction)inputStream.readObject())!=null) {
+
+            Instruction inst, next;
+            inst=readInst(inputStream);
+            next=readInst(inputStream);
+            while(inst !=null) {
+                intp.setNext(next);
                 inst.visit(intp);
+                inst = next;
+                next=readInst(inputStream);
             }
-            inputStream.close();
-        } catch (EOFException e) {
             ((ConcreteInterpreter)intp).endExecution();
-            System.out.println("Read all instructions");
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
