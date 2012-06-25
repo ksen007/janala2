@@ -10,7 +10,7 @@ package janala.logger.inst;
  * Time: 10:44 AM
  */
 public class SPECIAL extends Instruction {
-    int i;
+    public int i;
 
     public SPECIAL(int i) {
         super(-1, -1);

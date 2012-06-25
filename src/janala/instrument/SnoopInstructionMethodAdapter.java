@@ -608,35 +608,30 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ILOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"I","GETVALUE_");
                 break;
             case LLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LLOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"J","GETVALUE_");
                 break;
             case FLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FLOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"F","GETVALUE_");
                 break;
             case DLOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DLOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 addValueReadInsn(mv,"D","GETVALUE_");
                 break;
             case ALOAD:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ALOAD",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 if (!(var==0 && isInit && !isSuperInitCalled))
                     addValueReadInsn(mv,"Ljava/lang/Object;","GETVALUE_");
                 break;
@@ -644,37 +639,31 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ISTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case LSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LSTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case FSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "FSTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case DSTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "DSTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case ASTORE:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "ASTORE",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             case RET:
                 mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "RET",
                         "(III)V");
                 mv.visitVarInsn(opcode, var);
-                addSpecialInsn(mv,0); // for non-exceptional path
                 break;
             default:
                 System.err.println("Unknown var instruction opcode "+opcode);

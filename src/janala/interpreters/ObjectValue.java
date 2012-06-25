@@ -73,32 +73,18 @@ public class ObjectValue extends Value {
         }
     }
 
-    public Value getField(int fieldId, Frame currentFrame) {
-        try {
-            if (address==0) throw new NullPointerException("User NullPointerException");
-            if (concrete==null) return PlaceHolder.instance;
-            Value v = concrete[fieldId];
-            if (v==null) return PlaceHolder.instance;
-            else return v;
-        } catch (Exception e) {
-            System.err.println("User Exception in getField");
-            e.printStackTrace();
-            currentFrame.clear();
-            return PlaceHolder.instance;
-        }
+    public Value getField(int fieldId) {
+        if (address==0) throw new NullPointerException("User NullPointerException");
+        if (concrete==null) return PlaceHolder.instance;
+        Value v = concrete[fieldId];
+        if (v==null) return PlaceHolder.instance;
+        else return v;
     }
 
-    public void setField(int fieldId, Value value, Frame currentFrame) {
-        try {
-            if (address==0) throw new NullPointerException("User NullPointerException");
-            if (concrete!=null)
-                concrete[fieldId] = value;
-        } catch (Exception e) {
-            System.err.println("User Exception in getField");
-            e.printStackTrace();
-            currentFrame.clear();
-            currentFrame.push(PlaceHolder.instance);
-        }
+    public void setField(int fieldId, Value value) {
+        if (address==0) throw new NullPointerException("User NullPointerException");
+        if (concrete!=null)
+            concrete[fieldId] = value;
     }
 
     public void setAddress(int address) {

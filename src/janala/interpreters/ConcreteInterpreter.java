@@ -40,21 +40,48 @@ public class ConcreteInterpreter implements IVisitor {
         inputs = new ArrayList<Value>();
     }
 
+    private void checkAndSetException() {
+        if (!(next instanceof SPECIAL) || ((SPECIAL)next).i!=0) {
+            currentFrame.clear();
+            currentFrame.push(PlaceHolder.instance);
+        }
+    }
+
+    private void checkAndSetBranch(ConstraintAndResult cr) {
+        cr.result = false;
+        if (next instanceof SPECIAL) {
+            if (((SPECIAL)next).i==1) {
+                cr.result = true;
+            }
+        }
+    }
+
     public void endExecution() {
         history.solveAndSave(inputs);
     }
 
+
     public void visitAALOAD(AALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitAASTORE(AASTORE inst) {
-        Value value = currentFrame.pop();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
@@ -66,9 +93,14 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitANEWARRAY(ANEWARRAY inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue tmp = new ObjectValue(i1.concrete);
-        currentFrame.push(tmp);
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue tmp = new ObjectValue(i1.concrete);
+            currentFrame.push(tmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitARETURN(ARETURN inst) {
@@ -76,8 +108,13 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(new IntValue(ref.concrete.length));
+        try {
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(new IntValue(ref.concrete.length));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitASTORE(ASTORE inst) {
@@ -85,21 +122,32 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitATHROW(ATHROW inst) {
-        // keep the stack unchanged
-//        throw new RuntimeException("Unimplemented instruction "+inst);
+        Value top = currentFrame.peek();
+        currentFrame.clear();
+        currentFrame.push(top);
     }
 
     public void visitBALOAD(BALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitBASTORE(BASTORE inst) {
-        Value value = currentFrame.pop();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitBIPUSH(BIPUSH inst) {
@@ -107,22 +155,30 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitCALOAD(CALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitCASTORE(CASTORE inst) {
-        Value value = currentFrame.pop();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitCHECKCAST(CHECKCAST inst) {
-        // do nothing
-        // stack remains unchanged
-//        throw new RuntimeException("Unimplemented instruction "+inst);
+        checkAndSetException();
     }
 
     public void visitD2F(D2F inst) {
@@ -147,16 +203,26 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitDALOAD(DALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push2(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push2(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitDASTORE(DASTORE inst) {
-        Value value = currentFrame.pop2();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop2();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitDCMPG(DCMPG inst) {
@@ -269,16 +335,26 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitFALOAD(FALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitFASTORE(FASTORE inst) {
-        Value value = currentFrame.pop();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitFCMPG(FCMPG inst) {
@@ -347,24 +423,35 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitGETFIELD(GETFIELD inst) {
-        ObjectInfo oi = cnames.get(inst.cIdx);
-        FieldInfo fi = oi.get(inst.fIdx,false);
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
-            currentFrame.push2(ref.getField(fi.fieldId,currentFrame));
-        } else {
-            currentFrame.push(ref.getField(fi.fieldId,currentFrame));
+        try {
+            ObjectInfo oi = cnames.get(inst.cIdx);
+            FieldInfo fi = oi.get(inst.fIdx,false);
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+                currentFrame.push2(ref.getField(fi.fieldId));
+            } else {
+                currentFrame.push(ref.getField(fi.fieldId));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        checkAndSetException();
     }
 
     public void visitGETSTATIC(GETSTATIC inst) {
-        ObjectInfo oi = cnames.get(inst.cIdx);
-        FieldInfo fi = oi.get(inst.fIdx,true);
-        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
-            currentFrame.push2(oi.getStaticField(fi.fieldId));
-        } else {
-            currentFrame.push(oi.getStaticField(fi.fieldId));
+        try {
+            ObjectInfo oi = cnames.get(inst.cIdx);
+            FieldInfo fi = oi.get(inst.fIdx,true);
+            if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+                currentFrame.push2(oi.getStaticField(fi.fieldId));
+            } else {
+                currentFrame.push(oi.getStaticField(fi.fieldId));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        checkAndSetException();
     }
 
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
@@ -506,9 +593,14 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIALOAD(IALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitIAND(IAND inst) {
@@ -518,10 +610,15 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIASTORE(IASTORE inst) {
-        Value value = currentFrame.pop();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitICONST_0(ICONST_0 inst) {
@@ -553,21 +650,20 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIDIV(IDIV inst) {
-        IntValue i2 = (IntValue)currentFrame.pop();
-        IntValue i1 = (IntValue)currentFrame.pop();
         try {
+            IntValue i2 = (IntValue)currentFrame.pop();
+            IntValue i1 = (IntValue)currentFrame.pop();
             currentFrame.push(i1.IDIV(i2));
         } catch (Exception e) {
-            System.err.println("User Exception in IDIV");
             e.printStackTrace();
-            currentFrame.clear();
-            currentFrame.push(PlaceHolder.instance);
         }
+        checkAndSetException();
     }
 
     public void visitIFEQ(IFEQ inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFEQ();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -575,6 +671,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFGE(IFGE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFGE();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -582,6 +679,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFGT(IFGT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFGT();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -589,6 +687,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFLE(IFLE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFLE();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -596,6 +695,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFLT(IFLT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFLT();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -603,6 +703,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFNE(IFNE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFNE();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -610,6 +711,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFNONNULL(IFNONNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IFNONNULL();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -617,6 +719,7 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitIFNULL(IFNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IFNULL();
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -625,6 +728,7 @@ public class ConcreteInterpreter implements IVisitor {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IF_ACMPEQ(o2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -633,6 +737,7 @@ public class ConcreteInterpreter implements IVisitor {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IF_ACMPNE(o2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -641,6 +746,7 @@ public class ConcreteInterpreter implements IVisitor {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPEQ(i2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -649,6 +755,7 @@ public class ConcreteInterpreter implements IVisitor {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPGE(i2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -657,6 +764,7 @@ public class ConcreteInterpreter implements IVisitor {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPGT(i2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -665,6 +773,7 @@ public class ConcreteInterpreter implements IVisitor {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPLE(i2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -673,6 +782,7 @@ public class ConcreteInterpreter implements IVisitor {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPLT(i2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -681,6 +791,7 @@ public class ConcreteInterpreter implements IVisitor {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPNE(i2);
+        checkAndSetBranch(result);
         history.checkAndSetBranch(result);
 //        System.out.println(result);
     }
@@ -706,8 +817,13 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitINSTANCEOF(INSTANCEOF inst) {
-        currentFrame.pop();
-        currentFrame.push(new IntValue(1)); // could be wrong boolean value
+        try {
+            currentFrame.pop();
+            currentFrame.push(new IntValue(1)); // could be wrong boolean value
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     private void setArgumentsAndNewFrame(String desc, boolean isInstance) {
@@ -769,9 +885,14 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitIREM(IREM inst) {
-        IntValue i2 = (IntValue)currentFrame.pop();
-        IntValue i1 = (IntValue)currentFrame.pop();
-        currentFrame.push(i1.IREM(i2));
+        try {
+            IntValue i2 = (IntValue)currentFrame.pop();
+            IntValue i1 = (IntValue)currentFrame.pop();
+            currentFrame.push(i1.IREM(i2));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitIRETURN(IRETURN inst) {
@@ -837,9 +958,14 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLALOAD(LALOAD inst) {
+        try {
         IntValue i1 = (IntValue)currentFrame.pop();
         ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push2(ref.getField(i1.concrete,currentFrame));
+        currentFrame.push2(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitLAND(LAND inst) {
@@ -849,10 +975,15 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLASTORE(LASTORE inst) {
-        Value value = currentFrame.pop2();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop2();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitLCMP(LCMP inst) {
@@ -890,16 +1021,14 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLDIV(LDIV inst) {
-        LongValue i2 = (LongValue)currentFrame.pop2();
-        LongValue i1 = (LongValue)currentFrame.pop2();
         try {
+            LongValue i2 = (LongValue)currentFrame.pop2();
+            LongValue i1 = (LongValue)currentFrame.pop2();
             currentFrame.push2(i1.LDIV(i2));
         } catch (Exception e) {
-            System.err.println("User Exception in LDIV");
             e.printStackTrace();
-            currentFrame.clear();
-            currentFrame.push(PlaceHolder.instance);
         }
+        checkAndSetException();
     }
 
     public void visitLLOAD(LLOAD inst) {
@@ -924,9 +1053,14 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLREM(LREM inst) {
-        LongValue i2 = (LongValue)currentFrame.pop2();
-        LongValue i1 = (LongValue)currentFrame.pop2();
-        currentFrame.push2(i1.LREM(i2));
+        try {
+            LongValue i2 = (LongValue)currentFrame.pop2();
+            LongValue i1 = (LongValue)currentFrame.pop2();
+            currentFrame.push2(i1.LREM(i2));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitLRETURN(LRETURN inst) {
@@ -968,22 +1102,33 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitMONITORENTER(MONITORENTER inst) {
-//        throw new RuntimeException("Unimplemented instruction "+inst);
+        checkAndSetException();
     }
 
     public void visitMONITOREXIT(MONITOREXIT inst) {
-//        throw new RuntimeException("Unimplemented instruction "+inst);
+        checkAndSetException();
     }
 
     public void visitNEW(NEW inst) {
-        ObjectInfo oi = cnames.get(inst.cIdx);
-        currentFrame.push(new ObjectValue(oi.nFields));
+        try {
+            ObjectInfo oi = cnames.get(inst.cIdx);
+            currentFrame.push(new ObjectValue(oi.nFields));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
+
     }
 
     public void visitNEWARRAY(NEWARRAY inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue tmp = new ObjectValue(i1.concrete);
-        currentFrame.push(tmp);
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue tmp = new ObjectValue(i1.concrete);
+            currentFrame.push(tmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitNOP(NOP inst) {
@@ -998,28 +1143,38 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitPUTFIELD(PUTFIELD inst) {
-        ObjectInfo oi = cnames.get(inst.cIdx);
-        FieldInfo fi = oi.get(inst.fIdx,false);
-        Value value;
-        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
-            value = currentFrame.pop2();
-        } else {
-            value = currentFrame.pop();
+        try {
+            ObjectInfo oi = cnames.get(inst.cIdx);
+            FieldInfo fi = oi.get(inst.fIdx,false);
+            Value value;
+            if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+                value = currentFrame.pop2();
+            } else {
+                value = currentFrame.pop();
+            }
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(fi.fieldId,value);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(fi.fieldId,value,currentFrame);
+        checkAndSetException();
     }
 
     public void visitPUTSTATIC(PUTSTATIC inst) {
-        ObjectInfo oi = cnames.get(inst.cIdx);
-        FieldInfo fi = oi.get(inst.fIdx,true);
-        Value value;
-        if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
-            value = currentFrame.pop2();
-        } else {
-            value = currentFrame.pop();
+        try {
+            ObjectInfo oi = cnames.get(inst.cIdx);
+            FieldInfo fi = oi.get(inst.fIdx,true);
+            Value value;
+            if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+                value = currentFrame.pop2();
+            } else {
+                value = currentFrame.pop();
+            }
+            oi.setField(fi.fieldId,value);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        oi.setField(fi.fieldId,value);
+        checkAndSetException();
     }
 
     public void visitRET(RET inst) {
@@ -1030,16 +1185,26 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitSALOAD(SALOAD inst) {
-        IntValue i1 = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        currentFrame.push(ref.getField(i1.concrete,currentFrame));
+        try {
+            IntValue i1 = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            currentFrame.push(ref.getField(i1.concrete));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitSASTORE(SASTORE inst) {
-        Value value = currentFrame.pop();
-        IntValue i = (IntValue)currentFrame.pop();
-        ObjectValue ref = (ObjectValue)currentFrame.pop();
-        ref.setField(i.concrete,value,currentFrame);
+        try {
+            Value value = currentFrame.pop();
+            IntValue i = (IntValue)currentFrame.pop();
+            ObjectValue ref = (ObjectValue)currentFrame.pop();
+            ref.setField(i.concrete,value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        checkAndSetException();
     }
 
     public void visitSIPUSH(SIPUSH inst) {
