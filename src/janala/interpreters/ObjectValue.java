@@ -12,7 +12,6 @@ package janala.interpreters;
 public class ObjectValue extends Value {
     final public static ObjectValue NULL = new ObjectValue(0,0);
     Value[] concrete;
-    int symbolic; // if symbolic then >0, otherwise 0 for null and -1 for non-null
     int address; // address 0 is null, address -1 is uninitialized address
 
     @Override
@@ -23,54 +22,33 @@ public class ObjectValue extends Value {
     public ObjectValue(int nFields) {
         concrete = new Value[nFields];
         address = -1;
-        symbolic = -1;
     }
 
     public ObjectValue(int i, int v) {
         concrete = null;
         address = v;
-        symbolic = (address==0?0:-1);
-    }
-
-    public void MAKE_SYMBOLIC(int symbol) {
-        symbolic = symbol;
+//        symbolic = (address==0?0:-1);
     }
 
 
     public ConstraintAndResult IF_ACMPEQ(ObjectValue o2) {
         boolean result = this==o2;
-        if (symbolic>0 || o2.symbolic>0) {
-            return new ConstraintAndResult(new PointerConstraint(symbolic,o2.symbolic,result),result);
-        } else {
-            return new ConstraintAndResult(null,result);
-        }
+        return new ConstraintAndResult(null,result);
     }
 
     public ConstraintAndResult IF_ACMPNE(ObjectValue o2) {
         boolean result = this!=o2;
-        if (symbolic>0 || o2.symbolic>0) {
-            return new ConstraintAndResult(new PointerConstraint(symbolic,o2.symbolic,!result),result);
-        } else {
-            return new ConstraintAndResult(null,result);
-        }
+        return new ConstraintAndResult(null,result);
     }
 
     public ConstraintAndResult IFNULL() {
         boolean result = this.address==0;
-        if (symbolic>0) {
-            return new ConstraintAndResult(new PointerConstraint(symbolic,0,result),result);
-        } else {
-            return new ConstraintAndResult(null,result);
-        }
+        return new ConstraintAndResult(null,result);
     }
 
     public ConstraintAndResult IFNONNULL() {
         boolean result = this.address!=0;
-        if (symbolic>0) {
-            return new ConstraintAndResult(new PointerConstraint(symbolic,0,!result),result);
-        } else {
-            return new ConstraintAndResult(null,result);
-        }
+        return new ConstraintAndResult(null,result);
     }
 
     public Value getField(int fieldId) {

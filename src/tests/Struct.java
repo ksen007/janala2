@@ -28,16 +28,9 @@ public class Struct {
         int y = Main.readInt(0);
         Main.MakeSymbolic(y);
         Struct s;
-        int isNull = Main.readObject(0);
-        if (isNull==0) {
-            s = null;
-            Main.MakeSymbolic(s);
-        } else {
-            s = new Struct();
-            Main.MakeSymbolic(s);
-            s.x = Main.readInt(0);
-            Main.MakeSymbolic(s.x);
-        }
+        s = new Struct();
+        s.x = Main.readInt(0);
+        Main.MakeSymbolic(s.x);
         testme(s,y);
     }
 }

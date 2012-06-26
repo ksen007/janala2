@@ -8,7 +8,6 @@ import choco.cp.model.CPModel;
 import choco.kernel.model.variables.integer.IntegerVariable;
 import janala.config.Config;
 import janala.interpreters.Constraint;
-import janala.interpreters.PointerConstraint;
 import janala.interpreters.SymbolicInt;
 import janala.interpreters.Value;
 
@@ -48,11 +47,11 @@ public class YicesSolver implements Solver {
         constraints.add(c);
     }
 
-    public void visitPointerConstraint(PointerConstraint c) {
-        initSolver(c);
-        System.out.println(c);
-        constraints.add(c);
-    }
+//    public void visitPointerConstraint(PointerConstraint c) {
+//        initSolver(c);
+//        System.out.println(c);
+//        constraints.add(c);
+//    }
 
     public boolean solve() {
         try {

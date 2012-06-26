@@ -14,7 +14,6 @@ import choco.kernel.solver.variables.integer.IntDomainVar;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.Constraint;
-import janala.interpreters.PointerConstraint;
 import janala.interpreters.SymbolicInt;
 import janala.interpreters.Value;
 
@@ -91,17 +90,17 @@ public class ChocoSolver implements Solver {
 
     }
 
-    public void visitPointerConstraint(PointerConstraint c) {
-        initSolver(c);
-        System.out.println(c);
-        if (c.first>0 && c.second>0) {
-            m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],vars[c.second-1]):Choco.not(Choco.eq(vars[c.first-1],vars[c.second-1])));
-        } else if (c.first>0) {
-            m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],c.second):Choco.not(Choco.eq(vars[c.first-1],c.second)));
-        } else if (c.second>0) {
-            m.addConstraint(c.isEqual?Choco.eq(vars[c.second-1],c.first):Choco.not(Choco.eq(vars[c.second-1],c.first)));
-        }
-    }
+//    public void visitPointerConstraint(PointerConstraint c) {
+//        initSolver(c);
+//        System.out.println(c);
+//        if (c.first>0 && c.second>0) {
+//            m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],vars[c.second-1]):Choco.not(Choco.eq(vars[c.first-1],vars[c.second-1])));
+//        } else if (c.first>0) {
+//            m.addConstraint(c.isEqual?Choco.eq(vars[c.first-1],c.second):Choco.not(Choco.eq(vars[c.first-1],c.second)));
+//        } else if (c.second>0) {
+//            m.addConstraint(c.isEqual?Choco.eq(vars[c.second-1],c.first):Choco.not(Choco.eq(vars[c.second-1],c.first)));
+//        }
+//    }
 
     public boolean solve() {
         if (m!=null) {

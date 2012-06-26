@@ -13,7 +13,7 @@ import janala.Main;
  */
 public class StringEquals {
     public static void main(String[] args) {
-        String s = "Hello";
+        String s = Main.readString("Hello");
         Main.MakeSymbolic(s);
 
         boolean b = s.equals("World");

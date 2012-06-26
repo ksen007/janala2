@@ -21,7 +21,7 @@ public class Main {
     public static void MakeSymbolic(byte x) {    }
     public static void MakeSymbolic(short x) {    }
     public static void MakeSymbolic(boolean x) {    }
-    public static void MakeSymbolic(Object x) {    }
+    public static void MakeSymbolic(String x) {    }
 
 
     private static ArrayList<String> inputs;
@@ -152,14 +152,4 @@ public class Main {
         }
     }
 
-    static public int readObject(int x) {
-        if (index < inputs.size()) {
-            String input = inputs.get(index++);
-            System.out.println(input);
-            return Integer.parseInt(input);
-        } else {
-            System.out.println(x);
-            return x;
-        }
-    }
 }
