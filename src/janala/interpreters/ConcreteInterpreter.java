@@ -9,8 +9,8 @@ import janala.logger.ClassNames;
 import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
 import janala.logger.inst.*;
+import janala.solvers.ChocoSolver;
 import janala.solvers.History;
-import janala.solvers.YicesSolver;
 import org.objectweb.asm.Type;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ConcreteInterpreter implements IVisitor {
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
-        history = History.readHistory(new YicesSolver());
+        history = History.readHistory(new ChocoSolver());
         inputs = new ArrayList<Value>();
     }
 
