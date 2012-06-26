@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CLASSPATH=out/production/janala
 iter=$1
 YOURPGM=$2
 
@@ -12,8 +13,8 @@ i=1
 while [ $i -le $iter ]
 do
 	echo "[Input $i]"
-    java -javaagent:lib/iagent.jar  -cp lib/asm-all-3.3.1.jar:out/test/janala/:out/production/janala/ -ea $YOURPGM
-    java -cp lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:out/production/janala/ -ea janala.interpreters.LoadAndExecuteInstructions
+    java -javaagent:lib/iagent.jar  -cp $CLASSPATH:lib/asm-all-3.3.1.jar:lib/iagent.jar -ea $YOURPGM
+    java -cp $CLASSPATH:lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:lib/iagent.jar -ea janala.interpreters.LoadAndExecuteInstructions
 	if  [ -e "history" ]
 	then
 		echo -n ""
