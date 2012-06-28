@@ -9,6 +9,7 @@ import choco.kernel.model.variables.integer.IntegerVariable;
 import janala.config.Config;
 import janala.interpreters.Constraint;
 import janala.interpreters.SymbolicInt;
+import janala.interpreters.SymbolicString;
 import janala.interpreters.Value;
 
 import java.io.*;
@@ -45,6 +46,10 @@ public class YicesSolver implements Solver {
         initSolver(c);
         System.out.println(c);
         constraints.add(c);
+    }
+
+    public void visitSymboliString(SymbolicString c) {
+        
     }
 
 //    public void visitPointerConstraint(PointerConstraint c) {

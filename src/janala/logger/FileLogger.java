@@ -74,7 +74,7 @@ public class FileLogger extends Thread implements Logger {
     }
 
     public void LDC(int iid, int mid, String c) {
-        log(new LDC_String( iid, mid, c) );
+        log(new LDC_String( iid, mid, c, System.identityHashCode(c)) );
     }
 
     public void IINC(int iid, int mid, int var, int increment) {
@@ -706,7 +706,8 @@ log(new NEW(iid, mid, type, cIdx) );
     }
 
     public void GETVALUE_Object (Object v) {
-        log(new GETVALUE_Object (System.identityHashCode(v)) );
+        boolean isString = v instanceof String;
+        log(new GETVALUE_Object (System.identityHashCode(v), isString?((String)v):null, isString));
     }
 
     public void GETVALUE_boolean (boolean v) {

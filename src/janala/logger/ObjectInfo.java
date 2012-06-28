@@ -30,7 +30,7 @@ public class ObjectInfo implements Serializable {
     public int nFields;
     public Value[] statics;
 
-    String className;
+    public String className;
 
     public ObjectInfo(String className) {
         this.className = className.replace('/','.');

@@ -15,6 +15,7 @@ import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.Constraint;
 import janala.interpreters.SymbolicInt;
+import janala.interpreters.SymbolicString;
 import janala.interpreters.Value;
 
 import java.io.BufferedOutputStream;
@@ -88,6 +89,10 @@ public class ChocoSolver implements Solver {
             m.addConstraint(Choco.gt(old, 0));
         }
 
+    }
+
+    public void visitSymboliString(SymbolicString c) {
+        
     }
 
 //    public void visitPointerConstraint(PointerConstraint c) {

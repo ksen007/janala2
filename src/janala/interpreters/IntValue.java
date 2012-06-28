@@ -11,6 +11,7 @@ package janala.interpreters;
  */
 public class IntValue extends Value {
     SymbolicInt symbolic;
+    SymbolicString ss;
     int concrete;
     final static public IntValue TRUE = new IntValue(1);
     final static public IntValue FALSE = new IntValue(0);
@@ -30,6 +31,12 @@ public class IntValue extends Value {
         this.symbolic = symbolic;
     }
 
+    public IntValue(int i, SymbolicString ss) {
+        this.concrete = i;
+        this.ss = ss;
+    }
+
+
     public void MAKE_SYMBOLIC(int symbol) {
         symbolic = new SymbolicInt(symbol);
     }
@@ -43,24 +50,28 @@ public class IntValue extends Value {
     }
 
     public ConstraintAndResult IFEQ() {
-        if (symbolic==null) {
-            return (concrete==0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
-        } else {
-            boolean result = concrete==0;
+        boolean result = concrete==0;
+        if (symbolic==null && ss == null) {
+            return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
+        } else if (ss==null){
             return new ConstraintAndResult(result?
                     symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ):
                     symbolic.setop(SymbolicInt.COMPARISON_OPS.NE),result);
+        } else {
+            return new ConstraintAndResult(new SymbolicString(ss),result);
         }
     }
 
     public ConstraintAndResult IFNE() {
-        if (symbolic==null) {
+        boolean result = concrete!=0;
+        if (symbolic==null && ss == null) {
             return (concrete!=0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
-        } else {
-            boolean result = concrete!=0;
+        } else if (ss==null){
             return new ConstraintAndResult(result?
                     symbolic.setop(SymbolicInt.COMPARISON_OPS.NE):
                     symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ),result);
+        } else {
+            return new ConstraintAndResult(new SymbolicString(ss),result);
         }
     }
 

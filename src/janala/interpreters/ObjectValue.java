@@ -68,4 +68,8 @@ public class ObjectValue extends Value {
     public void setAddress(int address) {
         this.address = address;
     }
+
+    public Value invokeMethod(String name, Value[] args) {
+        return PlaceHolder.instance;
+    }
 }

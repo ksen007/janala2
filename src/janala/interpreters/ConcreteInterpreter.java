@@ -5,11 +5,11 @@
 package janala.interpreters;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
+import janala.config.Config;
 import janala.logger.ClassNames;
 import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
 import janala.logger.inst.*;
-import janala.solvers.ChocoSolver;
 import janala.solvers.History;
 import org.objectweb.asm.Type;
 
@@ -36,7 +36,7 @@ public class ConcreteInterpreter implements IVisitor {
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
-        history = History.readHistory(new ChocoSolver());
+        history = History.readHistory(Config.getSolver());
         inputs = new ArrayList<Value>();
     }
 
@@ -85,7 +85,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitACONST_NULL(ACONST_NULL inst) {
-        currentFrame.push(new ObjectValue(0,0));
+        currentFrame.push(ObjectValue.NULL);
     }
 
     public void visitALOAD(ALOAD inst) {
@@ -456,10 +456,23 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_Object(GETVALUE_Object inst) {
         Value peek = currentFrame.peek();
-        if (peek == PlaceHolder.instance) {
+        Value tmp;
+        if (peek == PlaceHolder.instance || (((ObjectValue)peek).address != -1 && ((ObjectValue)peek).address != inst.v) ) {
             //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
             currentFrame.pop();
-            currentFrame.push(new ObjectValue(100 /*ignored */,inst.v));
+            tmp = objects.get(inst.v);
+            if (tmp!=null) {
+                currentFrame.push(tmp);
+            } else if (inst.v==0) {
+                currentFrame.push(ObjectValue.NULL);
+            } else {
+                if (inst.isString) {
+                    currentFrame.push(tmp = new StringValue(inst.string,inst.v));
+                } else {
+                    currentFrame.push(tmp = new ObjectValue(100,inst.v));
+                }
+                objects.put(inst.v,tmp);
+            }
         } else if (((ObjectValue)peek).address == -1) {
             if (inst.v == 0) {
                 //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
@@ -468,18 +481,6 @@ public class ConcreteInterpreter implements IVisitor {
             } else {
                 ((ObjectValue)peek).setAddress(inst.v);
                 objects.put(inst.v,peek);
-            }
-        } else if (((ObjectValue)peek).address != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
-            currentFrame.pop();
-            Value tmp = objects.get(inst.v);
-            if (tmp!=null) {
-                currentFrame.push(tmp);
-            } else if (inst.v==0) {
-                currentFrame.push(ObjectValue.NULL);
-            } else {
-                currentFrame.push(tmp = new ObjectValue(100,inst.v));
-                objects.put(inst.v,tmp);
             }
         }
 //        throw new RuntimeException("Unimplemented instruction "+inst);
@@ -826,7 +827,7 @@ public class ConcreteInterpreter implements IVisitor {
         checkAndSetException();
     }
 
-    private void setArgumentsAndNewFrame(String desc, boolean isInstance) {
+    private void setArgumentsAndNewFrame(String desc, String name, boolean isInstance) {
         Type[] types = Type.getArgumentTypes(desc);
         Type retType = Type.getReturnType(desc);
         int nReturnWords;
@@ -848,8 +849,10 @@ public class ConcreteInterpreter implements IVisitor {
                 tmpValues[i] = currentFrame.pop();
             }
         }
+        ObjectValue instance = null;
         if (isInstance) {
-            tmp.addLocal(currentFrame.pop());
+            instance =  (ObjectValue)currentFrame.pop();
+            tmp.addLocal(instance);
         }
         for (int i=0; i<len; i++) {
             if (types[i]==Type.DOUBLE_TYPE || types[i]==Type.LONG_TYPE) {
@@ -860,22 +863,27 @@ public class ConcreteInterpreter implements IVisitor {
         }
         currentFrame = tmp;
 
+        if (next instanceof INVOKEMETHOD_END || next instanceof INVOKEMETHOD_EXCEPTION) {
+            if (isInstance) {
+                currentFrame.ret = instance.invokeMethod(name,tmpValues);
+            }
+        }
     }
 
     public void visitINVOKEINTERFACE(INVOKEINTERFACE inst) {
-        setArgumentsAndNewFrame(inst.desc, true);
+        setArgumentsAndNewFrame(inst.desc, inst.name, true);
     }
 
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
-        setArgumentsAndNewFrame(inst.desc, true);
+        setArgumentsAndNewFrame(inst.desc, inst.name, true);
     }
 
     public void visitINVOKESTATIC(INVOKESTATIC inst) {
-        setArgumentsAndNewFrame(inst.desc, false);
+        setArgumentsAndNewFrame(inst.desc, inst.name, false);
     }
 
     public void visitINVOKEVIRTUAL(INVOKEVIRTUAL inst) {
-        setArgumentsAndNewFrame(inst.desc, true);
+        setArgumentsAndNewFrame(inst.desc, inst.name, true);
     }
 
     public void visitIOR(IOR inst) {
@@ -1001,7 +1009,7 @@ public class ConcreteInterpreter implements IVisitor {
     }
 
     public void visitLDC_String(LDC_String inst) {
-        currentFrame.push(new StringValue(inst.c));
+        currentFrame.push(new StringValue(inst.c, inst.address));
     }
 
     public void visitLDC_double(LDC_double inst) {
@@ -1112,7 +1120,8 @@ public class ConcreteInterpreter implements IVisitor {
     public void visitNEW(NEW inst) {
         try {
             ObjectInfo oi = cnames.get(inst.cIdx);
-            currentFrame.push(new ObjectValue(oi.nFields));
+//            currentFrame.push(new ObjectValue(oi.nFields));
+            currentFrame.push(ObjectFactory.create(oi.nFields,oi.className));
         } catch (Exception e) {
             e.printStackTrace();
         }
