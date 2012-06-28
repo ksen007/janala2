@@ -4,12 +4,10 @@
 
 package janala.solvers;
 
-import choco.cp.model.CPModel;
-import choco.kernel.model.variables.integer.IntegerVariable;
 import janala.config.Config;
 import janala.interpreters.Constraint;
+import janala.interpreters.StringConstants;
 import janala.interpreters.SymbolicInt;
-import janala.interpreters.SymbolicString;
 import janala.interpreters.Value;
 
 import java.io.*;
@@ -25,9 +23,6 @@ public class YicesSolver implements Solver {
     boolean first = true;
     ArrayList<Value> inputs;
     ArrayList<Constraint> constraints;
-
-    IntegerVariable[] vars;
-    CPModel m;
 
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
@@ -46,10 +41,6 @@ public class YicesSolver implements Solver {
         initSolver(c);
         System.out.println(c);
         constraints.add(c);
-    }
-
-    public void visitSymboliString(SymbolicString c) {
-        
     }
 
 //    public void visitPointerConstraint(PointerConstraint c) {
@@ -158,15 +149,18 @@ class InputReader extends Thread {
             int len = inputs.size();
             for(int i=0; i<len; i++) {
                 Long l = soln.get(i+1);
+                Value input = inputs.get(i);
                 if (l!=null) {
-                    out.println(l);
+                    if (input instanceof janala.interpreters.StringValue) {
+                        out.print(StringConstants.instance.get((int)(long)l));
+                    } else {
+                        out.println(l);
+                    }
                 } else {
-                    out.println(inputs.get(i).getConcrete());
+                    out.println(input.getConcrete());
                 }
             }
             out.close();
-
-
         } catch (IOException ioe) {
             ioe.printStackTrace();
             Runtime.getRuntime().halt(1);

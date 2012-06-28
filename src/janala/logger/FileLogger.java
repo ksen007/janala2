@@ -48,7 +48,8 @@ public class FileLogger extends Thread implements Logger {
     }
 
     private void log(Instruction insn) {
-        //System.out.println(insn);
+        if (Config.printTrace)
+            System.out.println(insn);
         try {
             outputStream.writeObject(insn);
         } catch (IOException e) {

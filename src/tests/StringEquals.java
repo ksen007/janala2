@@ -13,13 +13,11 @@ import janala.Main;
  */
 public class StringEquals {
     public static void main(String[] args) {
-        String s = Main.readString("Hello");
+        String s = Main.readString("B");
         Main.MakeSymbolic(s);
 
-        boolean b = s.equals("World");
-        boolean c = b && b;
-        if (c) {
-            System.out.println("Hello world");
+        if (s.equals("A")) {
+            System.out.println("then");
         } else {
             System.out.println("else");
         }

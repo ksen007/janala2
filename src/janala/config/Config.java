@@ -7,6 +7,7 @@ package janala.config;
 import janala.solvers.Solver;
 
 public class Config {
+    public static final boolean printTrace = System.getProperty("janala.printTrace","false").equals("true");
     public static final String analysisClass = System.getProperty("janala.analysisClass","janala/logger/DJVM");
     public static final String traceFileName = System.getProperty("janala.trace","trace");
     public static final String traceAuxFileName = System.getProperty("janala.trace.aux","trace.aux");

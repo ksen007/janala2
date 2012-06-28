@@ -14,8 +14,8 @@ import choco.kernel.solver.variables.integer.IntDomainVar;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.Constraint;
+import janala.interpreters.StringConstants;
 import janala.interpreters.SymbolicInt;
-import janala.interpreters.SymbolicString;
 import janala.interpreters.Value;
 
 import java.io.BufferedOutputStream;
@@ -91,10 +91,6 @@ public class ChocoSolver implements Solver {
 
     }
 
-    public void visitSymboliString(SymbolicString c) {
-        
-    }
-
 //    public void visitPointerConstraint(PointerConstraint c) {
 //        initSolver(c);
 //        System.out.println(c);
@@ -119,12 +115,16 @@ public class ChocoSolver implements Solver {
                                     new FileOutputStream(Config.inputs)));
                     for(int i=0; i<vars.length; i++) {
                         IntDomainVar var = s.getVar(vars[i]);
+
+                        Value input = inputs.get(i);
                         if (var!=null) {
-                            out.println(var.getVal());
-                            //System.out.println(var.getVal());
+                            if (input instanceof janala.interpreters.StringValue) {
+                                out.print(StringConstants.instance.get(var.getVal()));
+                            } else {
+                                out.println(var.getVal());
+                            }
                         } else {
-                            out.println(inputs.get(i).getConcrete());
-                            //System.out.println(inputs.get(i).getConcrete());
+                            out.println(input.getConcrete());
                         }
                     }
                     out.close();

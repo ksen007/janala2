@@ -153,7 +153,13 @@ public class SymbolicInt extends Constraint {
 
     public SymbolicInt setop(COMPARISON_OPS op) {
         SymbolicInt ret = new SymbolicInt(this);
-        ret.op = op;
+        if (ret.op!=COMPARISON_OPS.UN) {
+            if(op==COMPARISON_OPS.EQ) { // (x op 0)==0 is same as !(x op 0)
+                ret.not();
+            }
+        } else {
+            ret.op = op;
+        }
         return ret;
     }
 

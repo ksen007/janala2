@@ -95,7 +95,13 @@ public class LongValue extends Value {
     }
 
     public LongValue LNEG() {
-        return new LongValue(-concrete);
+        if (symbolic==null)
+            return new LongValue(-concrete);
+        else {
+            LongValue ret = new LongValue(-concrete);
+            ret.symbolic = symbolic.subtractFrom(0);
+            return ret;
+        }
     }
 
     public LongValue LSHL(LongValue i) {

@@ -13,8 +13,8 @@ i=1
 while [ $i -le $iter ]
 do
 	echo "[Input $i]"
-    java -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/iagent.jar" -ea $YOURPGM
-    java -Djanala.solver=janala.solvers.ChocoSolver -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:lib/iagent.jar" -ea janala.interpreters.LoadAndExecuteInstructions
+    java -Djanala.printTrace=true -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/iagent.jar" -ea $YOURPGM
+    java -Djanala.solver=janala.solvers.YicesSolver -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:lib/iagent.jar" -ea janala.interpreters.LoadAndExecuteInstructions
 	if  [ -e "history" ]
 	then
 		echo -n ""

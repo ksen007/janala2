@@ -1,3 +1,5 @@
+./concolic 4 tests.StringEquals
+./concolic 4 tests.LongTest
 ./concolic 4 tests.Testme
 ./concolic 3 tests.NonLinear
 ./concolic 3 tests.BoolTest

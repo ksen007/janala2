@@ -11,12 +11,7 @@ package janala.interpreters;
  */
 public class StringValue extends ObjectValue {
     private String string;
-    private SymbolicString symbolic;
-
-    @Override
-    public Object getConcrete() {
-        return concrete;
-    }
+    private SymbolicInt symbolic;
 
     public StringValue(String string, int address) {
         super(100,address);
@@ -24,22 +19,22 @@ public class StringValue extends ObjectValue {
     }
 
     @Override
+    public Object getConcrete() {
+        return string;
+    }
+
+    @Override
     public Value invokeMethod(String name, Value[] args) {
         if (name.equals("equals") && args.length == 1) {
             if (args[0] instanceof StringValue) {
                 StringValue other = (StringValue)args[0];
-                if (symbolic !=null) {
-                    if (string.equals(other.string)) {
-                        return new IntValue(1, symbolic.EQ(other.string));
-                    } else {
-                        return new IntValue(0,symbolic.NE(other.string));
-                    }
-                } else if (other.symbolic != null) {
-                    if (string.equals(other.string)) {
-                        return new IntValue(1,other.symbolic.EQ(string));
-                    } else {
-                        return new IntValue(0,other.symbolic.NE(string));
-                    }
+                boolean result = string.equals(other.string);
+                if (symbolic !=null && other.symbolic !=null) {
+                    return new IntValue(result?1:0,symbolic.subtract(other.symbolic).setop(result? SymbolicInt.COMPARISON_OPS.NE: SymbolicInt.COMPARISON_OPS.EQ));
+                } else if (symbolic != null) {
+                    return new IntValue(result?1:0,symbolic.subtract(StringConstants.instance.get(other.string)).setop(result? SymbolicInt.COMPARISON_OPS.NE: SymbolicInt.COMPARISON_OPS.EQ));
+                } else {
+                    return new IntValue(result?1:0,other.symbolic.subtract(StringConstants.instance.get(string)).setop(result? SymbolicInt.COMPARISON_OPS.NE: SymbolicInt.COMPARISON_OPS.EQ));
                 }
             }
         }
@@ -47,6 +42,6 @@ public class StringValue extends ObjectValue {
     }
 
     public void MAKE_SYMBOLIC(int symbol) {
-        symbolic = new SymbolicString(symbol);
+        symbolic = new SymbolicInt(symbol);
     }
 }
