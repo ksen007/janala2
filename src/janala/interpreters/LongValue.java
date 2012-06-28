@@ -144,7 +144,7 @@ public class LongValue extends Value {
         IntValue ret;
         if (concrete == i2.concrete) {
             ret = new IntValue(0);
-        } else if (i2.concrete > concrete) {
+        } else if (concrete > i2.concrete) {
             ret = new IntValue(1);
         } else {
             ret = new IntValue(-1);
@@ -152,31 +152,31 @@ public class LongValue extends Value {
         if (symbolic==null && i2.symbolic==null) {
             return ret;
         } else if (symbolic!=null && i2.symbolic!=null) {
-            SymbolicInt tmp = symbolic.subtract(i2.symbolic);
-            if (tmp!=null) {
-                if (ret.concrete==0)
-                    ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.EQ);
-                if (ret.concrete==1)
-                    ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.GT);
-                if (ret.concrete==-1)
-                    ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.LT);
-            }
+            ret.symbolic = symbolic.subtract(i2.symbolic);
+//            if (tmp!=null) {
+//                if (ret.concrete==0)
+//                    ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.EQ);
+//                if (ret.concrete==1)
+//                    ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.GT);
+//                if (ret.concrete==-1)
+//                    ret.symbolic = tmp.setop(SymbolicInt.COMPARISON_OPS.LT);
+//            }
             return ret;
         } else if (symbolic!=null) {
             if (ret.concrete==0)
-                ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.EQ);
+                ret.symbolic = symbolic.subtract(i2.concrete);//.setop(SymbolicInt.COMPARISON_OPS.EQ);
             if (ret.concrete==1)
-                ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.GT);
+                ret.symbolic = symbolic.subtract(i2.concrete);//.setop(SymbolicInt.COMPARISON_OPS.GT);
             if (ret.concrete==-1)
-                ret.symbolic = symbolic.subtract(i2.concrete).setop(SymbolicInt.COMPARISON_OPS.LT);
+                ret.symbolic = symbolic.subtract(i2.concrete);//.setop(SymbolicInt.COMPARISON_OPS.LT);
             return ret;
         } else {
             if (ret.concrete==0)
-                ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.EQ);
+                ret.symbolic = i2.symbolic.subtractFrom(concrete);//.setop(SymbolicInt.COMPARISON_OPS.EQ);
             if (ret.concrete==1)
-                ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.GT);
+                ret.symbolic = i2.symbolic.subtractFrom(concrete);//.setop(SymbolicInt.COMPARISON_OPS.GT);
             if (ret.concrete==-1)
-                ret.symbolic = i2.symbolic.subtractFrom(concrete).setop(SymbolicInt.COMPARISON_OPS.LT);
+                ret.symbolic = i2.symbolic.subtractFrom(concrete);//.setop(SymbolicInt.COMPARISON_OPS.LT);
             return ret;
         }
     }

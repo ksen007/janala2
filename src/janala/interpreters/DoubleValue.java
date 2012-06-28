@@ -62,7 +62,7 @@ public class DoubleValue extends Value{
             return new IntValue(-1);
         } else if (concrete == d.concrete) {
             return new IntValue(0);
-        } else if (d.concrete > concrete) {
+        } else if (concrete > d.concrete) {
             return new IntValue(1);
         } else {
             return new IntValue(-1);
@@ -75,7 +75,7 @@ public class DoubleValue extends Value{
             return new IntValue(1);
         } else if (concrete == d.concrete) {
             return new IntValue(0);
-        } else if (d.concrete > concrete) {
+        } else if (concrete > d.concrete) {
             return new IntValue(1);
         } else {
             return new IntValue(-1);

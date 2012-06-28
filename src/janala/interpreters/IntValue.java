@@ -58,6 +58,7 @@ public class IntValue extends Value {
         if (symbolic==null) {
             return (concrete!=0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
+            //System.out.println("result = " + result);
             return new ConstraintAndResult(result?
                     symbolic.setop(SymbolicInt.COMPARISON_OPS.NE):
                     symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ),result);
