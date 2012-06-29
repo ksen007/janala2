@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Author: Koushik Sen (ksen@cs.berkeley.edu)
+  -->
+
+<project basedir="." default="build" name="wise">
+  <property environment="env"/>
+  <property name="debuglevel" value="source,lines,vars"/>
+  <property name="target" value="1.5"/>
+  <property name="source" value="1.5"/>
+
+  <path id="janala.classpath">
+    <pathelement location="out/production/janala"/>
+    <pathelement location="lib/asm-all-3.3.1.jar"/>
+      <pathelement location="lib/choco-solver-2.1.4.jar"/>
+      <pathelement location="lib/trove-3.0.3.jar"/>
+  </path>
+
+  <target name="init" depends="clean">
+    <tstamp/>
+    <mkdir dir="out/production/janala"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="out"/>
+    <delete file="lib/iagent.jar"/>
+  </target>
+
+  <target name="build" depends="build-project,packup"/>
+
+  <target depends="init" name="build-project">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <javac debug="true" debuglevel="${debuglevel}" destdir="out/production/janala"
+           source="${source}" target="${target}" includeantruntime="false">
+      <compilerarg value="-Xlint:deprecated"/>
+      <!-- <compilerarg value="-Xlint:unchecked"/> -->
+      <src path="src"/>
+      <classpath refid="janala.classpath"/>
+    </javac>
+  </target>
+<!--
+rm -rf lib/META-INF lib/iagent.jar
+cd out/production/janala
+jar cmf ../../../Manifest.txt ../../../lib/iagent.jar  janala
+-->
+  <target name="packup" depends="build-project">
+      <delete dir="lib/META-INF"/>
+      <delete file="lib/iagent.jar"/>
+      <jar destfile="lib/iagent.jar"
+       basedir="out/production/janala"
+       manifest="Manifest.txt"/>
+  </target>
+</project>

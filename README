@@ -1,7 +1,15 @@
-This is a concolic unit testing engine for Java programs.  The implementation uses ASM for instrumentation.
+CATG
+----
+
+CATG is a concolic unit testing engine for Java programs.  The implementation uses ASM for instrumentation.
 ASM instrumentation instruments (see janala.instrument.*) class files at runtime and dumps (see janala.logger.*)
 to a file a log of all instructions executed by the program and all values loaded from local stacks and heaps.
 A concolic execution engine (see janala.interpreters.*) then takes the log and performs both symbolic and
 concrete interpretation of the logged instructions.
+
+ant build
+./testall
+
+If you are using cygwin, replace concolic by concolic.cygwin in testall.
 
 
