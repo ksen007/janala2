@@ -26,6 +26,7 @@ public class MyLogger {
         Logger ret = Logger.getLogger(name);
         ret.setUseParentHandlers(false);
         ret.addHandler(handler);
+        ret.setLevel(Level.INFO);
         return ret;
     }
 
@@ -66,7 +67,7 @@ public class MyLogger {
         if (neW.exists() && old.exists()) {
             if (!compareFiles(neW,old)) {
                 System.err.println("**************************************************************************");
-                System.err.println("Test "+name+" failed!!!");
+                System.err.println("************************* Test "+name+" failed!! *************************");
                 System.err.println("**************************************************************************");
             }
         }

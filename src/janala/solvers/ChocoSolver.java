@@ -124,7 +124,7 @@ public class ChocoSolver implements Solver {
                         Value input = inputs.get(i);
                         if (var!=null) {
                             if (input instanceof janala.interpreters.StringValue) {
-                                out.print(StringConstants.instance.get(var.getVal()));
+                                out.println(StringConstants.instance.get(var.getVal()));
                             } else {
                                 out.println(var.getVal());
                             }

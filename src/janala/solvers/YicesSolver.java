@@ -152,7 +152,7 @@ class InputReader extends Thread {
                 if (l!=null) {
                     if (input instanceof janala.interpreters.StringValue) {
                         tester.log(Level.INFO,StringConstants.instance.get((int)(long)l));
-                        out.print(StringConstants.instance.get((int)(long)l));
+                        out.println(StringConstants.instance.get((int)(long)l));
                     } else {
                         tester.log(Level.INFO,l+"");
                         out.println(l);

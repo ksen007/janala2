@@ -1,7 +1,10 @@
 ./concolic 4 tests.StringEquals
+./concolic 4 tests.StringTest2
+./concolic 4 tests.StringTest3
 ./concolic 4 tests.LongTest
 ./concolic 4 tests.Testme
 ./concolic 3 tests.NonLinear
 ./concolic 3 tests.BoolTest
 ./concolic 5 tests.BoolTest2
 ./concolic 29 tests.QSort
+./concolic 29 tests.QSortLong
