@@ -7,6 +7,10 @@ package janala.config;
 import janala.solvers.Solver;
 
 public class Config {
+    public static final String mainClass = System.getProperty("janala.mainClass",null);
+    public static final int iteration = Integer.getInteger("janala.iteration",0);
+    public static final boolean isTest = System.getProperty("janala.isTest","false").equals("true");
+
     public static final boolean printTrace = System.getProperty("janala.printTrace","false").equals("true");
     public static final String analysisClass = System.getProperty("janala.analysisClass","janala/logger/DJVM");
     public static final String traceFileName = System.getProperty("janala.trace","trace");

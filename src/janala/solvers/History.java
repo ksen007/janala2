@@ -26,6 +26,7 @@ public class History {
     private int index;
     private Solver solver;
     private final static Logger logger = MyLogger.getLogger(History.class.getName());
+    private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
     private History(Solver solver) {
         history = new ArrayList<BranchElement>(1024);
@@ -62,6 +63,7 @@ public class History {
         if (index < history.size()) {
             current = history.get(index);
             if (current.branch != result.result) {
+                tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!!");
                 int len = history.size();
                 for (int j=len-1; j>index; j--) {

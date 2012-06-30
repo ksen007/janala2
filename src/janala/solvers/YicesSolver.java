@@ -27,6 +27,7 @@ public class YicesSolver implements Solver {
     ArrayList<Value> inputs;
     ArrayList<Constraint> constraints;
     private final static Logger logger = MyLogger.getLogger(YicesSolver.class.getName());
+    private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
@@ -79,11 +80,11 @@ public class YicesSolver implements Solver {
             proc.destroy();
             return soln.result;
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.log(Level.SEVERE,"",ioe);
             Runtime.getRuntime().halt(1);
             return false;
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            logger.log(Level.SEVERE,"",ie);
             Runtime.getRuntime().halt(1);
             return false;
         }
@@ -102,6 +103,7 @@ class InputReader extends Thread {
     boolean result;
     ArrayList<Value> inputs;
     private final static Logger logger = MyLogger.getLogger(InputReader.class.getName());
+    private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
 
     InputReader(InputStream is, ArrayList<Value> inputs) {
@@ -122,6 +124,7 @@ class InputReader extends Thread {
                             + Config.yicesCommand + ")");
                     Runtime.getRuntime().halt(1);
                 }
+                tester.log(Level.INFO,"-- Infeasible");
                 logger.log(Level.INFO,"-- Infeasible");
                 this.result = false;
                 return;
@@ -148,11 +151,14 @@ class InputReader extends Thread {
                 Value input = inputs.get(i);
                 if (l!=null) {
                     if (input instanceof janala.interpreters.StringValue) {
+                        tester.log(Level.INFO,StringConstants.instance.get((int)(long)l));
                         out.print(StringConstants.instance.get((int)(long)l));
                     } else {
+                        tester.log(Level.INFO,l+"");
                         out.println(l);
                     }
                 } else {
+                    tester.log(Level.INFO,input.getConcrete().toString());
                     out.println(input.getConcrete());
                 }
             }
