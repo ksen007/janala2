@@ -39,7 +39,6 @@
       <compilerarg value="-Xlint:deprecated"/>
       <!-- <compilerarg value="-Xlint:unchecked"/> -->
       <src path="src"/>
-        <src path="benchmarks"/>
       <classpath refid="janala.classpath"/>
     </javac>
   </target>
