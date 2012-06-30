@@ -33,13 +33,13 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
                 && !cname.startsWith("sun/reflect")
                 && !cname.startsWith("com/apple/java")
                 && !cname.startsWith("java/lang")) {
-            //System.out.println(">>>>>>>>>>>>>>> transform "+cname);
+            //System.err.println("((((((((((((((( transform "+cname);
             ClassReader cr = new ClassReader(cbuf);
             ClassWriter cw = new ClassWriter(cr, 0);
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
 //            ClassVisitor cv = new SnoopInstructionClassAdapter(new TraceClassVisitor(cw,new PrintWriter( System.out )));
             cr.accept(cv, 0);
-            //System.out.println("<<<<<<<<<<<<<<< end transform "+cname);
+            //System.err.println(")))))))))))))) end transform "+cname);
             return cw.toByteArray();
         } else {
             //System.out.println("--------------- skipping "+cname);

@@ -26,6 +26,10 @@ public class PrintLogger implements Logger {
         System.out.println("LDC iid="+iid+" mid="+mid+" c="+c);
     }
 
+    public void LDC(int iid, int mid, Object c) {
+        System.out.println("LDC iid="+iid+" mid="+mid+" c="+c);
+    }
+
     public void IINC(int iid, int mid, int var, int increment) {
         System.out.println("IINC iid="+iid+" mid="+mid+" var="+var+" increment="+increment);
     }

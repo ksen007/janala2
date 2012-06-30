@@ -993,8 +993,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         } else if (cst instanceof String) {
             mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LDC", "(IILjava/lang/String;)V");
         } else {
-            System.err.println("Cannot instrument LDC for constant "+cst);
-            System.exit(1);
+            mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "LDC", "(IILjava/lang/Object;)V");
         }
         mv.visitLdcInsn(cst);
     }

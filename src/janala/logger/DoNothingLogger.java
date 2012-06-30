@@ -25,6 +25,10 @@ public class DoNothingLogger implements Logger {
         
     }
 
+    public void LDC(int iid, int mid, Object c) {
+
+    }
+
     public void IINC(int iid, int mid, int var, int increment) {
         
     }

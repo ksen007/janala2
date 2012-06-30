@@ -3,6 +3,10 @@
   ~ Author: Koushik Sen (ksen@cs.berkeley.edu)
   -->
 
+<!--
+  ~ Author: Koushik Sen (ksen@cs.berkeley.edu)
+  -->
+
 <project basedir="." default="build" name="wise">
   <property environment="env"/>
   <property name="debuglevel" value="source,lines,vars"/>
@@ -35,6 +39,7 @@
       <compilerarg value="-Xlint:deprecated"/>
       <!-- <compilerarg value="-Xlint:unchecked"/> -->
       <src path="src"/>
+        <src path="benchmarks"/>
       <classpath refid="janala.classpath"/>
     </javac>
   </target>

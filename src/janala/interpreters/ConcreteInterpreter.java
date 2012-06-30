@@ -1000,6 +1000,18 @@ public class ConcreteInterpreter implements IVisitor {
         currentFrame.push(new StringValue(inst.c, inst.address));
     }
 
+    public void visitLDC_Object(LDC_Object inst) {
+        Value tmp = objects.get(inst.c);
+        if (tmp!=null) {
+            currentFrame.push(tmp);
+        } else if (inst.c==0) {
+            currentFrame.push(ObjectValue.NULL);
+        } else {
+            currentFrame.push(tmp = new ObjectValue(100,inst.c));
+            objects.put(inst.c,tmp);
+        }
+    }
+
     public void visitLDC_double(LDC_double inst) {
         currentFrame.push2(new DoubleValue(inst.c));
     }
@@ -1113,7 +1125,7 @@ public class ConcreteInterpreter implements IVisitor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        checkAndSetException();
+//        checkAndSetException();
 
     }
 
@@ -1125,7 +1137,7 @@ public class ConcreteInterpreter implements IVisitor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        checkAndSetException();
+//        checkAndSetException();
     }
 
     public void visitNOP(NOP inst) {

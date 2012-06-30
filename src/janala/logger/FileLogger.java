@@ -78,6 +78,10 @@ public class FileLogger extends Thread implements Logger {
         log(new LDC_String( iid, mid, c, System.identityHashCode(c)) );
     }
 
+    public void LDC(int iid, int mid, Object c) {
+        log(new LDC_Object( iid, mid, System.identityHashCode(c)) );
+    }
+
     public void IINC(int iid, int mid, int var, int increment) {
         log(new IINC(iid, mid, var, increment) );
     }

@@ -15,6 +15,8 @@ public interface Logger {
 
     public void LDC(int iid, int mid, String c);
 
+    public void LDC(int iid, int mid, Object c);
+
     public void IINC(int iid, int mid, int var, int increment);
 
     public void MULTIANEWARRAY(int iid, int mid, String desc, int dims);
@@ -352,4 +354,5 @@ public interface Logger {
     public void MAKE_SYMBOLIC();
 
     public void SPECIAL(int i);
+
 }

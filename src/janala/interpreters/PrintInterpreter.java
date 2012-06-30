@@ -572,6 +572,10 @@ public class PrintInterpreter implements IVisitor {
         System.out.println(inst);
     }
 
+    public void visitLDC_Object(LDC_Object inst) {
+        System.out.println(inst);
+    }
+
     public void visitLDIV(LDIV inst) {
         System.out.println(inst);
     }

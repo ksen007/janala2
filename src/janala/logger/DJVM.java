@@ -27,6 +27,10 @@ public class DJVM {
         intp.LDC(iid,mid,c);
     }
 
+    public static void LDC(int iid, int mid, Object c) {
+        intp.LDC(iid,mid, c);
+    }
+
     public static void IINC(int iid, int mid, int var, int increment) {
         intp.IINC(iid,mid,var,increment);
     }

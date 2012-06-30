@@ -282,6 +282,8 @@ public interface IVisitor {
 
     public void visitLDC_long(LDC_long inst);
 
+    public void visitLDC_Object(LDC_Object inst);
+
     public void visitLDIV(LDIV inst);
 
     public void visitLLOAD(LLOAD inst);
@@ -351,4 +353,5 @@ public interface IVisitor {
     public void visitSPECIAL(SPECIAL inst);
 
     public void setNext(Instruction next);
+
 }

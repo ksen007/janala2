@@ -14,6 +14,7 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -22,6 +23,8 @@ import java.util.logging.Logger;
  * Time: 12:22 PM
  */
 public class LoadAndExecuteInstructions {
+    private final static Logger logger = MyLogger.getLogger(LoadAndExecuteInstructions.class.getName());
+
     private static Instruction readInst(ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
         Instruction inst;
 
@@ -53,6 +56,7 @@ public class LoadAndExecuteInstructions {
             next=readInst(inputStream);
             while(inst !=null) {
                 intp.setNext(next);
+                logger.log(Level.FINE,"{0}",inst);
                 inst.visit(intp);
                 inst = next;
                 next=readInst(inputStream);
