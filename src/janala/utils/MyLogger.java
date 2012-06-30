@@ -39,7 +39,6 @@ public class MyLogger {
                     handler.setFormatter(new MyFormatter());
                     ret.addHandler(handler);
                 } else {
-                    System.out.println(" ***************** Again *****************");
                     FileHandler handler = new FileHandler("testdata/"+name);
                     handler.setFormatter(new MyFormatter());
                     ret.addHandler(handler);
