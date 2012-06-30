@@ -8,9 +8,12 @@ import janala.config.Config;
 import janala.interpreters.Constraint;
 import janala.interpreters.ConstraintAndResult;
 import janala.interpreters.Value;
+import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -22,6 +25,7 @@ public class History {
     private ArrayList<Constraint> pathConstraint;
     private int index;
     private Solver solver;
+    private final static Logger logger = MyLogger.getLogger(History.class.getName());
 
     private History(Solver solver) {
         history = new ArrayList<BranchElement>(1024);
@@ -47,7 +51,7 @@ public class History {
                     inputStream.close();
                 }
             } catch (IOException ex) {
-                ex.printStackTrace();
+                logger.log(Level.WARNING, "", ex);
             }
         }
         return ret;
@@ -58,7 +62,7 @@ public class History {
         if (index < history.size()) {
             current = history.get(index);
             if (current.branch != result.result) {
-                System.err.println("!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!!");
+                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!!");
                 int len = history.size();
                 for (int j=len-1; j>index; j--) {
                     history.remove(j);
@@ -103,7 +107,7 @@ public class History {
     private void removeHistory() {
         File f = new File(Config.history);
         f.delete();
-        System.out.println("Done with search");
+        logger.log(Level.INFO, "Done with search.");
     }
 
     private void writeHistory(int i) {
@@ -121,7 +125,7 @@ public class History {
             outputStream.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "", e);
             System.exit(1);
         }
 

@@ -9,10 +9,13 @@ import janala.interpreters.Constraint;
 import janala.interpreters.StringConstants;
 import janala.interpreters.SymbolicInt;
 import janala.interpreters.Value;
+import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -23,6 +26,7 @@ public class YicesSolver implements Solver {
     boolean first = true;
     ArrayList<Value> inputs;
     ArrayList<Constraint> constraints;
+    private final static Logger logger = MyLogger.getLogger(YicesSolver.class.getName());
 
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
@@ -39,15 +43,10 @@ public class YicesSolver implements Solver {
 
     public void visitSymbolicInt(SymbolicInt c) {
         initSolver(c);
-        System.out.println(c);
+        logger.log(Level.INFO,"{0}",c);
         constraints.add(c);
     }
 
-//    public void visitPointerConstraint(PointerConstraint c) {
-//        initSolver(c);
-//        System.out.println(c);
-//        constraints.add(c);
-//    }
 
     public boolean solve() {
         try {
@@ -102,6 +101,7 @@ class InputReader extends Thread {
     private InputStream is;
     boolean result;
     ArrayList<Value> inputs;
+    private final static Logger logger = MyLogger.getLogger(InputReader.class.getName());
 
 
     InputReader(InputStream is, ArrayList<Value> inputs) {
@@ -115,18 +115,14 @@ class InputReader extends Thread {
             BufferedReader br = new BufferedReader(isr);
             String line = null;
 
-//            while((line = br.readLine())!=null) {
-//                System.out.println(line);
-//            }
             line = br.readLine();
-//            System.out.println("%%%%%%%%% "+line);
             if (!line.startsWith("sat")) {
                 if (!line.startsWith("unsat")) {
-                    System.err.println("Call to Yices failed (concolic.yices = "
+                    logger.log(Level.SEVERE, "Call to Yices failed (concolic.yices = "
                             + Config.yicesCommand + ")");
                     Runtime.getRuntime().halt(1);
                 }
-                System.out.println("-- Infeasible");
+                logger.log(Level.INFO,"-- Infeasible");
                 this.result = false;
                 return;
             }

@@ -17,11 +17,14 @@ import janala.interpreters.Constraint;
 import janala.interpreters.StringConstants;
 import janala.interpreters.SymbolicInt;
 import janala.interpreters.Value;
+import janala.utils.MyLogger;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static janala.interpreters.SymbolicInt.COMPARISON_OPS;
 
@@ -35,6 +38,8 @@ public class ChocoSolver implements Solver {
     ArrayList<Value> inputs;
     IntegerVariable[] vars;
     CPModel m;
+    private final static Logger logger = MyLogger.getLogger(ChocoSolver.class.getName());
+
 
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
@@ -57,7 +62,7 @@ public class ChocoSolver implements Solver {
 
     public void visitSymbolicInt(SymbolicInt c) {
         initSolver(c);
-        System.out.println(c);
+        logger.log(Level.INFO,"{0}",c);
         boolean first2 = true;
         IntegerExpressionVariable old = null;
         for ( TIntLongIterator it = c.linear.iterator(); it.hasNext(); ) {
@@ -129,12 +134,12 @@ public class ChocoSolver implements Solver {
                     }
                     out.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE,"",e);
                     System.exit(1);
                 }
                 return true;
             } else {
-                System.out.println("-- Infeasible");
+                logger.log(Level.INFO,"-- Infeasible");
                 return false;
             }
 

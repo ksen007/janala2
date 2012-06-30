@@ -4,14 +4,19 @@
 
 package janala.interpreters;
 
+import janala.utils.MyLogger;
+
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClassDepot {
 
     private Map<String,ClassTemplate> templates;
 
     public final static ClassDepot instance = new ClassDepot();
+    private final static Logger logger = MyLogger.getLogger(ClassDepot.class.getName());
 
     private ClassDepot() {
         templates = new TreeMap<String, ClassTemplate>();
@@ -40,7 +45,7 @@ public class ClassDepot {
             ClassTemplate ct = getOrCreateTemplate(cName,clazz);
             return ct.getFieldIndex(field);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE,"",e);
             System.exit(-1);
         }
         return -1;
@@ -52,7 +57,7 @@ public class ClassDepot {
             ClassTemplate ct = getOrCreateTemplate(cName,clazz);
             return ct.getStaticFieldIndex(field);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE,"",e);
             System.exit(-1);
         }
         return -1;
@@ -64,7 +69,7 @@ public class ClassDepot {
             ClassTemplate ct = getOrCreateTemplate(cName,clazz);
             return ct.nFields();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE,"",e);
             System.exit(-1);
         }
         return -1;
@@ -76,7 +81,7 @@ public class ClassDepot {
             ClassTemplate ct = getOrCreateTemplate(cName,clazz);
             return ct.nStaticFields();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE,"",e);
             System.exit(-1);
         }
         return -1;

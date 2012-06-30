@@ -11,10 +11,13 @@ import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
 import janala.logger.inst.*;
 import janala.solvers.History;
+import janala.utils.MyLogger;
 import org.objectweb.asm.Type;
 
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -30,6 +33,7 @@ public class ConcreteInterpreter implements IVisitor {
     private History history;
     private ArrayList<Value> inputs;
     private Instruction next;
+    private final static Logger logger = MyLogger.getLogger(ConcreteInterpreter.class.getName());
 
     public ConcreteInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
@@ -458,7 +462,7 @@ public class ConcreteInterpreter implements IVisitor {
         Value peek = currentFrame.peek();
         Value tmp;
         if (peek == PlaceHolder.instance || (((ObjectValue)peek).address != -1 && ((ObjectValue)peek).address != inst.v) ) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            logger.log(Level.FINE, "** Failed to match " + currentFrame.peek() + " and " + inst.v);
             currentFrame.pop();
             tmp = objects.get(inst.v);
             if (tmp!=null) {
@@ -475,7 +479,7 @@ public class ConcreteInterpreter implements IVisitor {
             }
         } else if (((ObjectValue)peek).address == -1) {
             if (inst.v == 0) {
-                //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+                logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
                 currentFrame.pop();
                 currentFrame.push(ObjectValue.NULL);
             } else {
@@ -488,7 +492,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_boolean(GETVALUE_boolean inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != (inst.v?1:0)) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop();
             
             currentFrame.push(new IntValue(inst.v?1:0));
@@ -497,7 +501,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_byte(GETVALUE_byte inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -505,7 +509,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_char(GETVALUE_char inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -513,7 +517,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_double(GETVALUE_double inst) {
         if (currentFrame.peek2()==PlaceHolder.instance || ((DoubleValue)currentFrame.peek2()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop2();
             currentFrame.push2(new DoubleValue(inst.v));
         }
@@ -521,7 +525,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_float(GETVALUE_float inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((FloatValue)currentFrame.peek()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop();
             currentFrame.push(new FloatValue(inst.v));
         }
@@ -529,7 +533,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_int(GETVALUE_int inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -537,7 +541,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_long(GETVALUE_long inst) {
         if (currentFrame.peek2()==PlaceHolder.instance || ((LongValue)currentFrame.peek2()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop2();
             currentFrame.push2(new LongValue(inst.v));
         }
@@ -545,7 +549,7 @@ public class ConcreteInterpreter implements IVisitor {
 
     public void visitGETVALUE_short(GETVALUE_short inst) {
         if (currentFrame.peek()==PlaceHolder.instance || ((IntValue)currentFrame.peek()).concrete != inst.v) {
-            //System.out.println("** Failed to match "+currentFrame.peek2()+" and "+inst.v);
+            logger.log(Level.FINE,"** Failed to match {0} and "+inst.v, currentFrame.peek());
             currentFrame.pop();
             currentFrame.push(new IntValue(inst.v));
         }
@@ -666,7 +670,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IFEQ();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFGE(IFGE inst) {
@@ -674,7 +677,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IFGE();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFGT(IFGT inst) {
@@ -682,7 +684,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IFGT();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFLE(IFLE inst) {
@@ -690,7 +691,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IFLE();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFLT(IFLT inst) {
@@ -698,7 +698,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IFLT();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFNE(IFNE inst) {
@@ -706,7 +705,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IFNE();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
@@ -714,7 +712,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = o1.IFNONNULL();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIFNULL(IFNULL inst) {
@@ -722,7 +719,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = o1.IFNULL();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
@@ -731,7 +727,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = o1.IF_ACMPEQ(o2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
@@ -740,7 +735,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = o1.IF_ACMPNE(o2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
@@ -749,7 +743,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IF_ICMPEQ(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
@@ -758,7 +751,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IF_ICMPGE(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
@@ -767,7 +759,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IF_ICMPGT(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
@@ -776,7 +767,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IF_ICMPLE(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
@@ -785,7 +775,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IF_ICMPLT(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
@@ -794,7 +783,6 @@ public class ConcreteInterpreter implements IVisitor {
         ConstraintAndResult result = i1.IF_ICMPNE(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result);
-//        System.out.println(result);
     }
 
     public void visitIINC(IINC inst) {
