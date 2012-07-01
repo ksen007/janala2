@@ -16,8 +16,10 @@ import java.util.ArrayList;
  */
 public class Main {
     public static void Assume(boolean b) {
-        if (!b)
+        if (!b) {
             System.out.println("Assumption failed!");
+            System.exit(0);
+        }
     }
 
     public static void MakeSymbolic(int x) {    }
@@ -89,28 +91,6 @@ public class Main {
             boolean ret = Integer.parseInt(input)!=0;
             //System.out.println(ret);
             return ret;
-        } else {
-            //System.out.println(x);
-            return x;
-        }
-    }
-
-    static public float readFloat(float x) {
-        if (index < inputs.size()) {
-            String input = inputs.get(index++);
-            //System.out.println(input);
-            return Float.parseFloat(input);
-        } else {
-            //System.out.println(x);
-            return x;
-        }
-    }
-
-    static public double readDouble(double x) {
-        if (index < inputs.size()) {
-            String input = inputs.get(index++);
-            //System.out.println(input);
-            return Double.parseDouble(input);
         } else {
             //System.out.println(x);
             return x;

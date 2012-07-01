@@ -17,6 +17,7 @@ import java.util.logging.*;
  */
 public class MyLogger {
     private static ConsoleHandler handler = new ConsoleHandler();
+    private static String testDataDir = "testdata/";
 
     static {
         handler.setFormatter(new MyFormatter());
@@ -32,15 +33,16 @@ public class MyLogger {
 
     public static Logger getTestLogger(String name) {
         try {
+            String filename = testDataDir+name;
             Logger ret = Logger.getLogger(name);
             ret.setUseParentHandlers(false);
             if (ret.getHandlers().length==0) {
-                if ((new File("testdata/"+name)).exists()) {
-                    FileHandler handler = new FileHandler("testdata/"+name+".new");
+                if ((new File(filename).exists())) {
+                    FileHandler handler = new FileHandler(filename+".new");
                     handler.setFormatter(new MyFormatter());
                     ret.addHandler(handler);
                 } else {
-                    FileHandler handler = new FileHandler("testdata/"+name);
+                    FileHandler handler = new FileHandler(filename);
                     handler.setFormatter(new MyFormatter());
                     ret.addHandler(handler);
                 }
@@ -60,14 +62,14 @@ public class MyLogger {
                 ((FileHandler)handlers[0]).close();
             }
         }
-        String name = logger.getName();
-        File neW = new File("testdata/"+name+".new");
-        File old = new File("testdata/"+name);
+        String filename = testDataDir+logger.getName();
+        File neW = new File(filename+".new");
+        File old = new File(filename);
 
         if (neW.exists() && old.exists()) {
             if (!compareFiles(neW,old)) {
                 System.err.println("**************************************************************************");
-                System.err.println("************************* Test "+name+" failed!! *************************");
+                System.err.println("************************* Test "+filename+" failed!! *************************");
                 System.err.println("**************************************************************************");
             }
         }

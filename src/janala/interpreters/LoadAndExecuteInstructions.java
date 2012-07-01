@@ -48,7 +48,7 @@ public class LoadAndExecuteInstructions {
             inputStream.close();
             cnames.init();
 
-            intp = new ConcreteInterpreter(cnames);
+            intp = new ConcolicInterpreter(cnames);
             inputStream = new ObjectInputStream(new FileInputStream(Config.traceFileName));
 
             Instruction inst, next;
@@ -61,7 +61,7 @@ public class LoadAndExecuteInstructions {
                 inst = next;
                 next=readInst(inputStream);
             }
-            ((ConcreteInterpreter)intp).endExecution();
+            ((ConcolicInterpreter)intp).endExecution();
             inputStream.close();
             MyLogger.checkLog(tester);
         } catch (IOException e) {

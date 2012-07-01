@@ -1,7 +1,8 @@
- ./concolic 3 tests.BoolFlow
- ./concolic 3 tests.BoolTest
- ./concolic 5 tests.BoolTest2
- ./concolic 4 tests.StringEquals
+./concolic 3 tests.BoolFlow
+./concolic 3 tests.BoolFlow2
+./concolic 3 tests.BoolTest
+./concolic 5 tests.BoolTest2
+./concolic 4 tests.StringEquals
 ./concolic 4 tests.StringTest2
 ./concolic 4 tests.StringTest3
 ./concolic 4 tests.LongTest
@@ -18,3 +19,4 @@
 ./concolic 13 tests.HeapInsertJDK15
 ./concolic 25 tests.QuickSortJDK15
 ./concolic 217 tests.RedBlackTreeSearch
+./concolic 121 tests.SortedListInsert

@@ -5,7 +5,7 @@
 package janala.logger.inst;
 
 public class INVOKESPECIAL extends Instruction {
-    String owner;
+    public String owner;
     public String name;
     public String desc;
 

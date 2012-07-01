@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * Date: 6/17/12
  * Time: 12:12 PM
  */
-public class ConcreteInterpreter implements IVisitor {
+public class ConcolicInterpreter implements IVisitor {
     private Stack<Frame> stack;
     private Frame currentFrame;
     private ClassNames cnames;
@@ -33,9 +33,9 @@ public class ConcreteInterpreter implements IVisitor {
     private History history;
     private ArrayList<Value> inputs;
     private Instruction next;
-    private final static Logger logger = MyLogger.getLogger(ConcreteInterpreter.class.getName());
+    private final static Logger logger = MyLogger.getLogger(ConcolicInterpreter.class.getName());
 
-    public ConcreteInterpreter(ClassNames cnames) {
+    public ConcolicInterpreter(ClassNames cnames) {
         stack = new Stack<Frame>();
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
@@ -81,7 +81,7 @@ public class ConcreteInterpreter implements IVisitor {
             Value value = currentFrame.pop();
             IntValue i = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            ref.setField(i.concrete,value);
+            ref.setField(i.concrete, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -147,7 +147,7 @@ public class ConcreteInterpreter implements IVisitor {
             Value value = currentFrame.pop();
             IntValue i = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            ref.setField(i.concrete,value);
+            ref.setField(i.concrete, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -174,7 +174,7 @@ public class ConcreteInterpreter implements IVisitor {
             Value value = currentFrame.pop();
             IntValue i = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            ref.setField(i.concrete,value);
+            ref.setField(i.concrete, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -222,7 +222,7 @@ public class ConcreteInterpreter implements IVisitor {
             Value value = currentFrame.pop2();
             IntValue i = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            ref.setField(i.concrete,value);
+            ref.setField(i.concrete, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -354,7 +354,7 @@ public class ConcreteInterpreter implements IVisitor {
             Value value = currentFrame.pop();
             IntValue i = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            ref.setField(i.concrete,value);
+            ref.setField(i.concrete, value);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -815,7 +815,7 @@ public class ConcreteInterpreter implements IVisitor {
         checkAndSetException();
     }
 
-    private void setArgumentsAndNewFrame(String desc, String name, boolean isInstance) {
+    private void setArgumentsAndNewFrame(String desc, String owner, String name, boolean isInstance) {
         Type[] types = Type.getArgumentTypes(desc);
         Type retType = Type.getReturnType(desc);
         int nReturnWords;
@@ -854,24 +854,35 @@ public class ConcreteInterpreter implements IVisitor {
         if (next instanceof INVOKEMETHOD_END || next instanceof INVOKEMETHOD_EXCEPTION) {
             if (isInstance) {
                 currentFrame.ret = instance.invokeMethod(name,tmpValues);
+            } else {
+                checkAssumption(owner,name,tmpValues);
+                currentFrame.ret = StaticInvocation.invokeMethod(owner,name,tmpValues);
+            }
+        }
+    }
+
+    private void checkAssumption(String owner, String name, Value[] tmpValues) {
+        if (owner.equals("janala/Main") && name.equals("Assume") && tmpValues.length==1) {
+            if (((IntValue)tmpValues[0]).concrete!=0) {
+                history.setLastBranchDone();
             }
         }
     }
 
     public void visitINVOKEINTERFACE(INVOKEINTERFACE inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.name, true);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true);
     }
 
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.name, true);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true);
     }
 
     public void visitINVOKESTATIC(INVOKESTATIC inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.name, false);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, false);
     }
 
     public void visitINVOKEVIRTUAL(INVOKEVIRTUAL inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.name, true);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true);
     }
 
     public void visitIOR(IOR inst) {

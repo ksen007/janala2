@@ -35,7 +35,7 @@
 
 package tests;
 
-import janala.Main;
+import catg.CATG;
 
 /**
  * @author Jacob Burnim <jburnim@cs.berkeley.edu>
@@ -72,8 +72,7 @@ public class SortedListInsert {
 
         List list = new List();
         for (int i = 0; i < N; i++) {
-            int x = Main.readInt(0);
-            Main.MakeSymbolic(x);
+            int x = CATG.readInt(0);
             list.insert(x);
         }
 
@@ -81,8 +80,7 @@ public class SortedListInsert {
         // final insert operation.  That is, we count branches only
         // from this point forward in the execution.
 
-        int x = Main.readInt(0);
-        Main.MakeSymbolic(x);
+        int x = CATG.readInt(0);
         list.insert(x);
 
     }

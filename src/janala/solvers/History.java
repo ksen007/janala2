@@ -132,4 +132,10 @@ public class History {
         }
 
     }
+
+    public void setLastBranchDone() {
+        if (index>=1 && index-1<history.size()) {
+            history.get(index-1).done = true;
+        }
+    }
 }

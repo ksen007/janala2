@@ -36,6 +36,7 @@
                source="${source}" target="${target}" includeantruntime="false">
             <compilerarg value="-Xlint:deprecated"/>
             <src path="src/janala"/>
+            <src path="src/catg"/>
             <classpath refid="janala.classpath"/>
         </javac>
     </target>
