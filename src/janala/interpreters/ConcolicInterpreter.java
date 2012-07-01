@@ -104,7 +104,7 @@ public class ConcolicInterpreter implements IVisitor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        checkAndSetException();
+//        checkAndSetException();
     }
 
     public void visitARETURN(ARETURN inst) {
@@ -1148,7 +1148,7 @@ public class ConcolicInterpreter implements IVisitor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        checkAndSetException();
+        checkAndSetException();
     }
 
     public void visitNOP(NOP inst) {
@@ -1273,8 +1273,29 @@ public class ConcolicInterpreter implements IVisitor {
         this.next = next;
     }
 
+    private ObjectValue initMultiArray(int[] dims, int idx) {
+        ObjectValue tmp = new ObjectValue(dims[idx]);
+        if (idx<dims.length-1) {
+            for (int i=0; i<dims[idx]; i++) {
+                tmp.concrete[i] = initMultiArray(dims,idx+1);
+            }
+        }
+        return tmp;
+    }
+
     public void visitMULTIANEWARRAY(MULTIANEWARRAY inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        int dims[] = new int[inst.dims];
+        try {
+            for (int i = 0; i < dims.length; i++) {
+                IntValue i1 = (IntValue)currentFrame.pop();
+                dims[dims.length-i-1] = i1.concrete;
+
+            }
+            ObjectValue tmp = initMultiArray(dims,0);
+            currentFrame.push(tmp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void visitLOOKUPSWITCH(LOOKUPSWITCH inst) {

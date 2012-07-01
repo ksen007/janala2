@@ -20,3 +20,5 @@
 ./concolic 25 tests.QuickSortJDK15
 ./concolic 217 tests.RedBlackTreeSearch
 ./concolic 121 tests.SortedListInsert
+./concolic 206 tests.BellmanFord
+./concolic 206 tests.Dijkstra
