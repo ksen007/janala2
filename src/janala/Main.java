@@ -15,6 +15,11 @@ import java.util.ArrayList;
  * Time: 4:50 PM
  */
 public class Main {
+    public static void Assume(boolean b) {
+        if (!b)
+            System.out.println("Assumption failed!");
+    }
+
     public static void MakeSymbolic(int x) {    }
     public static void MakeSymbolic(long x) {    }
     public static void MakeSymbolic(char x) {    }
@@ -22,35 +27,6 @@ public class Main {
     public static void MakeSymbolic(short x) {    }
     public static void MakeSymbolic(boolean x) {    }
     public static void MakeSymbolic(String x) {    }
-
-
-    private static ArrayList<String> inputs;
-    private static int index;
-
-    static {
-        inputs = new ArrayList<String>();
-        index = 0;
-        DataInputStream in = null;
-        try{
-            FileInputStream fstream = new FileInputStream(Config.inputs);
-            in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String strLine;
-            while ((strLine = br.readLine()) != null)   {
-                inputs.add(strLine);
-            }
-            in.close();
-        } catch (Exception e) {
-            //System.err.println("Error: " + e.getMessage());
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException ex) {
-            }
-        }
-    }
 
     static public int readInt(int x) {
         if (index < inputs.size()) {
@@ -151,5 +127,34 @@ public class Main {
             return x;
         }
     }
+
+    private static ArrayList<String> inputs;
+    private static int index;
+
+    static {
+        inputs = new ArrayList<String>();
+        index = 0;
+        DataInputStream in = null;
+        try{
+            FileInputStream fstream = new FileInputStream(Config.inputs);
+            in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String strLine;
+            while ((strLine = br.readLine()) != null)   {
+                inputs.add(strLine);
+            }
+            in.close();
+        } catch (Exception e) {
+            //System.err.println("Error: " + e.getMessage());
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+            }
+        }
+    }
+
 
 }

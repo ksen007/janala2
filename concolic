@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export PATH=$PATH:yices-2.0.0/bin
-CLASSPATH=out/production/janala
+CLASSPATH=out/production/tests
 iter=$1
 YOURPGM=$2
 
@@ -13,7 +13,7 @@ i=1
 while [ $i -le $iter ]
 do
 	echo "[Input $i]"
-    java -Djanala.printTrace=false -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/iagent.jar" -ea $YOURPGM
+    java -Djanala.printTrace=false -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:out/production/janala" -ea $YOURPGM
     java -Djanala.solver=janala.solvers.YicesSolver -Djanala.mainClass=$YOURPGM -Djanala.iteration=$i -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:lib/iagent.jar" -ea janala.interpreters.LoadAndExecuteInstructions
 	if  [ -e "history" ]
 	then
