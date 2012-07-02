@@ -4,6 +4,7 @@
 
 package database.table;
 
+import java.sql.ResultSet;
 import java.util.*;
 
 /**
@@ -71,7 +72,7 @@ public class TableImpl implements Table {
         return ret;
     }
 
-    public Table select(Where where, String[][] selectColumns, TableImpl[] fromOther) {
+    public Table select(Where where, String[][] selectColumns, Table[] fromOther) {
         int nTables = 1;
         if (fromOther!=null) {
             nTables += fromOther.length;
@@ -81,18 +82,21 @@ public class TableImpl implements Table {
         for(int i=0 ; i<selectColumns.length; i++) {
             if (selectColumns[i]!=null) {
                 nRows += selectColumns[i].length;
-                String tableName;
-                if (i==0) {
-                    tableName = name;
-                } else {
-                    tableName = fromOther[i-1].name;
-                }
                 for (int j=0; j<selectColumns[i].length; j++) {
-                    columns.add(tableName+"."+selectColumns[i][j]);
+                    if (columns.contains(selectColumns[i][j])) {
+                        throw new RuntimeException("Duplicate column name in select "+selectColumns[i][j]);
+                    }
+                    columns.add(selectColumns[i][j]);
                 }
             }
         }
-        Table ret = TableFactory.create(null,(String[])columns.toArray());
+        String[] tmp = new String[columns.size()];
+        int l=0;
+        for (String next : columns) {
+            tmp[l] = next;
+            l++;
+        }
+        Table ret = TableFactory.create(null, tmp);
 
         ListIterator<Map<String,Object>>[] iterators = new ListIterator[nTables];
 
@@ -103,6 +107,14 @@ public class TableImpl implements Table {
             }
         }
         return ret;
+    }
+
+    public ResultSet getResultSet() {
+        return new ResultSetImpl(rows.listIterator());
+    }
+
+    public String getName() {
+        return name;
     }
 
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Map<String, Object>[] rows) {
@@ -119,15 +131,15 @@ public class TableImpl implements Table {
         return ret;
     }
 
-    private static Map<String, Object>[] next(ListIterator<Map<String, Object>>[] iterators, TableImpl table, TableImpl[] fromOther) {
+    private static Map<String, Object>[] next(ListIterator<Map<String, Object>>[] iterators, Table table, Table[] fromOther) {
         Map<String,Object>[] ret = new Map[iterators.length];
         boolean first = true;
         for(int i=iterators.length-1; i>=0; i--) {
             if (iterators[i] == null || (first && !iterators[i].hasNext())) {
                 if (i==0) {
-                    iterators[i] = table.rows.listIterator();
+                    iterators[i] = table.iterator();
                 } else {
-                    iterators[i] = fromOther[i-1].rows.listIterator();
+                    iterators[i] = fromOther[i-1].iterator();
                 }
                 ret[i] = iterators[i].next();
             } else if (first) {
@@ -143,7 +155,7 @@ public class TableImpl implements Table {
 
     private static boolean hasNext(ListIterator<Map<String, Object>>[] iterators) {
         for (int i=0; i<iterators.length;i++) {
-            if (iterators[i].hasNext())
+            if (iterators[i]==null || iterators[i].hasNext())
                 return true;
         }
         return false;

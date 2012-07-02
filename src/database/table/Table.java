@@ -1,5 +1,10 @@
+/*
+ * Author: Koushik Sen (ksen@cs.berkeley.edu)
+ */
+
 package database.table;
 
+import java.sql.ResultSet;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -19,5 +24,9 @@ public interface Table {
 
     int update(Where where);
 
-    Table select(Where where, String[][] selectColumns, TableImpl[] fromOther);
+    Table select(Where where, String[][] selectColumns, Table[] fromOther);
+
+    ResultSet getResultSet();
+
+    String getName();
 }

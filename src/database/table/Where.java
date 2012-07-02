@@ -11,8 +11,10 @@ import java.util.Map;
  * Date: 7/2/12
  * Time: 10:42 AM
  */
-public interface Where {
-    public boolean isTrue(Map<String,Object>[] rows);
-    public boolean modify(Map<String,Object> row);
+public abstract class Where {
+    public abstract boolean isTrue(Map<String,Object>[] rows);
+    public boolean modify(Map<String,Object> row) {
+        throw new RuntimeException("Unimplemented modify in Where class");
+    }
 
 }
