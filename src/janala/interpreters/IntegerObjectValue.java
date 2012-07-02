@@ -46,6 +46,9 @@ public class IntegerObjectValue extends ObjectValue {
             if (args[0] instanceof IntegerObjectValue) {
                 IntegerObjectValue i2 = (IntegerObjectValue)args[0];
                 IntValue ret = intValue.ISUB(i2.intValue);
+                if (ret.concrete>0) ret.concrete=1;
+                else if (ret.concrete==0) ret.concrete = 0;
+                else ret.concrete = -1;
                 return ret;
             }
         }
