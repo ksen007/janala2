@@ -5,10 +5,10 @@
 package janala.logger.inst;
 
 public class TABLESWITCH extends Instruction {
-    int min;
-    int max;
-    int dflt;
-    int[] labels;
+    public int min;
+    public int max;
+    public int dflt;
+    public int[] labels;
 
     public TABLESWITCH(int iid, int mid, int min, int max, int dflt, int[] labels) {
         super(iid, mid);

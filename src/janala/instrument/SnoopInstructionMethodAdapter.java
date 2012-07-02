@@ -4,19 +4,23 @@
 
 package janala.instrument;
 
+import janala.config.Config;
 import janala.logger.ClassNames;
 import janala.logger.ObjectInfo;
-import janala.config.Config;
 import org.objectweb.asm.*;
+
+import java.util.LinkedList;
 
 public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opcodes{
     boolean isInit;
     boolean isSuperInitCalled;
+    LinkedList<TryCatchBlock> tryCatchBlocks;
 
     public SnoopInstructionMethodAdapter(MethodVisitor mv, boolean isInit) {
         super(mv);
         this.isInit = isInit;
         this.isSuperInitCalled = false;
+        tryCatchBlocks = new LinkedList<TryCatchBlock>();
     }
 
     @Override
@@ -862,6 +866,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         Label handler = new Label();
         Label end = new Label();
 
+        tryCatchBlocks.addFirst(new TryCatchBlock(begin,handler,handler,null));
         mv.visitLabel(begin);
         mv.visitMethodInsn(opcode, owner, name, desc);
         mv.visitJumpInsn(GOTO,end);
@@ -873,7 +878,6 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         mv.visitMethodInsn(INVOKESTATIC, Config.analysisClass, "INVOKEMETHOD_END", "()V");
         addValueReadInsn(mv,desc,"GETVALUE_");
 
-        mv.visitTryCatchBlock(begin,handler,handler,null);
     }
 
     @Override
@@ -1070,7 +1074,14 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
     @Override
     public void visitMaxs(int maxStack, int maxLocals) {
+        for(TryCatchBlock b:tryCatchBlocks) {
+            b.visit(mv);
+        }
         mv.visitMaxs(maxStack + 8, maxLocals);    //To change body of overridden methods use File | Settings | File Templates.
     }
-    
+
+    @Override
+    public void visitTryCatchBlock(Label label, Label label1, Label label2, String s) {
+        tryCatchBlocks.addLast(new TryCatchBlock(label, label1, label2, s));
+    }
 }

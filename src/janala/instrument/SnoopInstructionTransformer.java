@@ -39,8 +39,17 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
 //            ClassVisitor cv = new SnoopInstructionClassAdapter(new TraceClassVisitor(cw,new PrintWriter( System.out )));
             cr.accept(cv, 0);
+
+            byte[] ret = cw.toByteArray();
+//            try {
+//                FileOutputStream out = new FileOutputStream("tmp.class");
+//                out.write(ret);
+//                out.close();
+//            } catch(Exception e) {
+//                e.printStackTrace();
+//            }
             //System.err.println(")))))))))))))) end transform "+cname);
-            return cw.toByteArray();
+            return ret;
         } else {
             //System.out.println("--------------- skipping "+cname);
         }

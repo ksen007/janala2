@@ -35,7 +35,7 @@
 
 package tests;
 
-import catg.CATG;
+import janala.Main;
 
 /**
  * @author Sudeep Juvekar <sjuvekar@cs.berkeley.edu>
@@ -103,7 +103,9 @@ public class Tsp {
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                D[i][j] = CATG.readInt(0);
+                int x = Main.readInt(0);
+                Main.MakeSymbolic(x);
+                D[i][j] = x;
             }
         }
 

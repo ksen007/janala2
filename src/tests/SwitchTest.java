@@ -5,6 +5,8 @@
 package tests;
 
 
+import janala.Main;
+
 class MyException extends RuntimeException {
 
 }
@@ -25,7 +27,8 @@ public class SwitchTest {
     }
 
     public static void main(String[] args) {
-        int x = 100;
+        int x = Main.readInt(4);
+        Main.MakeSymbolic(x);
         int y;
         switch(x){
             case -100:

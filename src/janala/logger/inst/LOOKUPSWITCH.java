@@ -5,9 +5,9 @@
 package janala.logger.inst;
 
 public class LOOKUPSWITCH extends Instruction{
-    int dflt;
-    int[] keys;
-    int[] labels;
+    public int dflt;
+    public int[] keys;
+    public int[] labels;
 
     public LOOKUPSWITCH(int iid, int mid, int dflt, int[] keys, int[] labels) {
         super(iid, mid);

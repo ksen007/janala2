@@ -10,6 +10,8 @@ rm -f history
 
 i=1
 
+echo "Now testing $YOURPGM"
+
 while [ $i -le $iter ]
 do
 	echo "[Input $i]"

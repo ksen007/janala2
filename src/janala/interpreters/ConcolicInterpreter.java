@@ -1299,11 +1299,22 @@ public class ConcolicInterpreter implements IVisitor {
     }
 
     public void visitLOOKUPSWITCH(LOOKUPSWITCH inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        int[] keys = inst.keys;
+        IntValue i1 = (IntValue)currentFrame.pop();
+        for (int key : keys) {
+            ConstraintAndResult result = i1.IF_ICMPEQ(new IntValue(key));
+            history.checkAndSetBranch(result);
+            if (result.result) return;
+        }
     }
 
     public void visitTABLESWITCH(TABLESWITCH inst) {
-        throw new RuntimeException("Unimplemented instruction "+inst);
+        IntValue i1 = (IntValue)currentFrame.pop();
+        for (int i=inst.min; i<=inst.max; i++) {
+            ConstraintAndResult result = i1.IF_ICMPEQ(new IntValue(i));
+            history.checkAndSetBranch(result);
+            if (result.result) return;
+        }
     }
 
 

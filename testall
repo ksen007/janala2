@@ -10,10 +10,12 @@
 ./concolic 3 tests.NonLinear
 ./concolic 3 tests.BoolTest
 ./concolic 5 tests.BoolTest2
+./concolic 8 tests.SwitchTest
+./concolic 3 tests.SwitchTest2
+./concolic 5 tests.Linear
 ./concolic 29 tests.QSort
 ./concolic 29 tests.QSortLong
 ./concolic 25 tests.InsertionSort
-./concolic 5 tests.Linear
 ./concolic 121 tests.MergeSortJDK15
 ./concolic 76 tests.BinaryTreeSearch
 ./concolic 13 tests.HeapInsertJDK15
