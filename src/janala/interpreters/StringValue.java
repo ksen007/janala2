@@ -19,7 +19,7 @@ public class StringValue extends ObjectValue {
     }
 
     @Override
-    public Object getConcrete() {
+    public String getConcrete() {
         return string;
     }
 
@@ -33,7 +33,6 @@ public class StringValue extends ObjectValue {
                     return new IntValue(result?1:0,symbolic.subtract(other.symbolic).setop(SymbolicInt.COMPARISON_OPS.EQ));
                 } else if (symbolic != null) {
                     IntValue ret = new IntValue(result?1:0,symbolic.subtract(StringConstants.instance.get(other.string)).setop(SymbolicInt.COMPARISON_OPS.EQ));
-                    //System.out.println("ret = " + ret +" "+other.string);
                     return ret;
                 } else {
                     return new IntValue(result?1:0,other.symbolic.subtract(StringConstants.instance.get(string)).setop(SymbolicInt.COMPARISON_OPS.EQ));

@@ -11,6 +11,9 @@ package janala.interpreters;
  */
 public class ObjectFactory {
     public static ObjectValue create(int nFields, String className) {
+        if (className.equals("java/lang/Integer")) {
+            return new IntegerObjectValue();
+        }
         return new ObjectValue(nFields);
     }
 }
