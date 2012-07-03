@@ -4,6 +4,8 @@
 
 package janala.utils;
 
+import janala.config.Config;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,7 +29,7 @@ public class MyLogger {
         Logger ret = Logger.getLogger(name);
         ret.setUseParentHandlers(false);
         ret.addHandler(handler);
-        ret.setLevel(Level.INFO);
+        ret.setLevel(Config.verbose?Level.INFO:Level.WARNING);
         return ret;
     }
 

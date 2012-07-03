@@ -26,3 +26,4 @@
 ./concolic 121 tests.SortedListInsert
 ./concolic 206 tests.BellmanFord
 ./concolic 206 tests.Dijkstra
+./concolic 301 tests.Tsp

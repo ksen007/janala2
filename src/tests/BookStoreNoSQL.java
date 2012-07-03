@@ -193,8 +193,6 @@ public class BookStoreNoSQL {
 
 		Main.Assume(customerId >= 0);
         Main.Assume(customerId <= 1000);
-		Main.Assume(password >= 0);
-        Main.Assume(password <= 20);
 
         this.cid = customerId;
         this.pwd = password;
@@ -204,7 +202,7 @@ public class BookStoreNoSQL {
                 Integer i = (Integer)rows[0].get("Id");
                 if (i==null || i!=cid) return false;
                 i = (Integer)rows[0].get("PasswordHash");
-                if (i==null || i!=pwd) return false;
+                if (i==null || i!=hash(pwd)) return false;
                 return true;
             }
         },new String[][]{{"Id"}},null).getResultSet();
