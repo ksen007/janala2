@@ -14,6 +14,10 @@ import java.util.Map;
  * Time: 12:32 PM
  */
 public interface Table {
+    final public static int INT = 1;
+    final public static int STRING = 2;
+//    final public static int LONG = 3;
+
     void insert(String[] columns, Object[] values);
 
     void insert(Object[] values);
@@ -29,4 +33,10 @@ public interface Table {
     ResultSet getResultSet();
 
     String getName();
+
+    String[] getColumnNames();
+
+    int[] getColumnTypes();
+
+    boolean[] getPrimaries();
 }

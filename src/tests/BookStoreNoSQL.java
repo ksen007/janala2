@@ -1,6 +1,7 @@
 
 package tests;
 
+import database.table.SymbolicTable;
 import database.table.Table;
 import database.table.TableFactory;
 import database.table.Where;
@@ -81,10 +82,23 @@ public class BookStoreNoSQL {
 
 		try
 		{
-            Customers = TableFactory.create("Customers",new String[]{"Id","Name","PasswordHash","Age"});
-            Orders = TableFactory.create("Orders", new String[]{"Id","CustomerId","OrderDateTime","CancelDate", "BookId", "IsCanceled"});
-            Publishers = TableFactory.create("Publishers",new String[]{"Id","Name"});
-            Books = TableFactory.create("Books",new String[]{"Id","ISBN","Title","Price","Year","PublisherId","Stock"});
+            Customers = TableFactory.create("Customers",
+                    new String[]{"Id","Name","PasswordHash","Age"},
+                    new int[] {Table.INT,Table.STRING,Table.INT,Table.INT},
+                    new boolean[]{true,false,false,false});
+
+            Orders = TableFactory.create("Orders",
+                    new String[]{"Id","CustomerId","OrderDateTime","CancelDate", "BookId", "IsCanceled"},
+                    new int[]{Table.INT,Table.INT,Table.INT,Table.INT,Table.INT,Table.INT},
+                    new boolean[]{true,false,false,false,false,false});
+
+            Publishers = TableFactory.create("Publishers",new String[]{"Id","Name"},
+                    new int[]{Table.INT,Table.STRING},
+                    new boolean[]{true,false});
+
+            Books = TableFactory.create("Books",new String[]{"Id","ISBN","Title","Price","Year","PublisherId","Stock"},
+                    new int[]{Table.INT,Table.INT,Table.STRING,Table.INT,Table.INT,Table.INT,Table.INT},
+                    new boolean[]{true,false,false,false,false,false,false});
 
 			// create an example of inputs and initial database state
 			createExampleInitialDatabaseState();
@@ -99,21 +113,27 @@ public class BookStoreNoSQL {
 
 	public void  createExampleInitialDatabaseState() throws SQLException {
 
-		//Customers
-		Customers.insert(new Object[]{0, "Tanaka", 3, 25});
+//		//Customers
+//		Customers.insert(new Object[]{0, "Tanaka", 3, 25});
+        SymbolicTable.insertSymbolicRows(Customers,1);
+//
+//		//Books
+//		Books.insert(new Object[]{20, 1234567890, "The Art of C++", 20, 1987, 20, 1});
+//		Books.insert(new Object[]{21, 1234567891, "The Art of C#", 25, 2000, 21, 1});
+//		Books.insert(new Object[]{22, 1234567892, "The Art of Lisp", 30, 1980, 20, 1});
+//		Books.insert(new Object[]{23, 1234567894, "Java HandBook", 5, 1999, 21, 1});
+//
+        SymbolicTable.insertSymbolicRows(Books,4);
 
-		//Books
-		Books.insert(new Object[]{20, 1234567890, "The Art of C++", 20, 1987, 20, 1});
-		Books.insert(new Object[]{21, 1234567891, "The Art of C#", 25, 2000, 21, 1});
-		Books.insert(new Object[]{22, 1234567892, "The Art of Lisp", 30, 1980, 20, 1});
-		Books.insert(new Object[]{23, 1234567894, "Java HandBook", 5, 1999, 21, 1});
 
-		//Publishers
-		Publishers.insert(new Object[]{20, "Pearson Education"});
-        Publishers.insert(new Object[]{21, "O Reilly"});
-
-		//Orders
-		Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
+//		//Publishers
+//		Publishers.insert(new Object[]{20, "Pearson Education"});
+//        Publishers.insert(new Object[]{21, "O Reilly"});
+        SymbolicTable.insertSymbolicRows(Publishers,2);
+//
+//		//Orders
+//		Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
+        SymbolicTable.insertSymbolicRows(Orders,1);
 
 	}
 

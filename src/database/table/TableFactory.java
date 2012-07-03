@@ -13,4 +13,9 @@ public class TableFactory {
     public static Table create(String name, String[] columnNames) {
         return new TableImpl(name,columnNames);
     }
+
+    public static Table create(String name, String[] columnNames, int[] columnTypes, boolean [] primaryKeys) {
+        assert(columnNames.length==columnTypes.length && columnNames.length == primaryKeys.length);
+        return new TableImpl(name,columnNames,columnTypes,primaryKeys);
+    }
 }

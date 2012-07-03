@@ -15,11 +15,21 @@ import java.util.*;
 public class TableImpl implements Table {
     private String name;
     private String[] columnNames;
+    private int[] columnTypes;
+    private boolean[] isPrimary;
     private List<Map<String,Object>> rows;
 
     public TableImpl(String name, String[] columnNames) {
         this.name = name;
         this.columnNames = columnNames;
+        rows = new LinkedList<Map<String, Object>>();
+    }
+
+    public TableImpl(String name, String[] columnNames, int[] columnTypes, boolean[] primary) {
+        this.name = name;
+        this.columnNames = columnNames;
+        this.columnTypes = columnTypes;
+        isPrimary = primary;
         rows = new LinkedList<Map<String, Object>>();
     }
 
@@ -115,6 +125,18 @@ public class TableImpl implements Table {
 
     public String getName() {
         return name;
+    }
+
+    public String[] getColumnNames() {
+        return columnNames;
+    }
+
+    public int[] getColumnTypes() {
+        return columnTypes;
+    }
+
+    public boolean[] getPrimaries() {
+        return getPrimaries();
     }
 
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Map<String, Object>[] rows) {
