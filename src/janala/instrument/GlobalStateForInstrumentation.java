@@ -11,8 +11,8 @@ public class GlobalStateForInstrumentation {
 
 //    private TObjectIntHashMap<String> classNameToInternalID = new TObjectIntHashMap<String>();
 
-    public int getIid() {
-        // System.out.println("iid="+iid+" mid="+mid);
+    public int getIid(int line) {
+        //System.out.println("iid="+iid+" line="+line);
         return iid++;
     }
 

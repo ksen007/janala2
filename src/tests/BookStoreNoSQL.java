@@ -4,6 +4,7 @@ package tests;
 import database.table.Table;
 import database.table.TableFactory;
 import database.table.Where;
+import janala.Main;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -118,13 +119,37 @@ public class BookStoreNoSQL {
 
 	public void createExampleInitialInputsList() {
 		BookStoreScreenInputs is = screenInputsList[0];
-		is.customerId = 0;
-		is.password = 1;
-		is.title = "The Art of C#";
-		is.publisherName = "O Reilly";
-		is.minYear = 2000;
-		is.maxYear = 2010;
-	}
+        is.customerId = Main.readInt(0);
+        Main.MakeSymbolic(is.customerId);
+        is.password = Main.readInt(1);
+        Main.MakeSymbolic(is.password);
+//        is.title = "The Art of C#";
+//        is.publisherName = "O Reilly";
+        is.title = Main.readString("The Art of C#");
+        Main.MakeSymbolic(is.title);
+        is.publisherName = Main.readString("O Reilly");
+        Main.MakeSymbolic(is.publisherName);
+        is.minYear = Main.readInt(2000);
+        Main.MakeSymbolic(is.minYear);
+        is.maxYear = Main.readInt(2010);
+        Main.MakeSymbolic(is.maxYear);
+
+//        BookStoreScreenInputs is = screenInputsList[0];
+//        is.customerId =0;
+//        is.password = 1;
+//        is.title = "The Art of C#";
+//        is.publisherName = "O Reilly";
+//        is.minYear = 2000;
+//        is.maxYear = 2010;
+
+//        BookStoreScreenInputs is = screenInputsList[0];
+//        is.customerId =0;
+//        is.password = 20;
+//        is.title = "Java HandBook";
+//        is.publisherName = "O Reilly";
+//        is.minYear = 2000;
+//        is.maxYear = 2050;
+    }
 
 	public void execute(){
 
@@ -139,6 +164,7 @@ public class BookStoreNoSQL {
 					System.err.println("Exceed the max count of screen visit");
 					return;
 				}
+                screenVisitCountTable[state]++;
 				BookStoreScreenInputs is = screenInputsList[screenVisitCount];
 
 				// execution the business logic related to state (screen)
@@ -165,8 +191,10 @@ public class BookStoreNoSQL {
 
 	public int s01_loginScreen(int customerId, int password) throws SQLException {
 
-		assume(customerId >= 0 && customerId <= 1000);
-		assume(password >= 0 && password <= 20);
+		Main.Assume(customerId >= 0);
+        Main.Assume(customerId <= 1000);
+		Main.Assume(password >= 0);
+        Main.Assume(password <= 20);
 
         this.cid = customerId;
         this.pwd = password;
@@ -176,7 +204,7 @@ public class BookStoreNoSQL {
                 Integer i = (Integer)rows[0].get("Id");
                 if (i==null || i!=cid) return false;
                 i = (Integer)rows[0].get("PasswordHash");
-                if (i==null || i!=hash(pwd)) return false;
+                if (i==null || i!=pwd) return false;
                 return true;
             }
         },new String[][]{{"Id"}},null).getResultSet();
@@ -202,7 +230,7 @@ public class BookStoreNoSQL {
 
 	private int s03_menuScreen(int whereGoto)  throws SQLException {
 
-		assume(whereGoto == BookStoreScreenInputs.GOTO_ORDER ||  whereGoto == BookStoreScreenInputs.GOTO_CANCEL);
+		Main.Assume(whereGoto == BookStoreScreenInputs.GOTO_ORDER || whereGoto == BookStoreScreenInputs.GOTO_CANCEL);
 
 		if(whereGoto == BookStoreScreenInputs.GOTO_ORDER){
 			return S04_SEARCH_BOOKS_SCREEN;
@@ -238,10 +266,14 @@ public class BookStoreNoSQL {
 	private int s04_searchBooksScreen(String title, String publisherName,
 		int minYear, int maxYear) throws SQLException{
 
-		assume(title.length() >= 0 && title.length() <= 20);
-		assume(publisherName.length() >= 0 && publisherName.length() <= 20);
-		assume(minYear >= 1950 && minYear <= 2050);
-		assume(maxYear >= 1950 && maxYear <= 2050);
+		Main.Assume(title.length() >= 0);
+        Main.Assume(title.length() <= 20);
+        Main.Assume(publisherName.length() >= 0);
+        Main.Assume(publisherName.length() <= 20);
+		Main.Assume(minYear >= 1950);
+        Main.Assume(minYear <= 2050);
+		Main.Assume(maxYear >= 1950);
+        Main.Assume(maxYear <= 2050);
 
         this.tte = title;
         this.pn = publisherName;
@@ -286,9 +318,6 @@ public class BookStoreNoSQL {
 		return 0;
 	}
 
-	private void assume(boolean b) {
-		if (!b) System.err.println("Assumption is incorrect");
-	}
 
 	private int hash(int password) {
 		return password % 5 + 3;

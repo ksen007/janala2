@@ -230,6 +230,10 @@ public class SymbolicInt extends Constraint {
             sb.append(">");
             sb.append('0');
         }
+        sb.append(" at iid ");
+        sb.append(iid);
+        sb.append(" and index ");
+        sb.append(index);
         return sb.toString();
     }
 

@@ -30,12 +30,16 @@ public class StringValue extends ObjectValue {
                 StringValue other = (StringValue)args[0];
                 boolean result = string.equals(other.string);
                 if (symbolic !=null && other.symbolic !=null) {
-                    return new IntValue(result?1:0,symbolic.subtract(other.symbolic).setop(SymbolicInt.COMPARISON_OPS.EQ));
+                    SymbolicInt ret = symbolic.subtract(other.symbolic);
+                    return new IntValue(result?1:0,ret!=null?ret.setop(SymbolicInt.COMPARISON_OPS.EQ):null);
                 } else if (symbolic != null) {
                     IntValue ret = new IntValue(result?1:0,symbolic.subtract(StringConstants.instance.get(other.string)).setop(SymbolicInt.COMPARISON_OPS.EQ));
                     return ret;
+                } else if (other.symbolic!=null) {
+                    SymbolicInt ret = other.symbolic.subtract(StringConstants.instance.get(string));
+                    return new IntValue(result?1:0,ret.setop(SymbolicInt.COMPARISON_OPS.EQ));
                 } else {
-                    return new IntValue(result?1:0,other.symbolic.subtract(StringConstants.instance.get(string)).setop(SymbolicInt.COMPARISON_OPS.EQ));
+                    return new IntValue(result?1:0,null);
                 }
             }
         }

@@ -7,7 +7,7 @@ package janala.logger.inst;
 import java.io.Serializable;
 
 public abstract class Instruction implements Serializable {
-    int iid;
+    public int iid;
     int mid;
 
     public abstract void visit(IVisitor visitor);

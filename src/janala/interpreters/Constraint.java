@@ -12,6 +12,9 @@ import java.io.PrintStream;
  * Time: 12:23 PM
  */
 public abstract class Constraint {
+    public int iid;
+    public int index;
+
     public abstract void accept(ConstraintVisitor v);
     public abstract void not();
     public abstract void print(PrintStream out);

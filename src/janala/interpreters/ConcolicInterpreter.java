@@ -669,56 +669,56 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFEQ();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFGE(IFGE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFGE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFGT(IFGT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFGT();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFLE(IFLE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFLE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFLT(IFLT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFLT();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFNE(IFNE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IFNE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IFNONNULL();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIFNULL(IFNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IFNULL();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
@@ -726,7 +726,7 @@ public class ConcolicInterpreter implements IVisitor {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IF_ACMPEQ(o2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
@@ -734,7 +734,7 @@ public class ConcolicInterpreter implements IVisitor {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
         ConstraintAndResult result = o1.IF_ACMPNE(o2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
@@ -742,7 +742,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPEQ(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
@@ -750,7 +750,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPGE(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
@@ -758,7 +758,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPGT(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
@@ -766,7 +766,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPLE(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
@@ -774,7 +774,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPLT(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
@@ -782,7 +782,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         ConstraintAndResult result = i1.IF_ICMPNE(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result);
+        history.checkAndSetBranch(result,inst.iid);
     }
 
     public void visitIINC(IINC inst) {
@@ -1303,7 +1303,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         for (int key : keys) {
             ConstraintAndResult result = i1.IF_ICMPEQ(new IntValue(key));
-            history.checkAndSetBranch(result);
+            history.checkAndSetBranch(result,inst.iid);
             if (result.result) return;
         }
     }
@@ -1312,7 +1312,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         for (int i=inst.min; i<=inst.max; i++) {
             ConstraintAndResult result = i1.IF_ICMPEQ(new IntValue(i));
-            history.checkAndSetBranch(result);
+            history.checkAndSetBranch(result,inst.iid);
             if (result.result) return;
         }
     }

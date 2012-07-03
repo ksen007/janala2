@@ -101,10 +101,10 @@ public class Main {
         if (index < inputs.size()) {
             String input = inputs.get(index++);
             //System.out.println(input);
-            return input;
+            return new String(input);
         } else {
             //System.out.println(x);
-            return x;
+            return new String(x);
         }
     }
 

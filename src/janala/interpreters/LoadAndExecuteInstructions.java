@@ -54,12 +54,14 @@ public class LoadAndExecuteInstructions {
             Instruction inst, next;
             inst=readInst(inputStream);
             next=readInst(inputStream);
+            int i=0;
             while(inst !=null) {
                 intp.setNext(next);
                 logger.log(Level.FINE,"{0}",inst);
                 inst.visit(intp);
                 inst = next;
                 next=readInst(inputStream);
+                i++;
             }
             ((ConcolicInterpreter)intp).endExecution();
             inputStream.close();

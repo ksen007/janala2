@@ -13,10 +13,22 @@ public class BranchElement extends Element {
     boolean branch;
     boolean done;
     int pathConstraintIndex; // -1 for no index
+    int iid;
 
-    public BranchElement(boolean branch, boolean done, int pathConstraintIndex) {
+    public BranchElement(boolean branch, boolean done, int pathConstraintIndex, int iid) {
         this.branch = branch;
         this.done = done;
         this.pathConstraintIndex = pathConstraintIndex;
+        this.iid = iid;
+    }
+
+    @Override
+    public String toString() {
+        return "BranchElement{" +
+                "branch=" + branch +
+                ", done=" + done +
+                ", pathConstraintIndex=" + pathConstraintIndex +
+                ", iid=" + iid +
+                '}';
     }
 }

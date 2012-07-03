@@ -5,6 +5,7 @@
 ./concolic 4 tests.StringEquals
 ./concolic 4 tests.StringTest2
 ./concolic 4 tests.StringTest3
+./concolic 3 tests.StringMapTest
 ./concolic 4 tests.LongTest
 ./concolic 4 tests.Testme
 ./concolic 4 tests.TestmeInteger

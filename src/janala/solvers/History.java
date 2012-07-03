@@ -58,25 +58,34 @@ public class History {
         return ret;
     }
 
-    public void checkAndSetBranch(ConstraintAndResult result) {
+    public void checkAndSetBranch(ConstraintAndResult result,int iid) {
         BranchElement current;
         if (index < history.size()) {
             current = history.get(index);
             if (current.branch != result.result) {
                 tester.log(Level.INFO,"Prediction failed");
-                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!!");
+                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "+index+" history.size() "+history.size());
+                logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+result.constraint);
+//                int i = 0;
+//                for(BranchElement b:history) {
+//                    System.out.println(i+" "+b);
+//                    i++;
+//                }
                 int len = history.size();
                 for (int j=len-1; j>index; j--) {
                     history.remove(j);
                 }
                 current.branch = result.result;
                 current.done = false;
+                current.iid = iid;
             }
         } else {
-            current = new BranchElement(result.result,false,-1);
+            current = new BranchElement(result.result,false,-1,iid);
             history.add(current);
         }
         if (result.constraint!=null) {
+            result.constraint.iid = iid;
+            result.constraint.index = index;
             pathConstraint.add(result.constraint);
             current.pathConstraintIndex = pathConstraint.size()-1;
         } else {
