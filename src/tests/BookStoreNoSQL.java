@@ -144,12 +144,12 @@ public class BookStoreNoSQL {
         Main.MakeSymbolic(is.customerId);
         is.password = Main.readInt(1);
         Main.MakeSymbolic(is.password);
-        is.title = "The Art of C#";
-        is.publisherName = "O Reilly";
-//        is.title = Main.readString("The Art of C#");
-//        Main.MakeSymbolic(is.title);
-//        is.publisherName = Main.readString("O Reilly");
-//        Main.MakeSymbolic(is.publisherName);
+//        is.title = "The Art of C#";
+//        is.publisherName = "O Reilly";
+        is.title = Main.readString("The Art of C#");
+        Main.MakeSymbolic(is.title);
+        is.publisherName = Main.readString("O Reilly");
+        Main.MakeSymbolic(is.publisherName);
         is.minYear = Main.readInt(2000);
         Main.MakeSymbolic(is.minYear);
         is.maxYear = Main.readInt(2010);
