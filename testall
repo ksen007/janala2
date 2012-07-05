@@ -28,3 +28,4 @@
 ./concolic 206 tests.BellmanFord
 ./concolic 206 tests.Dijkstra
 ./concolic 301 tests.Tsp
+./concolic 100 tests.BookStoreNoSQL
