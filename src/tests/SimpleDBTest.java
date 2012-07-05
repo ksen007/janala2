@@ -33,9 +33,6 @@ public class SimpleDBTest {
 
             cid = Main.readInt(0);
             Main.MakeSymbolic(cid);
-            pwd = Main.readInt(1);
-            Main.MakeSymbolic(pwd);
-
 
             ResultSet rs = Customers.select(new Where() {
                 public boolean isTrue(Map<String, Object>[] rows) {

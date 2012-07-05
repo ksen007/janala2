@@ -21,7 +21,8 @@ public class SymbolicTable {
                 if (types[j]==Table.INT) {
                     int x = Main.readInt(0);
                     Main.MakeSymbolic(x);
-                    row[j] = x;
+                    Integer k = new Integer(x);
+                    row[j] = k;
                 } else if (types[j]==Table.STRING) {
                     String x = Main.readString("");
                     Main.MakeSymbolic(x);

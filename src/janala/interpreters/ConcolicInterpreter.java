@@ -462,6 +462,8 @@ public class ConcolicInterpreter implements IVisitor {
         Value peek = currentFrame.peek();
         Value tmp;
         if (peek == PlaceHolder.instance || (((ObjectValue)peek).address != -1 && ((ObjectValue)peek).address != inst.v) ) {
+            //if (peek != PlaceHolder.instance)
+            //    logger.log(Level.WARNING, "** Failed to match " + currentFrame.peek() + " and " + inst.v);
             logger.log(Level.FINE, "** Failed to match " + currentFrame.peek() + " and " + inst.v);
             currentFrame.pop();
             tmp = objects.get(inst.v);

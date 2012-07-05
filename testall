@@ -15,6 +15,7 @@
 ./concolic 8 tests.SwitchTest
 ./concolic 3 tests.SwitchTest2
 ./concolic 5 tests.Linear
+./concolic 3 tests.SimpleDBTest
 ./concolic 29 tests.QSort
 ./concolic 29 tests.QSortLong
 ./concolic 25 tests.InsertionSort
