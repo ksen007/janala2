@@ -116,7 +116,7 @@ public class BookStoreNoSQL {
 
 //		//Customers
 //		Customers.insert(new Object[]{0, "Tanaka", 3, 25});
-        SymbolicTable.insertSymbolicRows(Customers,1);
+        SymbolicTable.insertSymbolicRows(Customers,1); //4
 //
 //		//Books
 //		Books.insert(new Object[]{20, 1234567890, "The Art of C++", 20, 1987, 20, 1});
@@ -124,17 +124,17 @@ public class BookStoreNoSQL {
 //		Books.insert(new Object[]{22, 1234567892, "The Art of Lisp", 30, 1980, 20, 1});
 //		Books.insert(new Object[]{23, 1234567894, "Java HandBook", 5, 1999, 21, 1});
 //
-        SymbolicTable.insertSymbolicRows(Books,4);
+        SymbolicTable.insertSymbolicRows(Books,4); //4*7
 
 
 //		//Publishers
 //		Publishers.insert(new Object[]{20, "Pearson Education"});
 //        Publishers.insert(new Object[]{21, "O Reilly"});
-        SymbolicTable.insertSymbolicRows(Publishers,2);
+        SymbolicTable.insertSymbolicRows(Publishers,2); // 2*2
 //
 //		//Orders
 //		Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
-        SymbolicTable.insertSymbolicRows(Orders,1);
+        SymbolicTable.insertSymbolicRows(Orders,1); // 1*6
 
 	}
 
@@ -144,12 +144,12 @@ public class BookStoreNoSQL {
         Main.MakeSymbolic(is.customerId);
         is.password = Main.readInt(1);
         Main.MakeSymbolic(is.password);
-//        is.title = "The Art of C#";
-//        is.publisherName = "O Reilly";
-        is.title = Main.readString("The Art of C#");
-        Main.MakeSymbolic(is.title);
-        is.publisherName = Main.readString("O Reilly");
-        Main.MakeSymbolic(is.publisherName);
+        is.title = "The Art of C#";
+        is.publisherName = "O Reilly";
+//        is.title = Main.readString("The Art of C#");
+//        Main.MakeSymbolic(is.title);
+//        is.publisherName = Main.readString("O Reilly");
+//        Main.MakeSymbolic(is.publisherName);
         is.minYear = Main.readInt(2000);
         Main.MakeSymbolic(is.minYear);
         is.maxYear = Main.readInt(2010);
@@ -217,7 +217,7 @@ public class BookStoreNoSQL {
 
         this.cid = customerId;
         this.pwd = password;
-        
+
         ResultSet rs = Customers.select(new Where() {
             public boolean isTrue(Map<String, Object>[] rows) {
                 Integer i = (Integer)rows[0].get("Id");

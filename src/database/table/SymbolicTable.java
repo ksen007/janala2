@@ -24,9 +24,9 @@ public class SymbolicTable {
                     Integer k = new Integer(x);
                     row[j] = k;
                 } else if (types[j]==Table.STRING) {
-                    String x = Main.readString("");
-                    Main.MakeSymbolic(x);
-                    row[j] = x;
+                    //String x = Main.readString("");
+                    //Main.MakeSymbolic(x);
+                    row[j] = "x";
                 }
             }
             table.insert(row);
