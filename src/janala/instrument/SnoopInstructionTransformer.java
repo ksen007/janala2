@@ -28,6 +28,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
                 && !cname.startsWith("java/util")
                 && !cname.startsWith("java/io")
                 && !cname.startsWith("java/security")
+                && !cname.startsWith("sun/")
                 && !cname.startsWith("javax/security")
                 && !cname.startsWith("sun/security")
                 && !cname.startsWith("sun/reflect")

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export PATH=$PATH:yices-2.0.0/bin
-CLASSPATH=out/production/tests
+CLASSPATH="out/production/tests"
 iter=$1
 YOURPGM=$2
 
