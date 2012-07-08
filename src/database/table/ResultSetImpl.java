@@ -107,7 +107,8 @@ public class ResultSetImpl implements ResultSet {
     }
 
     public String getString(String s) throws SQLException {
-        throw new RuntimeException("Unimplemented method in ResultSetImpl");
+        String ret = (String)currentRow.get(s);
+        return ret;
     }
 
     public boolean getBoolean(String s) throws SQLException {
@@ -128,7 +129,8 @@ public class ResultSetImpl implements ResultSet {
     }
 
     public long getLong(String s) throws SQLException {
-        throw new RuntimeException("Unimplemented method in ResultSetImpl");
+        Long l = (Long)currentRow.get(s);
+        return l;
     }
 
     public float getFloat(String s) throws SQLException {

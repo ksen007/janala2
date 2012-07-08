@@ -16,7 +16,7 @@ import java.util.Map;
 public interface Table {
     final public static int INT = 1;
     final public static int STRING = 2;
-//    final public static int LONG = 3;
+    final public static int LONG = 3;
 
     void insert(String[] columns, Object[] values);
 

@@ -23,6 +23,11 @@ public class SymbolicTable {
                     Main.MakeSymbolic(x);
                     Integer k = new Integer(x);
                     row[j] = k;
+                } else if (types[j]==Table.LONG) {
+                    long x = Main.readLong(0);
+                    Main.MakeSymbolic(x);
+                    Long k = new Long(x);
+                    row[j] = k;
                 } else if (types[j]==Table.STRING) {
                     String x = Main.readString("");
                     Main.MakeSymbolic(x);

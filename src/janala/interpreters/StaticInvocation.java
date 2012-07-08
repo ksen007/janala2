@@ -17,7 +17,14 @@ public class StaticInvocation {
                 ret.intValue = (IntValue)args[0];
                 return ret;
             }
+        } else if (owner.equals("java/lang/Long") && name.equals("valueOf")) {
+            LongObjectValue ret = new LongObjectValue();
+            if (args[0] instanceof LongValue) {
+                ret.longValue = (LongValue)args[0];
+                return ret;
+            }
         }
+
         return PlaceHolder.instance;
     }
 }
