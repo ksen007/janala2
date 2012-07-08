@@ -90,6 +90,8 @@ public class YicesSolver2 implements Solver {
                 tester.log(Level.INFO,"-- Infeasible");
                 logger.log(Level.INFO,"-- Infeasible");
                 result = false;
+                while ((line = br.readLine()) != null) { }
+                br.close();
             } else {
                 result = true;
                 TreeMap<Integer,Long> soln = new TreeMap<Integer, Long>();
