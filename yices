@@ -1,4 +1,0 @@
-#!/bin/bash
-
-yices < formula > solution 2>/dev/null
-
