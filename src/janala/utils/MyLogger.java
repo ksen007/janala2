@@ -33,6 +33,19 @@ public class MyLogger {
         return ret;
     }
 
+    public static Logger getFileLogger(String name) {
+        Logger ret = Logger.getLogger(name);
+        FileHandler handler = null;
+        try {
+            handler = new FileHandler(name,true);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        handler.setFormatter(new MyFormatter());
+        ret.addHandler(handler);
+        return ret;
+    }
+
     public static Logger getTestLogger(String name) {
         try {
             String filename = testDataDir+name;
@@ -70,9 +83,8 @@ public class MyLogger {
 
         if (neW.exists() && old.exists()) {
             if (!compareFiles(neW,old)) {
-                System.err.println("**************************************************************************");
-                System.err.println("************************* Test "+filename+" failed!! *************************");
-                System.err.println("**************************************************************************");
+                Logger test = getFileLogger(Config.testLog);
+                test.warning("************* Test "+filename+" failed!! **************");
             }
         }
     }

@@ -1,4 +1,0 @@
-rm -rf lib/META-INF lib/iagent.jar
-cd out/production/janala
-jar cmf ../../../Manifest.txt ../../../lib/iagent.jar  janala
-
