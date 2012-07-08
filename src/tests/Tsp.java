@@ -105,8 +105,8 @@ public class Tsp {
             for (int j = 0; j < N; j++) {
                 int x = Main.readInt(0);
                 Main.MakeSymbolic(x);
-                Main.Assume(x<10000);
-                Main.Assume(x>-10000);
+                Main.Assume(x<10000?1:0);
+                Main.Assume(x>-10000?1:0);
                 D[i][j] = x;
             }
         }

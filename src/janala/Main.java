@@ -5,6 +5,7 @@
 package janala;
 
 import janala.config.Config;
+import janala.interpreters.OrValue;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,9 +16,24 @@ import java.util.ArrayList;
  * Time: 4:50 PM
  */
 public class Main {
-    public static void Assume(boolean b) {
-        if (!b) {
+    public static void Assume(int b) {
+        if (b==0) {
             System.out.println("Assumption failed!");
+            System.exit(0);
+        }
+    }
+
+    public static OrValue AssumeOrBegin(int b) {
+        return new OrValue(b!=0);
+    }
+
+    public static OrValue AssumeOr(int b, OrValue b2) {
+        return new OrValue(b!=0 || b2.boolValue());
+    }
+
+    public static void AssumeOrEnd(OrValue b) {
+        if (!b.boolValue()) {
+            System.out.println("Assumption (OR) failed!");
             System.exit(0);
         }
     }

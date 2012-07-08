@@ -212,8 +212,8 @@ public class BookStoreNoSQL {
 
 	public int s01_loginScreen(int customerId, int password) throws SQLException {
 
-		Main.Assume(customerId >= 0);
-        Main.Assume(customerId <= 1000);
+		Main.Assume(customerId >= 0?1:0);
+        Main.Assume(customerId <= 1000?1:0);
 
         this.cid = customerId;
         this.pwd = password;
@@ -249,7 +249,7 @@ public class BookStoreNoSQL {
 
 	private int s03_menuScreen(int whereGoto)  throws SQLException {
 
-		Main.Assume(whereGoto == BookStoreScreenInputs.GOTO_ORDER || whereGoto == BookStoreScreenInputs.GOTO_CANCEL);
+		Main.Assume((whereGoto == BookStoreScreenInputs.GOTO_ORDER || whereGoto == BookStoreScreenInputs.GOTO_CANCEL)?1:0);
 
 		if(whereGoto == BookStoreScreenInputs.GOTO_ORDER){
 			return S04_SEARCH_BOOKS_SCREEN;
@@ -285,14 +285,14 @@ public class BookStoreNoSQL {
 	private int s04_searchBooksScreen(String title, String publisherName,
 		int minYear, int maxYear) throws SQLException{
 
-		Main.Assume(title.length() >= 0);
-        Main.Assume(title.length() <= 20);
-        Main.Assume(publisherName.length() >= 0);
-        Main.Assume(publisherName.length() <= 20);
-		Main.Assume(minYear >= 1950);
-        Main.Assume(minYear <= 2050);
-		Main.Assume(maxYear >= 1950);
-        Main.Assume(maxYear <= 2050);
+		Main.Assume(title.length() >= 0?1:0);
+        Main.Assume(title.length() <= 20?1:0);
+        Main.Assume(publisherName.length() >= 0?1:0);
+        Main.Assume(publisherName.length() <= 20?1:0);
+		Main.Assume(minYear >= 1950?1:0);
+        Main.Assume(minYear <= 2050?1:0);
+		Main.Assume(maxYear >= 1950?1:0);
+        Main.Assume(maxYear <= 2050?1:0);
 
         this.tte = title;
         this.pn = publisherName;
