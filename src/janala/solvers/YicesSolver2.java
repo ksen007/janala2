@@ -82,7 +82,8 @@ public class YicesSolver2 implements Solver {
 
             line = br.readLine();
             if (!line.startsWith("sat")) {
-                if (!line.startsWith("unsat")) {
+                if (!line.contains("unsat")) {
+                    logger.log(Level.SEVERE,line);
                     logger.log(Level.SEVERE, "Call to Yices failed (concolic.yices = "
                             + Config.yicesCommand + ")");
                     Runtime.getRuntime().halt(1);
