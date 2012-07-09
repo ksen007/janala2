@@ -58,11 +58,16 @@ public class History {
         return ret;
     }
 
+    public void checkAndSetBranchIgnore(ConstraintAndResult result,int iid) {
+        checkAndSetBranch(result,iid);
+        history.get(index-1).ignore = true;
+    }
+
     public void checkAndSetBranch(ConstraintAndResult result,int iid) {
         BranchElement current;
         if (index < history.size()) {
             current = history.get(index);
-            if (current.branch != result.result) {
+            if (!current.ignore && current.branch != result.result) {
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "+index+" history.size() "+history.size());
                 logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+result.constraint);
@@ -91,6 +96,7 @@ public class History {
         } else {
             current.pathConstraintIndex = -1;
         }
+        current.branch = result.result;
         index++;
     }
 
@@ -146,5 +152,14 @@ public class History {
         if (index>=1 && index-1<history.size()) {
             history.get(index-1).done = true;
         }
+    }
+
+    public Constraint removeLastBranch() {
+        index--;
+        BranchElement current = history.get(index);
+        if (current.pathConstraintIndex!=-1) {
+            return  pathConstraint.remove(pathConstraint.size()-1);
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-CATG=concolic
+CATG=concolic.cygwin
 ./$CATG 3 tests.BoolFlow
 ./$CATG 3 tests.BoolFlow2
 ./$CATG 3 tests.BoolTest
@@ -17,6 +17,7 @@ CATG=concolic
 ./$CATG 3 tests.SwitchTest2
 ./$CATG 5 tests.Linear
 ./$CATG 3 tests.SimpleDBTest
+./$CATG 5 tests.OrAssumptionTest
 ./$CATG 29 tests.QSort
 ./$CATG 29 tests.QSortLong
 ./$CATG 25 tests.InsertionSort

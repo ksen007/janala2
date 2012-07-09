@@ -5,10 +5,7 @@
 package janala.solvers;
 
 import janala.config.Config;
-import janala.interpreters.Constraint;
-import janala.interpreters.StringConstants;
-import janala.interpreters.SymbolicInt;
-import janala.interpreters.Value;
+import janala.interpreters.*;
 import janala.utils.MyLogger;
 
 import java.io.*;
@@ -34,18 +31,23 @@ public class YicesSolver implements Solver {
         this.first = true;
     }
 
-    private void initSolver(Constraint c) {
+    private Constraint initSolver(Constraint c) {
         if (first) {
             first = false;
             constraints = new ArrayList<Constraint>();
-            c.not();
+            return c.not();
         }
+        return c;
     }
 
     public void visitSymbolicInt(SymbolicInt c) {
-        initSolver(c);
+        c = (SymbolicInt)initSolver(c);
         logger.log(Level.INFO,"{0}",c);
         constraints.add(c);
+    }
+
+    public void visitSymbolicOr(SymbolicOrConstraint c) {
+        throw new RuntimeException("Unimplemented feature");
     }
 
 

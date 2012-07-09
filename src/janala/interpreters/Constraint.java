@@ -16,6 +16,6 @@ public abstract class Constraint {
     public int index;
 
     public abstract void accept(ConstraintVisitor v);
-    public abstract void not();
+    public abstract Constraint not();
     public abstract void print(PrintStream out);
 }

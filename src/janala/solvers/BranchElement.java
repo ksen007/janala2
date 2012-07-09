@@ -14,12 +14,14 @@ public class BranchElement extends Element {
     boolean done;
     int pathConstraintIndex; // -1 for no index
     int iid;
+    public boolean ignore;
 
     public BranchElement(boolean branch, boolean done, int pathConstraintIndex, int iid) {
         this.branch = branch;
         this.done = done;
         this.pathConstraintIndex = pathConstraintIndex;
         this.iid = iid;
+        this.ignore = false;
     }
 
     @Override

@@ -11,4 +11,5 @@ package janala.interpreters;
  */
 public interface ConstraintVisitor {
     void visitSymbolicInt(SymbolicInt c);
+    void visitSymbolicOr(SymbolicOrConstraint c);
 }

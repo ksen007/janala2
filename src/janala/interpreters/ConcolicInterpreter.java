@@ -817,7 +817,7 @@ public class ConcolicInterpreter implements IVisitor {
         checkAndSetException();
     }
 
-    private void setArgumentsAndNewFrame(String desc, String owner, String name, boolean isInstance) {
+    private void setArgumentsAndNewFrame(String desc, String owner, String name, boolean isInstance, Instruction inst) {
         Type[] types = Type.getArgumentTypes(desc);
         Type retType = Type.getReturnType(desc);
         int nReturnWords;
@@ -853,38 +853,38 @@ public class ConcolicInterpreter implements IVisitor {
         }
         currentFrame = tmp;
 
-        if (next instanceof INVOKEMETHOD_END || next instanceof INVOKEMETHOD_EXCEPTION) {
+        if (next instanceof INVOKEMETHOD_END || next instanceof INVOKEMETHOD_EXCEPTION || next == null) {
             if (isInstance) {
                 currentFrame.ret = instance.invokeMethod(name,tmpValues);
             } else {
-                checkAssumption(owner,name,tmpValues);
-                currentFrame.ret = StaticInvocation.invokeMethod(owner,name,tmpValues);
+//                checkAssumption(owner,name,tmpValues);
+                currentFrame.ret = StaticInvocation.invokeMethod(inst.iid,owner,name,tmpValues, history);
             }
         }
     }
 
-    private void checkAssumption(String owner, String name, Value[] tmpValues) {
-        if (owner.equals("janala/Main") && name.equals("Assume") && tmpValues.length==1) {
-            if (((IntValue)tmpValues[0]).concrete!=0) {
-                history.setLastBranchDone();
-            }
-        }
-    }
-
+//    private void checkAssumption(String owner, String name, Value[] tmpValues) {
+//        if (owner.equals("janala/Main") && name.equals("Assume") && tmpValues.length==1) {
+//            if (((IntValue)tmpValues[0]).concrete!=0) {
+//                history.setLastBranchDone();
+//            }
+//        }
+//    }
+//
     public void visitINVOKEINTERFACE(INVOKEINTERFACE inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true, inst);
     }
 
     public void visitINVOKESPECIAL(INVOKESPECIAL inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true, inst);
     }
 
     public void visitINVOKESTATIC(INVOKESTATIC inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, false);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, false, inst);
     }
 
     public void visitINVOKEVIRTUAL(INVOKEVIRTUAL inst) {
-        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true);
+        setArgumentsAndNewFrame(inst.desc, inst.owner, inst.name, true, inst);
     }
 
     public void visitIOR(IOR inst) {

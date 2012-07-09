@@ -13,10 +13,7 @@ import choco.kernel.model.variables.integer.IntegerVariable;
 import choco.kernel.solver.variables.integer.IntDomainVar;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
-import janala.interpreters.Constraint;
-import janala.interpreters.StringConstants;
-import janala.interpreters.SymbolicInt;
-import janala.interpreters.Value;
+import janala.interpreters.*;
 import janala.utils.MyLogger;
 
 import java.io.BufferedOutputStream;
@@ -46,7 +43,7 @@ public class ChocoSolver implements Solver {
         this.first = true;
     }
 
-    private void initSolver(Constraint c) {
+    private Constraint initSolver(Constraint c) {
         if (first) {
             first = false;
             this.m = new CPModel();
@@ -56,12 +53,13 @@ public class ChocoSolver implements Solver {
                 vars[i] = Choco.makeIntVar("x"+i);
                 //m.addVariable(vars[i]);
             }
-            c.not();
+            return c.not();
         }
+        return c;
     }
 
     public void visitSymbolicInt(SymbolicInt c) {
-        initSolver(c);
+        c = (SymbolicInt)initSolver(c);
         logger.log(Level.INFO,"{0}",c);
         boolean first2 = true;
         IntegerExpressionVariable old = null;
@@ -95,6 +93,11 @@ public class ChocoSolver implements Solver {
         }
 
     }
+
+    public void visitSymbolicOr(SymbolicOrConstraint c) {
+        throw new RuntimeException("Unimplemented feature");
+    }
+
 
 //    public void visitPointerConstraint(PointerConstraint c) {
 //        initSolver(c);

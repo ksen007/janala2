@@ -155,7 +155,7 @@ public class SymbolicInt extends Constraint {
         SymbolicInt ret = new SymbolicInt(this);
         if (ret.op!=COMPARISON_OPS.UN) {
             if(op==COMPARISON_OPS.EQ) { // (x op 0)==0 is same as !(x op 0)
-                ret.not();
+                ret = (SymbolicInt) ret.not();
             }
         } else {
             ret.op = op;
@@ -163,13 +163,15 @@ public class SymbolicInt extends Constraint {
         return ret;
     }
 
-    public void not() {
-        if (op == COMPARISON_OPS.EQ) op = COMPARISON_OPS.NE;
-        else if (op == COMPARISON_OPS.NE) op = COMPARISON_OPS.EQ;
-        else if (op == COMPARISON_OPS.GT) op = COMPARISON_OPS.LE;
-        else if (op == COMPARISON_OPS.GE) op = COMPARISON_OPS.LT;
-        else if (op == COMPARISON_OPS.LT) op = COMPARISON_OPS.GE;
-        else if (op == COMPARISON_OPS.LE) op = COMPARISON_OPS.GT;
+    public Constraint not() {
+        SymbolicInt ret = new SymbolicInt(this);
+        if (ret.op == COMPARISON_OPS.EQ) ret.op = COMPARISON_OPS.NE;
+        else if (ret.op == COMPARISON_OPS.NE) ret.op = COMPARISON_OPS.EQ;
+        else if (ret.op == COMPARISON_OPS.GT) ret.op = COMPARISON_OPS.LE;
+        else if (ret.op == COMPARISON_OPS.GE) ret.op = COMPARISON_OPS.LT;
+        else if (ret.op == COMPARISON_OPS.LT) ret.op = COMPARISON_OPS.GE;
+        else if (ret.op == COMPARISON_OPS.LE) ret.op = COMPARISON_OPS.GT;
+        return ret;
     }
 
 
