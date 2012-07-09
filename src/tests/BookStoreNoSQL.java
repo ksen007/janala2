@@ -1,10 +1,7 @@
 
 package tests;
 
-import database.table.SymbolicTable;
-import database.table.Table;
-import database.table.TableFactory;
-import database.table.Where;
+import database.table.*;
 import janala.Main;
 
 import java.sql.ResultSet;
@@ -85,20 +82,24 @@ public class BookStoreNoSQL {
             Customers = TableFactory.create("Customers",
                     new String[]{"Id","Name","PasswordHash","Age"},
                     new int[] {Table.INT,Table.STRING,Table.INT,Table.INT},
-                    new boolean[]{true,false,false,false});
+                    new boolean[]{true,false,false,false},
+                    new ForeignKey[] {null,null,null,null});
 
             Orders = TableFactory.create("Orders",
                     new String[]{"Id","CustomerId","OrderDateTime","CancelDate", "BookId", "IsCanceled"},
                     new int[]{Table.INT,Table.INT,Table.INT,Table.INT,Table.INT,Table.INT},
-                    new boolean[]{true,false,false,false,false,false});
+                    new boolean[]{true,false,false,false,false,false},
+                    new ForeignKey[] {null, new ForeignKey(Customers,"Id"), null, null, null, null});
 
             Publishers = TableFactory.create("Publishers",new String[]{"Id","Name"},
                     new int[]{Table.INT,Table.STRING},
-                    new boolean[]{true,false});
+                    new boolean[]{true,false},
+                    new ForeignKey[] {null, null});
 
             Books = TableFactory.create("Books",new String[]{"Id","ISBN","Title","Price","Year","PublisherId","Stock"},
                     new int[]{Table.INT,Table.INT,Table.STRING,Table.INT,Table.INT,Table.INT,Table.INT},
-                    new boolean[]{true,false,false,false,false,false,false});
+                    new boolean[]{true,false,false,false,false,false,false},
+                    new ForeignKey[]{null,null,null,null,null,new ForeignKey(Publishers,"Id"),null});
 
 			// create an example of inputs and initial database state
 			createExampleInitialDatabaseState();
@@ -124,17 +125,19 @@ public class BookStoreNoSQL {
 //		Books.insert(new Object[]{22, 1234567892, "The Art of Lisp", 30, 1980, 20, 1});
 //		Books.insert(new Object[]{23, 1234567894, "Java HandBook", 5, 1999, 21, 1});
 //
+        SymbolicTable.insertSymbolicRows(Orders,1); // 1*6
+
+        SymbolicTable.insertSymbolicRows(Publishers,2); // 2*2
+
         SymbolicTable.insertSymbolicRows(Books,4); //4*7
 
 
 //		//Publishers
 //		Publishers.insert(new Object[]{20, "Pearson Education"});
 //        Publishers.insert(new Object[]{21, "O Reilly"});
-        SymbolicTable.insertSymbolicRows(Publishers,2); // 2*2
 //
 //		//Orders
 //		Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
-        SymbolicTable.insertSymbolicRows(Orders,1); // 1*6
 
 	}
 

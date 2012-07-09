@@ -5,6 +5,7 @@
 package database.table;
 
 import janala.Main;
+import janala.interpreters.OrValue;
 
 import java.util.ListIterator;
 import java.util.Map;
@@ -20,8 +21,10 @@ public class SymbolicTable {
         int[] types = table.getColumnTypes();
         boolean[] primaries = table.getPrimaries();
         String[] columnNames = table.getColumnNames();
+        ForeignKey[] foreignKeys = table.getForeignKeys();
         for (int i=0; i<n; i++) {
             Object[] row = new Object[types.length];
+            System.out.print(table.getName()+" {");
             for (int j=0; j<row.length; j++) {
                 if (types[j]==Table.INT) {
                     int x = Main.readInt(0);
@@ -38,6 +41,8 @@ public class SymbolicTable {
                     Main.MakeSymbolic(x);
                     row[j] = x;
                 }
+                System.out.print(row[j]);
+                System.out.print(" , ");
 
                 // now assume primary key constraint
                 if (primaries[j]) {
@@ -47,7 +52,26 @@ public class SymbolicTable {
                         Main.Assume(row[j].equals(otherRow.get(columnNames[j]))?0:1);
                     }
                 }
+
+                // now assume foreign key constraints
+                if (foreignKeys[j]!=null) {
+                    OrValue tmp = null;
+                    ListIterator<Map<String,Object>> iter = foreignKeys[j].table.iterator();
+                    while (iter.hasNext()) {
+                        Map<String,Object> otherRow = iter.next();
+                        if (tmp==null) {
+                            tmp = Main.AssumeOrBegin(row[j].equals(otherRow.get(foreignKeys[j].key))?1:0);
+                        } else {
+                            tmp = Main.AssumeOr(row[j].equals(otherRow.get(foreignKeys[j].key))?1:0,tmp);
+                        }
+                    }
+                    if (tmp!=null) {
+                        Main.AssumeOrEnd(tmp);
+                    }
+                }
             }
+            System.out.println("}");
+
             table.insert(row);
         }
     }

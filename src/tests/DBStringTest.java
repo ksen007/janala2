@@ -4,10 +4,7 @@
 
 package tests;
 
-import database.table.SymbolicTable;
-import database.table.Table;
-import database.table.TableFactory;
-import database.table.Where;
+import database.table.*;
 import janala.Main;
 
 import java.sql.ResultSet;
@@ -27,7 +24,8 @@ public class DBStringTest {
             Customers = TableFactory.create("Customers",
                     new String[]{"Id", "PasswordHash"},
                     new int[]{Table.STRING, Table.STRING},
-                    new boolean[]{true, false});
+                    new boolean[]{true, false},
+                    new ForeignKey[] {null,null});
 
             SymbolicTable.insertSymbolicRows(Customers, 2);
 

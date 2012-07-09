@@ -39,4 +39,6 @@ public interface Table {
     int[] getColumnTypes();
 
     boolean[] getPrimaries();
+
+    ForeignKey[] getForeignKeys();
 }

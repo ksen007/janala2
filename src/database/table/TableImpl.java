@@ -17,6 +17,7 @@ public class TableImpl implements Table {
     private String[] columnNames;
     private int[] columnTypes;
     private boolean[] isPrimary;
+    private ForeignKey[] foreignKeys;
     private List<Map<String,Object>> rows;
 
     public TableImpl(String name, String[] columnNames) {
@@ -25,11 +26,12 @@ public class TableImpl implements Table {
         rows = new LinkedList<Map<String, Object>>();
     }
 
-    public TableImpl(String name, String[] columnNames, int[] columnTypes, boolean[] primary) {
+    public TableImpl(String name, String[] columnNames, int[] columnTypes, boolean[] primary, ForeignKey[] foreignKeys) {
         this.name = name;
         this.columnNames = columnNames;
         this.columnTypes = columnTypes;
-        isPrimary = primary;
+        this.foreignKeys = foreignKeys;
+        this.isPrimary = primary;
         rows = new LinkedList<Map<String, Object>>();
     }
 
@@ -137,6 +139,10 @@ public class TableImpl implements Table {
 
     public boolean[] getPrimaries() {
         return isPrimary;
+    }
+
+    public ForeignKey[] getForeignKeys() {
+        return foreignKeys;
     }
 
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Map<String, Object>[] rows) {
