@@ -136,7 +136,7 @@ public class TableImpl implements Table {
     }
 
     public boolean[] getPrimaries() {
-        return getPrimaries();
+        return isPrimary;
     }
 
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Map<String, Object>[] rows) {
