@@ -28,10 +28,14 @@ public class History {
     private final static Logger logger = MyLogger.getLogger(History.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
     private boolean ignore;
+    private ArrayList<Value> inputs;
+    private Strategy strategy = new DFSStrategy();
+
 
     private History(Solver solver) {
         history = new ArrayList<BranchElement>(1024);
         pathConstraint = new ArrayList<Constraint>(1024);
+        inputs = new ArrayList<Value>();
         index = 0;
         this.solver = solver;
         this.ignore = false;
@@ -66,13 +70,9 @@ public class History {
             current = history.get(index);
             if (!ignore && current.branch != result.result) {
                 tester.log(Level.INFO,"Prediction failed");
-                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "+index+" history.size() "+history.size());
+                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
+                        +index+" history.size() "+history.size());
                 logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+result.constraint);
-//                int i = 0;
-//                for(BranchElement b:history) {
-//                    System.out.println(i+" "+b);
-//                    i++;
-//                }
                 int len = history.size();
                 for (int j=len-1; j>index; j--) {
                     history.remove(j);
@@ -100,20 +100,16 @@ public class History {
         index++;
     }
 
-    public void solveAndSave(ArrayList<Value> inputs) {
-        for (int i=index-1; i>=0; i--) {
-            BranchElement current = history.get(i);
-            if (!current.done && current.pathConstraintIndex != -1) {
-                if (solveAt(current.pathConstraintIndex,inputs)) {
-                    writeHistory(i);
-                    return;
-                }
-            }
+    public void solveAndSave() {
+        int i;
+        if ((i=strategy.solve(history,index,this))>=0) {
+            writeHistory(i);
+        } else {
+            removeHistory();
         }
-        removeHistory();
     }
 
-    private boolean solveAt(int pathConstraintIndex, ArrayList<Value> inputs) {
+    boolean solveAt(int pathConstraintIndex) {
         solver.setInputs(inputs);
         for (int i=pathConstraintIndex; i>=0; i--) {
             pathConstraint.get(i).accept(solver);
@@ -169,5 +165,9 @@ public class History {
 
     public void setIgnore() {
         ignore = true;
+    }
+
+    public void addInput(Value value) {
+        inputs.add(value);
     }
 }

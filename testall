@@ -1,4 +1,4 @@
-CATG=concolic
+CATG=concolic.cygwin
 ./$CATG 3 tests.BoolFlow
 ./$CATG 3 tests.BoolFlow2
 ./$CATG 3 tests.BoolTest

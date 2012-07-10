@@ -14,7 +14,6 @@ import janala.solvers.History;
 import janala.utils.MyLogger;
 import org.objectweb.asm.Type;
 
-import java.util.ArrayList;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +30,6 @@ public class ConcolicInterpreter implements IVisitor {
     private TIntObjectHashMap<Value> objects;
     private int symbol = 1;
     private History history;
-    private ArrayList<Value> inputs;
     private Instruction next;
     private final static Logger logger = MyLogger.getLogger(ConcolicInterpreter.class.getName());
 
@@ -41,7 +39,7 @@ public class ConcolicInterpreter implements IVisitor {
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
         history = History.readHistory(Config.getSolver());
-        inputs = new ArrayList<Value>();
+//        inputs = new ArrayList<Value>();
     }
 
     private void checkAndSetException() {
@@ -61,7 +59,7 @@ public class ConcolicInterpreter implements IVisitor {
     }
 
     public void endExecution() {
-        history.solveAndSave(inputs);
+        history.solveAndSave();
     }
 
 
@@ -1260,10 +1258,10 @@ public class ConcolicInterpreter implements IVisitor {
     public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
         if (currentFrame.peek()==PlaceHolder.instance) {
             currentFrame.peek2().MAKE_SYMBOLIC(symbol++);
-            inputs.add(currentFrame.peek2());
+            history.addInput(currentFrame.peek2());
         } else {
             currentFrame.peek().MAKE_SYMBOLIC(symbol++);
-            inputs.add(currentFrame.peek());
+            history.addInput(currentFrame.peek());
         }
     }
 
