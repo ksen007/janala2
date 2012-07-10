@@ -22,13 +22,15 @@ public class OrAssumptionTest {
 
         if (y < 0) {
 
-        OrValue tmp = Main.AssumeOrBegin(x < -100?1:0);
-        Main.AssumeOrEnd(Main.AssumeOr(x>100?1:0,tmp));
-        if (y+x==300) {
-            System.out.println("then");
-        } else {
-            System.out.println("else");
-        }
+            Main.Ignore();
+            OrValue tmp = Main.AssumeOrBegin(x < -100?1:0);
+            Main.Ignore();
+            Main.AssumeOrEnd(Main.AssumeOr(x>100?1:0,tmp));
+            if (y+x==300) {
+                System.out.println("then");
+            } else {
+                System.out.println("else");
+            }
         }
     }
 }

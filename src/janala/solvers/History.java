@@ -27,12 +27,14 @@ public class History {
     private Solver solver;
     private final static Logger logger = MyLogger.getLogger(History.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
+    private boolean ignore;
 
     private History(Solver solver) {
         history = new ArrayList<BranchElement>(1024);
         pathConstraint = new ArrayList<Constraint>(1024);
         index = 0;
         this.solver = solver;
+        this.ignore = false;
     }
 
     public static History readHistory(Solver solver) {
@@ -58,16 +60,11 @@ public class History {
         return ret;
     }
 
-    public void checkAndSetBranchIgnore(ConstraintAndResult result,int iid) {
-        checkAndSetBranch(result,iid);
-        history.get(index-1).ignore = true;
-    }
-
     public void checkAndSetBranch(ConstraintAndResult result,int iid) {
         BranchElement current;
         if (index < history.size()) {
             current = history.get(index);
-            if (!current.ignore && current.branch != result.result) {
+            if (!ignore && current.branch != result.result) {
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "+index+" history.size() "+history.size());
                 logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+result.constraint);
@@ -96,7 +93,10 @@ public class History {
         } else {
             current.pathConstraintIndex = -1;
         }
-        current.branch = result.result;
+        if (ignore) {
+            ignore = false;
+        }
+//        current.branch = result.result;
         index++;
     }
 
@@ -157,9 +157,17 @@ public class History {
     public Constraint removeLastBranch() {
         index--;
         BranchElement current = history.get(index);
+        Constraint ret = null;
         if (current.pathConstraintIndex!=-1) {
-            return  pathConstraint.remove(pathConstraint.size()-1);
+            ret =  pathConstraint.remove(pathConstraint.size()-1);
         }
-        return null;
+        if (index==history.size()-1) {
+            history.remove(history.size()-1);
+        }
+        return ret;
+    }
+
+    public void setIgnore() {
+        ignore = true;
     }
 }

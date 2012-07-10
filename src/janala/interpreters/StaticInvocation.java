@@ -49,10 +49,13 @@ public class StaticInvocation {
                 c = b.symbolic.not();
             else
                 c = b.symbolic;
-            history.checkAndSetBranchIgnore(new ConstraintAndResult(c,res),iid);
+            history.checkAndSetBranch(new ConstraintAndResult(c,res),iid);
             if (b.concrete) {
                 history.setLastBranchDone();
             }
+            return PlaceHolder.instance;
+        } else if (owner.equals("janala/Main") && name.equals("Ignore") && args.length==0) {
+            history.setIgnore();
             return PlaceHolder.instance;
         }
 

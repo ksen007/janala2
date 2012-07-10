@@ -60,8 +60,10 @@ public class SymbolicTable {
                     while (iter.hasNext()) {
                         Map<String,Object> otherRow = iter.next();
                         if (tmp==null) {
+                            Main.Ignore();
                             tmp = Main.AssumeOrBegin(row[j].equals(otherRow.get(foreignKeys[j].key))?1:0);
                         } else {
+                            Main.Ignore();
                             tmp = Main.AssumeOr(row[j].equals(otherRow.get(foreignKeys[j].key))?1:0,tmp);
                         }
                     }

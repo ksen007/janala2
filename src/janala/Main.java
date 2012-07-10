@@ -16,6 +16,8 @@ import java.util.ArrayList;
  * Time: 4:50 PM
  */
 public class Main {
+    public static void Ignore() {}
+
     public static void Assume(int b) {
         if (b==0) {
             System.out.println("Assumption failed!");
