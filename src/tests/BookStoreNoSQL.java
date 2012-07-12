@@ -194,7 +194,7 @@ public class BookStoreNoSQL {
 				// execution the business logic related to state (screen)
 				switch (state){
 				case S01_LOGIN_SCREEN: state = s01_loginScreen(is.customerId, is.password); break;
-				case S02_LOGIN_ERROR_SCREEN: state = s02_loginErrorScreen();
+				case S02_LOGIN_ERROR_SCREEN: state = s02_loginErrorScreen(); break;
 				case S03_MENU_SCREEN: state = s03_menuScreen(is.whereGoto); break;
 				case S04_SEARCH_BOOKS_SCREEN: state = s04_searchBooksScreen(is.title, is.publisherName, is.minYear, is.maxYear); break;
 				case S05_NO_BOOK_SCREEN: state = s05_noBookScreen(); break;
@@ -226,7 +226,12 @@ public class BookStoreNoSQL {
                 Integer i = (Integer)rows[0].get("Id");
                 if (i==null || i!=cid) return false;
                 i = (Integer)rows[0].get("PasswordHash");
-                if (i==null || i!=hash(pwd)) return false;
+                if (i==null || i!=hash(pwd)) {
+                    System.out.println("^^^^^^^^^^^^ Failed to match password "+pwd+" with database value " + i);
+                    return false;
+                } else {
+                    System.out.println("************ Matched password "+pwd+" with database value " + i);
+                }
                 return true;
             }
         },new String[][]{{"Id"}},null).getResultSet();
