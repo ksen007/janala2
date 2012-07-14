@@ -13,8 +13,8 @@ import java.util.LinkedList;
  * Time: 1:46 PM
  */
 public class SymbolicOrConstraint extends Constraint {
-    LinkedList<Constraint> constraints;
-    boolean isNegated;
+    public LinkedList<Constraint> constraints;
+    public boolean isNegated;
 
     public SymbolicOrConstraint(Constraint c) {
         isNegated = false;

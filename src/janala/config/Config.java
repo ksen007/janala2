@@ -21,6 +21,7 @@ public class Config {
     public static final String yicesCommand = System.getProperty("janala.yices", "yices");
     public static final String formulaFile = System.getProperty("janala.formulaFile", "formula");
     public static final String testLog = System.getProperty("janala.testLog", "test.log");
+    public static String cvc3Command = System.getProperty("janala.cvc3", "cvc3");
 
     public static Solver getSolver() {
         try {
