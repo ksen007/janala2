@@ -114,6 +114,8 @@ public class CVC3Solver implements Solver {
                 out.print(")");
             }
 
+        } else {
+            throw new RuntimeException("Unimplemented constraint type "+con);
         }
     }
 
