@@ -525,13 +525,13 @@ public class BookStoreNoSQL {
 			l_orderedBookId = orderedBookIdPrice.fst;
 
 			Orders.update(new Where() {
-				public boolean modify(Map<String, Object>[] rows) {
-					Integer id = (Integer) rows[0].get("Id");
+				public boolean modify(Map<String, Object> rows) {
+					Integer id = (Integer) rows.get("Id");
 					if (id == null || id != l_orderedBookId) {
 						return false;
 					} else {
-						Integer stock = (Integer) rows[0].get("Stock");
-						rows[0].put("Stock", stock + 1);
+						Integer stock = (Integer) rows.get("Stock");
+						rows.put("Stock", stock + 1);
 						return true;
 					}
 				}
