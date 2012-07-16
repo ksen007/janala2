@@ -7,6 +7,7 @@ package janala.solvers;
 import choco.Choco;
 import choco.cp.model.CPModel;
 import choco.cp.solver.CPSolver;
+import choco.kernel.model.constraints.*;
 import choco.kernel.model.variables.integer.IntegerConstantVariable;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import choco.kernel.model.variables.integer.IntegerVariable;
@@ -14,6 +15,7 @@ import choco.kernel.solver.variables.integer.IntDomainVar;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.*;
+import janala.interpreters.Constraint;
 import janala.utils.MyLogger;
 
 import java.io.BufferedOutputStream;
@@ -59,7 +61,11 @@ public class ChocoSolver implements Solver {
     }
 
     public void visitSymbolicInt(SymbolicInt c) {
-        c = (SymbolicInt)initSolver(c);
+        Constraint tmp  = initSolver(c);
+        m.addConstraint(createSymbolicInt((SymbolicInt) tmp));
+    }
+
+    public choco.kernel.model.constraints.Constraint createSymbolicInt(SymbolicInt c) {
         logger.log(Level.INFO,"{0}",c);
         boolean first2 = true;
         IntegerExpressionVariable old = null;
@@ -78,24 +84,41 @@ public class ChocoSolver implements Solver {
         if (c.constant != 0) {
             old = Choco.sum(new IntegerConstantVariable((int)c.constant),old);
         }
+        choco.kernel.model.constraints.Constraint ret = null;
         if (c.op == COMPARISON_OPS.EQ) {
-            m.addConstraint(Choco.eq(old, 0));
+            ret = Choco.eq(old, 0);
         } else if (c.op == COMPARISON_OPS.NE) {
-            m.addConstraint(Choco.not(Choco.eq(old, 0)));
+            ret = Choco.not(Choco.eq(old, 0));
         } else if (c.op == COMPARISON_OPS.LE) {
-            m.addConstraint(Choco.leq(old, 0));
+            ret = Choco.leq(old, 0);
         } else if (c.op == COMPARISON_OPS.LT) {
-            m.addConstraint(Choco.lt(old, 0));
+            ret = Choco.lt(old, 0);
         } else if (c.op == COMPARISON_OPS.GE) {
-            m.addConstraint(Choco.geq(old, 0));
+            ret = Choco.geq(old, 0);
         } else if (c.op == COMPARISON_OPS.GT) {
-            m.addConstraint(Choco.gt(old, 0));
+            ret = Choco.gt(old, 0);
         }
-
+        return ret;
     }
 
-    public void visitSymbolicOr(SymbolicOrConstraint c) {
-        throw new RuntimeException("Unimplemented feature");
+    public void visitSymbolicOr(SymbolicOrConstraint or) {
+
+        choco.kernel.model.constraints.Constraint old = null;
+        boolean first2 = true;
+        for(Constraint c:or.constraints) {
+            if (first2) {
+                first2 = false;
+                Constraint tmp  = initSolver(c);
+                old = createSymbolicInt((SymbolicInt)tmp);
+            } else {
+                Constraint tmp  = initSolver(c);
+                old = Choco.or(old,createSymbolicInt((SymbolicInt)tmp));
+            }
+        }
+        if (or.isNegated) {
+            old = Choco.not(old);
+        }
+        m.addConstraint(old);
     }
 
 
@@ -115,7 +138,11 @@ public class ChocoSolver implements Solver {
         if (m!=null) {
             CPSolver s = new CPSolver();
             s.read(m);
+            System.out.println("Running choco solver ...");
+            logger.log(Level.INFO, "Running Choco Solver ...");
             s.solve();
+            logger.log(Level.INFO,"end running Choco Solver ");
+
             if (s.isFeasible()) {
                 try {
                     PrintStream out = new PrintStream(
