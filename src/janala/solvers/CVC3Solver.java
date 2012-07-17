@@ -110,6 +110,9 @@ public class CVC3Solver implements Solver {
                 print(c,out);
                 out.print(")");
             }
+            if (or.constraints.isEmpty()) {
+                out.print(" TRUE ");
+            }
             if (or.isNegated) {
                 out.print(")");
             }

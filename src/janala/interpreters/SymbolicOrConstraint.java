@@ -4,7 +4,6 @@
 
 package janala.interpreters;
 
-import java.io.PrintStream;
 import java.util.LinkedList;
 
 /**
@@ -51,23 +50,23 @@ public class SymbolicOrConstraint extends Constraint {
         return ret;
     }
 
-    @Override
-    public void print(PrintStream out) {
-        if (isNegated) {
-            out.print("(not (or ");
-        } else {
-            out.print("(or ");
-        }
-        for(Constraint c:constraints) {
-            c.print(out);
-            out.print(" ");
-        }
-        if (isNegated) {
-            out.print("))");
-        } else {
-            out.print(")");
-        }
-    }
+//    @Override
+//    public void print(PrintStream out) {
+//        if (isNegated) {
+//            out.print("(not (or ");
+//        } else {
+//            out.print("(or ");
+//        }
+//        for(Constraint c:constraints) {
+//            c.print(out);
+//            out.print(" ");
+//        }
+//        if (isNegated) {
+//            out.print("))");
+//        } else {
+//            out.print(")");
+//        }
+//    }
 
     @Override
     public String toString() {

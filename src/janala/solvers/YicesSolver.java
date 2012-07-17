@@ -4,6 +4,7 @@
 
 package janala.solvers;
 
+import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.*;
 import janala.utils.MyLogger;
@@ -50,6 +51,81 @@ public class YicesSolver implements Solver {
         throw new RuntimeException("Unimplemented feature");
     }
 
+    private void print(Constraint con, PrintStream out) {
+        if (con instanceof SymbolicInt) {
+            SymbolicInt c = (SymbolicInt)con;
+            out.print("(");
+            if (c.op == SymbolicInt.COMPARISON_OPS.EQ) {
+                out.print("=");
+            } else
+            if (c.op == SymbolicInt.COMPARISON_OPS.NE) {
+                out.print("/=");
+            } else
+            if (c.op == SymbolicInt.COMPARISON_OPS.LE) {
+                out.print("<=");
+            } else
+            if (c.op == SymbolicInt.COMPARISON_OPS.LT) {
+                out.print("<");
+            } else
+            if (c.op == SymbolicInt.COMPARISON_OPS.GE) {
+                out.print(">=");
+            } else
+            if (c.op == SymbolicInt.COMPARISON_OPS.GT) {
+                out.print(">");
+            }
+            out.print(" (+ ");
+            for ( TIntLongIterator it = c.linear.iterator(); it.hasNext(); ) {
+                it.advance();
+
+                int key = it.key();
+                long val = it.value();
+                if (val < 0) {
+                    out.print("(* (- 0 ");
+                    out.print(-val);
+                    out.print(") x");
+                } else {
+                    out.print("(* ");
+                    out.print(val);
+                    out.print(" x");
+                }
+                out.print(key);
+                out.print(") ");
+            }
+            if (c.constant < 0) {
+                out.print("(- 0 ");
+                out.print(-c.constant);
+                out.print(")");
+            } else if (c.constant > 0) {
+                out.print(c.constant);
+            }
+            out.print(") 0)");
+        } else if (con instanceof SymbolicOrConstraint) {
+            SymbolicOrConstraint or = (SymbolicOrConstraint)con;
+            if (or.isNegated) {
+                out.print("(not ");
+            }
+            if (or.constraints.size()>1) {
+                out.print("(or ");
+            }
+            for(Constraint c:or.constraints) {
+                print(c,out);
+                out.print(" ");
+            }
+            if (or.constraints.size()>1) {
+                out.print(")");
+            }
+            if (or.constraints.isEmpty()) {
+                out.print(" true ");
+            }
+            if (or.isNegated) {
+                out.print(")");
+            }
+        } else {
+            throw new RuntimeException("Unimplemented constraint type "+con);
+        }
+
+    }
+
 
     public boolean solve() {
         try {
@@ -67,7 +143,7 @@ public class YicesSolver implements Solver {
             }
             for (Constraint next : constraints) {
                 out.print("(assert ");
-                next.print(out);
+                print(next,out);
                 out.println(")");
             }
             out.println("(check)");

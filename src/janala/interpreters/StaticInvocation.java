@@ -33,13 +33,15 @@ public class StaticInvocation {
         } else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
             Constraint last = history.removeLastBranch();
             boolean res = ((IntValue)args[0]).concrete!=0;
-            return new SymbolicOrValue(res,new SymbolicOrConstraint(res?last:last.not()));
+            if (!res && last!=null) last = last.not();
+            return new SymbolicOrValue(res,new SymbolicOrConstraint(last));
         } else if (owner.equals("janala/Main") && name.equals("AssumeOr") && args.length==2) {
             Constraint last = history.removeLastBranch();
             SymbolicOrValue b2 = (SymbolicOrValue)args[1];
             SymbolicOrConstraint tmp;
             boolean res = ((IntValue)args[0]).concrete!=0;
-            tmp = b2.symbolic.OR(res?last:last.not());
+            if (!res && last!=null) last = last.not();
+            tmp = b2.symbolic.OR(last);
             return new SymbolicOrValue(res || b2.concrete,tmp);
         } else if (owner.equals("janala/Main") && name.equals("AssumeOrEnd") && args.length==1) {
             SymbolicOrValue b = (SymbolicOrValue)args[0];

@@ -9,8 +9,6 @@ package janala.interpreters;
 import gnu.trove.iterator.TIntLongIterator;
 import gnu.trove.map.hash.TIntLongHashMap;
 
-import java.io.PrintStream;
-
 public class SymbolicInt extends Constraint {
     public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};
 
@@ -239,52 +237,52 @@ public class SymbolicInt extends Constraint {
         return sb.toString();
     }
 
-    public void print(PrintStream out) {
-        out.print("(");
-        if (op == COMPARISON_OPS.EQ) {
-            out.print("=");
-        } else
-        if (op == COMPARISON_OPS.NE) {
-            out.print("/=");
-        } else
-        if (op == COMPARISON_OPS.LE) {
-            out.print("<=");
-        } else
-        if (op == COMPARISON_OPS.LT) {
-            out.print("<");
-        } else
-        if (op == COMPARISON_OPS.GE) {
-            out.print(">=");
-        } else
-        if (op == COMPARISON_OPS.GT) {
-            out.print(">");
-        }
-        out.print(" (+ ");
-        for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
-            it.advance();
-            
-            int key = it.key();
-            long val = it.value();
-            if (val < 0) {
-                out.print("(* (- 0 ");
-                out.print(-val);
-                out.print(") x");
-            } else {
-                out.print("(* ");
-                out.print(val);
-                out.print(" x");
-            }
-            out.print(key);
-            out.print(") ");
-        }
-        if (constant < 0) {
-            out.print("(- 0 ");
-            out.print(-constant);
-            out.print(")");
-        } else if (constant > 0) {
-            out.print(constant);
-        }
-        out.print(") 0)");
-    }
+//    public void print(PrintStream out) {
+//        out.print("(");
+//        if (op == COMPARISON_OPS.EQ) {
+//            out.print("=");
+//        } else
+//        if (op == COMPARISON_OPS.NE) {
+//            out.print("/=");
+//        } else
+//        if (op == COMPARISON_OPS.LE) {
+//            out.print("<=");
+//        } else
+//        if (op == COMPARISON_OPS.LT) {
+//            out.print("<");
+//        } else
+//        if (op == COMPARISON_OPS.GE) {
+//            out.print(">=");
+//        } else
+//        if (op == COMPARISON_OPS.GT) {
+//            out.print(">");
+//        }
+//        out.print(" (+ ");
+//        for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
+//            it.advance();
+//
+//            int key = it.key();
+//            long val = it.value();
+//            if (val < 0) {
+//                out.print("(* (- 0 ");
+//                out.print(-val);
+//                out.print(") x");
+//            } else {
+//                out.print("(* ");
+//                out.print(val);
+//                out.print(" x");
+//            }
+//            out.print(key);
+//            out.print(") ");
+//        }
+//        if (constant < 0) {
+//            out.print("(- 0 ");
+//            out.print(-constant);
+//            out.print(")");
+//        } else if (constant > 0) {
+//            out.print(constant);
+//        }
+//        out.print(") 0)");
+//    }
 
 }
