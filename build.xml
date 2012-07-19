@@ -41,7 +41,7 @@
         </javac>
     </target>
 
-    <target depends="init" name="build-tests">
+    <target depends="build-project" name="build-tests">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="out/production/tests"
                source="${source}" target="${target}" includeantruntime="false">

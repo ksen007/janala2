@@ -42,6 +42,7 @@ public class TableImpl implements Table {
             String column = columns[i];
             row.put(column,values[i]);
         }
+        ConsistencyChecker.checkRow(this, row);
         rows.add(row);
     }
 
@@ -52,6 +53,7 @@ public class TableImpl implements Table {
             String column = columnNames[i];
             row.put(column,values[i]);
         }
+        ConsistencyChecker.checkRow(this, row);
         rows.add(row);
     }
 
@@ -78,6 +80,7 @@ public class TableImpl implements Table {
         int ret=0;
         for (Map<String, Object> row : rows) {
             if (where.modify(row)) {
+                ConsistencyChecker.checkRow(this, row);
                 ret++;
             }
         }

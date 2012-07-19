@@ -32,6 +32,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
                 && !cname.startsWith("javax/security")
                 && !cname.startsWith("sun/security")
                 && !cname.startsWith("sun/reflect")
+                && !cname.startsWith("database/table/ConsistencyChecker")
                 && !cname.startsWith("com/apple/java")
                 && !cname.startsWith("java/lang")) {
             //System.err.println("((((((((((((((( transform "+cname);
