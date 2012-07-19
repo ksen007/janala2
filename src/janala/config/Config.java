@@ -5,6 +5,7 @@
 package janala.config;
 
 import janala.solvers.Solver;
+import janala.solvers.Strategy;
 
 public class Config {
     public static final String mainClass = System.getProperty("janala.mainClass",null);
@@ -41,4 +42,22 @@ public class Config {
         return null;
     }
     //public static Solver solver = new ChocoSolver();
+
+    public static Strategy getStrategy() {
+        try {
+            Class solverClass = Class.forName(System.getProperty("janala.strategy", "janala.solvers.DFSStrategy"));
+            Strategy ret = (Strategy)solverClass.newInstance();
+            return ret;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
 }

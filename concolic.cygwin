@@ -16,7 +16,7 @@ while [ $i -le $iter ]
 do
 	echo "[Input $i]"
     java -Djanala.printTrace=false -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH;lib/asm-all-3.3.1.jar;out/production/janala" -ea $YOURPGM
-    java -Djanala.solver=janala.solvers.YicesSolver2 -Djanala.verbose=false  -Djanala.mainClass=$YOURPGM -Djanala.iteration=$i -cp "$CLASSPATH;lib/asm-all-3.3.1.jar;lib/trove-3.0.3.jar;lib/choco-solver-2.1.4.jar;lib/iagent.jar" -ea janala.interpreters.LoadAndExecuteInstructions
+    java -Djanala.solver=janala.solvers.YicesSolver2 -Djanala.strategy=janala.solvers.DFSStrategy -Djanala.verbose=false  -Djanala.mainClass=$YOURPGM -Djanala.iteration=$i -cp "$CLASSPATH;lib/asm-all-3.3.1.jar;lib/trove-3.0.3.jar;lib/choco-solver-2.1.4.jar;lib/iagent.jar" -ea janala.interpreters.LoadAndExecuteInstructions
 	if  [ -e "history" ]
 	then
 		echo -n ""

@@ -29,7 +29,7 @@ public class History {
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
     private boolean ignore;
     private ArrayList<Value> inputs;
-    private Strategy strategy = new DFSStrategy();
+    private Strategy strategy = Config.getStrategy();
 
 
     private History(Solver solver) {
