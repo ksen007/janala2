@@ -3,6 +3,7 @@ CATG=concolic
 ./$CATG 3 tests.BoolFlow2
 ./$CATG 3 tests.BoolTest
 ./$CATG 5 tests.BoolTest2
+./$CATG 5 tests.BoolTest3
 ./$CATG 4 tests.StringEquals
 ./$CATG 4 tests.StringTest2
 ./$CATG 4 tests.StringTest3
@@ -18,6 +19,7 @@ CATG=concolic
 ./$CATG 5 tests.Linear
 ./$CATG 3 tests.SimpleDBTest
 ./$CATG 5 tests.OrAssumptionTest
+./$CATG 5 tests.OrAssumptionTest2
 ./$CATG 29 tests.QSort
 ./$CATG 29 tests.QSortLong
 ./$CATG 25 tests.InsertionSort
