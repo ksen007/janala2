@@ -29,7 +29,7 @@ public class MyLogger {
         Logger ret = Logger.getLogger(name);
         ret.setUseParentHandlers(false);
         ret.addHandler(handler);
-        ret.setLevel(Config.verbose?Level.INFO:Level.WARNING);
+        ret.setLevel(Config.verbose?Level.FINE:Level.WARNING);
         return ret;
     }
 

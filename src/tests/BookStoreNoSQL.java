@@ -518,7 +518,7 @@ public class BookStoreNoSQL {
 		final int CURREMT_TIME_STAMP = 20120714;
 
 		for (Tuple2<Integer, Integer> orderedBookIdPrice : orderedBookIdPriceList) {
-			Object[] newOrder = { g_customerId, null, CURREMT_TIME_STAMP, null,
+			Object[] newOrder = { g_customerId, g_customerId, CURREMT_TIME_STAMP, null,
 					orderedBookIdPrice.fst, 0 };
 			Orders.insert(newOrder);
 
@@ -531,6 +531,7 @@ public class BookStoreNoSQL {
 						return false;
 					} else {
 						Integer stock = (Integer) rows.get("Stock");
+                        if (stock==null) stock = 0;
 						rows.put("Stock", stock + 1);
 						return true;
 					}
