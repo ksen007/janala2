@@ -2,6 +2,8 @@ package tests;
 
 import database.table.*;
 import janala.Main;
+import janala.utils.DebugAction;
+import janala.utils.Debugger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,16 +51,19 @@ public class BookStoreNoSQL {
 	// global inputs
 	private int g_customerId;
 	// inner variables
+	private ArrayList<Integer> orderIdList;
+	private ArrayList<Integer> selectedOrderIdList;
 	private ArrayList<Tuple2<Integer, Integer>> selectedBookIdPriceList;
 	private ArrayList<Tuple2<Integer, Integer>> orderedBookIdPriceList;
-	private int[] selectedIndexes;
-	private ArrayList<Integer> selectedOrderIdList;
+
+	// private ArrayList<Integer> selectedOrderIdList;
 	private Table Customers;
 	private Table Orders;
 	private Table Publishers;
 	private Table Books;
 	// local variables for where clause (we can not use clouser...)
 	private int l_orderedBookId;
+	private int l_selectedOrderId;
 
 	// ---------------------------------------------------------------------------
 
@@ -74,36 +79,49 @@ public class BookStoreNoSQL {
 
 	public static void main(String[] argv) {
 		try {
+			System.out.println();
+			System.out.println();
 			BookStoreNoSQL bookStore = new BookStoreNoSQL();
 			bookStore.initialize();
 			bookStore.printPreConditions();
 			bookStore.execute();
 			bookStore.printPostConditions();
 			bookStore.dispose();
+			System.out.println();
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void printPreConditions(){
-		System.out.println("--initial database state--");
-		PrintDBTables();
+	public void printPreConditions() {
+		Debugger.Debug(new DebugAction() {
+			public void execute() {
+				System.out.println("--initial database state--");
+				PrintDBTables();
+			}
+		});
+
 	}
 
-	public void printPostConditions(){
-		System.out.println("--inputs and updated database state--");
-		PrintVisitStatesInputs();
-		PrintDBTables();
+	public void printPostConditions() {
+		Debugger.Debug(new DebugAction() {
+			public void execute() {
+				System.out.println("--inputs and updated database state--");
+				PrintVisitStatesInputs();
+				PrintDBTables();
+			}
+		});
+
 	}
 
-	private void PrintDBTables(){
-		try{
+	private void PrintDBTables() {
+		try {
 			PrintDBTable(Customers);
 			PrintDBTable(Books);
 			PrintDBTable(Publishers);
 			PrintDBTable(Orders);
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 
 		}
 	}
@@ -117,10 +135,10 @@ public class BookStoreNoSQL {
 		System.out.println();
 
 		ListIterator<Map<String, Object>> ite = table.iterator();
-		while(ite.hasNext()){
+		while (ite.hasNext()) {
 			Map<String, Object> record = ite.next();
 			for (String columnName : names) {
-				System.out.print(record.get(columnName)+" ");
+				System.out.print(record.get(columnName) + " ");
 			}
 			System.out.println();
 		}
@@ -128,15 +146,15 @@ public class BookStoreNoSQL {
 	}
 
 	private void PrintVisitStatesInputs() {
-		System.out.print("visited screens = ");
+		System.out.print("[[**visited screens = ");
 		for (VisitState visitState : visitStateList) {
-			System.out.print(visitState.state +" ");
+			System.out.print(visitState.state + " ");
 		}
-		System.out.println();
+		System.out.println(" **]]");
 
 		for (VisitState visitState : visitStateList) {
 			System.out.println("Screen " + visitState.state + " (the "
-					+ visitState.visitCount + " round)");
+					+ (visitState.visitCount + 1) + " round)");
 			BookStoreScreenInputs is = screenInputsList[visitState.visitCount];
 			switch (visitState.state) {
 			case S01_LOGIN_SCREEN:
@@ -147,17 +165,15 @@ public class BookStoreNoSQL {
 				System.out.println("whereGoto=" + is.whereGoto);
 				break;
 			case S04_SEARCH_BOOKS_SCREEN:
+				System.out.println("isBackToMenue=" + is.isBackToMenu);
 				System.out.println("title=" + is.title);
 				System.out.println("publisherName=" + is.publisherName);
 				System.out.println("maxYear=" + is.maxYear);
 				System.out.println("minYear=" + is.minYear);
 				break;
 			case S06_SELECT_BOOKS_SCREEN:
-				System.out.print("selectedBooksIndexs={ ");
-				for (int i = 0; i < selectedIndexes.length; i++) {
-					System.out.print(selectedIndexes[i]);
-				}
-				System.out.println(" }");
+				printSelectedIndexes("selectedBooksIndexes",
+						is.selectedBooksIndexes);
 				break;
 			case S08_TOO_EXPENSIVE_SCREEN:
 				System.out.println("isTooExpensiveOk=" + is.isTooExpensiveOk);
@@ -169,8 +185,25 @@ public class BookStoreNoSQL {
 				System.out.println("isDuplicateOrderOk="
 						+ is.isDuplicateOrderOK);
 				break;
+			case S21_SELECT_ORDERS_SCREEN:
+				printSelectedIndexes("selectedOrdersIndexes",
+						is.selectedOrdersIndexes);
+				break;
+			case S23_FINAL_CHECK_TO_CANCEL_SCREEN:
+				System.out.println("isCancelOk=" + is.isCancelOk);
+				break;
 			}
 		}
+
+		System.out.println();
+	}
+
+	private void printSelectedIndexes(String variableName, int[] selectedIndexes) {
+		System.out.print(variableName + "={ ");
+		for (int i = 0; i < selectedIndexes.length; i++) {
+			System.out.print(selectedIndexes[i]);
+		}
+		System.out.println(" }");
 	}
 
 	public void initialize() {
@@ -212,7 +245,6 @@ public class BookStoreNoSQL {
 			// create an example of inputs and initial database state
 			createExampleInitialDatabaseState();
 			createExampleInitialInputsList();
-			createExampleInitialInnerVariables();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,11 +254,11 @@ public class BookStoreNoSQL {
 
 	public void createExampleInitialDatabaseState() throws SQLException {
 
-		SymbolicTable.insertSymbolicRows(Customers, 1); // 4
+		SymbolicTable.insertSymbolicRows(Customers, 4); // 4*4
 
-		SymbolicTable.insertSymbolicRows(Orders, 1); // 1*6
+		SymbolicTable.insertSymbolicRows(Orders, 4); // 4*6
 
-		SymbolicTable.insertSymbolicRows(Publishers, 2); // 2*2
+		SymbolicTable.insertSymbolicRows(Publishers, 4); // 4*2
 
 		SymbolicTable.insertSymbolicRows(Books, 4); // 4*7
 	}
@@ -238,6 +270,8 @@ public class BookStoreNoSQL {
 			Main.MakeSymbolic(is.customerId);
 			is.password = Main.readInt(1);
 			Main.MakeSymbolic(is.password);
+			is.isBackToMenu = Main.readBool(false);
+			Main.MakeSymbolic(is.isBackToMenu);
 			is.title = Main.readString("The Art of C#");
 			Main.MakeSymbolic(is.title);
 			is.publisherName = Main.readString("O Reilly");
@@ -246,15 +280,35 @@ public class BookStoreNoSQL {
 			Main.MakeSymbolic(is.minYear);
 			is.maxYear = Main.readInt(2010);
 			Main.MakeSymbolic(is.maxYear);
+			// is.isCancelOk = Main.readBool(true);
+			// Main.MakeSymbolic(is.isCancelOk);
+			is.isCancelOk = true;
+			// is.isDuplicateOrderOK = Main.readBool(true);
+			// Main.MakeSymbolic(is.isDuplicateOrderOK);
+			is.isDuplicateOrderOK = true;
+			// is.isOderderOK = Main.readBool(is.isOderderOK);
+			// Main.MakeSymbolic(true);
+			is.isOderderOK = true;
+			is.isTooExpensiveOk = Main.readBool(true);
+			Main.MakeSymbolic(is.isTooExpensiveOk);
+			// is.whereGoto = Main.readInt(BookStoreScreenInputs.GOTO_CANCEL);
+			// Main.MakeSymbolic(is.whereGoto);
+			is.whereGoto = BookStoreScreenInputs.GOTO_ORDER;
+
+			is.selectedBooksIndexes = createExampleSelectedIndexes();
+			is.selectedOrdersIndexes = createExampleSelectedIndexes();
 		}
 	}
 
-	public void createExampleInitialInnerVariables() {
-		int selectedIndexSize = 1;
-		selectedIndexes = new int[selectedIndexSize];
-		for (int i = 0; i < selectedIndexSize; i++) {
-			selectedIndexes[i] = Main.readInt(i);
+	private int[] createExampleSelectedIndexes() {
+		int selectedIndexesSize = 1;
+		int[] selectedIndexes = new int[selectedIndexesSize];
+		for (int i = 0; i < selectedIndexesSize; i++) {
+			selectedIndexes[i] = i;
+			// selectedIndexes[i] = Main.readInt(i);
+			// Main.MakeSymbolic(selectedIndexes[i]);
 		}
+		return selectedIndexes;
 	}
 
 	public void execute() {
@@ -264,12 +318,18 @@ public class BookStoreNoSQL {
 
 			while (true) {
 
+				if (state == -1) {
+					System.err.println("Invalid state");
+					return;
+				}
+
 				// check screen visit count
 				int screenVisitCount = screenVisitCountTable[state];
 				if (screenVisitCount >= SCREEN_VISIT_MAX) {
 					System.out.println("Exceed the max count of screen visit");
 					return;
 				}
+
 				screenVisitCountTable[state]++;
 				cis = screenInputsList[screenVisitCount];
 
@@ -325,9 +385,6 @@ public class BookStoreNoSQL {
 				case S24_FINISHED_CANCEL_SCREEN:
 					state = S24_finishedCannelScreen();
 					break;
-				case -1:
-					System.err.println("Invalid state");
-					return;
 				}
 			}
 		} catch (Exception e) {
@@ -384,13 +441,17 @@ public class BookStoreNoSQL {
 			ResultSet rs = Orders.select(new Where() {
 				public boolean isTrue(Map<String, Object>[] rows) {
 					Integer i = (Integer) rows[0].get("CustomerId");
+					Integer isCanceled = (Integer) rows[0].get("IsCanceled");
 					if (i == null || i != g_customerId)
 						return false;
+					if (isCanceled == null || isCanceled == 1) {
+						return false;
+					}
 					return true;
 				}
 			}, new String[][] { { "Id" } }, null).getResultSet();
 
-			ArrayList<Integer> orderIdList = new ArrayList<Integer>();
+			orderIdList = new ArrayList<Integer>();
 			while (rs.next()) {
 				orderIdList.add(rs.getInt("Id"));
 			}
@@ -405,6 +466,10 @@ public class BookStoreNoSQL {
 	}
 
 	private int s04_searchBooksScreen() throws SQLException {
+
+		if (cis.isBackToMenu) {
+			return S03_MENU_SCREEN;
+		}
 
 		Main.Assume(cis.title.length() >= 0 ? 1 : 0);
 		Main.Assume(cis.title.length() <= 20 ? 1 : 0);
@@ -460,8 +525,9 @@ public class BookStoreNoSQL {
 	}
 
 	private int s06_selectBooksScreen() throws SQLException {
-		orderedBookIdPriceList = new ArrayList<Tuple2<Integer,Integer>>();
-		for (int selectedIndex : selectedIndexes) {
+
+		orderedBookIdPriceList = new ArrayList<Tuple2<Integer, Integer>>();
+		for (int selectedIndex : cis.selectedBooksIndexes) {
 			orderedBookIdPriceList.add(selectedBookIdPriceList
 					.get(selectedIndex));
 		}
@@ -513,34 +579,51 @@ public class BookStoreNoSQL {
 		}
 	}
 
+	public int orderId = 0;
+
 	private int S09_finalCheckToOrderScreen() {
+
+		if (!cis.isOderderOK) {
+			return S04_SEARCH_BOOKS_SCREEN;
+		}
 
 		final int CURREMT_TIME_STAMP = 20120714;
 
 		for (Tuple2<Integer, Integer> orderedBookIdPrice : orderedBookIdPriceList) {
-			Object[] newOrder = { g_customerId, g_customerId, CURREMT_TIME_STAMP, null,
-					orderedBookIdPrice.fst, 0 };
-			Orders.insert(newOrder);
+			orderId++;
+			// Object[] newOrder = {orderId ,g_customerId, CURREMT_TIME_STAMP,
+			// null,
+			Object[] newOrder = { orderId, g_customerId, CURREMT_TIME_STAMP,
+					null, orderedBookIdPrice.fst, 0 };
+
+			try {
+				Orders.insert(newOrder);
+			} catch (AssertionError e) {
+				return -1;
+			}
 
 			l_orderedBookId = orderedBookIdPrice.fst;
 
-			Orders.update(new Where() {
-				public boolean modify(Map<String, Object> rows) {
-					Integer id = (Integer) rows.get("Id");
-					if (id == null || id != l_orderedBookId) {
-						return false;
-					} else {
-						Integer stock = (Integer) rows.get("Stock");
-                        if (stock==null) stock = 0;
-						rows.put("Stock", stock + 1);
+			try {
+				Books.update(new Where() {
+					public boolean modify(Map<String, Object> rows) {
+						Integer id = (Integer) rows.get("Id");
+						if (id == null || id != l_orderedBookId) {
+							return false;
+						} else {
+							Integer stock = (Integer) rows.get("Stock");
+							rows.put("Stock", stock - 1);
+							return true;
+						}
+					}
+
+					public boolean isTrue(Map<String, Object>[] rows) {
 						return true;
 					}
-				}
-
-				public boolean isTrue(Map<String, Object>[] rows) {
-					return true;
-				}
-			});
+				});
+			} catch (AssertionError e) {
+				return -1;
+			}
 		}
 
 		return S10_THANK_YOU_ORDER_SCREEN;
@@ -559,23 +642,59 @@ public class BookStoreNoSQL {
 	}
 
 	private int S20_noOrderScreen() {
-		return 0;
+		return S03_MENU_SCREEN;
 	}
 
 	private int S21_selectOrdersScreen() {
-		return 0;
+		selectedOrderIdList = new ArrayList<Integer>();
+
+		for (int selectedIndex : cis.selectedOrdersIndexes) {
+			selectedOrderIdList.add(orderIdList.get(selectedIndex));
+		}
+
+		if (selectedOrderIdList.size() > 0) {
+			return S23_FINAL_CHECK_TO_CANCEL_SCREEN;
+		} else {
+			return S22_NO_SELECTED_ORDER_SCREEN;
+		}
 	}
 
 	private int S22_noSelectedOrderScreen() {
-		return 0;
+		return S21_SELECT_ORDERS_SCREEN;
 	}
 
 	private int S23_finalCheckToCancelScreen() {
-		return 0;
+
+		final int CURREMT_TIME_STAMP = 20120721;
+
+		if (cis.isCancelOk) {
+			for (int selectedOrderId : selectedOrderIdList) {
+				l_selectedOrderId = selectedOrderId;
+				Orders.update(new Where() {
+					public boolean modify(Map<String, Object> rows) {
+						Integer id = (Integer) rows.get("Id");
+						if (id == null || id != l_selectedOrderId) {
+							return false;
+						} else {
+							rows.put("IsCanceled", 1);
+							rows.put("CancelDate", CURREMT_TIME_STAMP);
+							return true;
+						}
+					}
+
+					public boolean isTrue(Map<String, Object>[] rows) {
+						return true;
+					}
+				});
+			}
+			return S24_FINISHED_CANCEL_SCREEN;
+		} else {
+			return S23_FINAL_CHECK_TO_CANCEL_SCREEN;
+		}
 	}
 
 	private int S24_finishedCannelScreen() {
-		return 0;
+		return S21_SELECT_ORDERS_SCREEN;
 	}
 
 	private int hash(int password) {

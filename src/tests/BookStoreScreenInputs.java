@@ -14,6 +14,7 @@ public class BookStoreScreenInputs {
 		public int whereGoto;
 
 	    //(4)SEARCH_BOOKS_SCREEN
+		public boolean isBackToMenu;
 		public String title;
 		public String publisherName;
 		public int maxYear;
