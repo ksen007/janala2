@@ -1,0 +1,57 @@
+package tests;
+
+import catg.CATG;
+import database.table.*;
+
+import java.sql.ResultSet;
+import java.util.Map;
+
+public class DBSelectTest {
+	public static int l_age;
+
+	public  static void testme(Table customers, int age){
+		l_age = age;
+
+		ResultSet rs = customers.select(new Where() {
+			public boolean isTrue(Map<String, Object>[] rows) {
+				Integer i = (Integer) rows[0].get("Age");
+				if (i != null && i == l_age)
+					return true;
+				return false;
+			}
+		}, new String[][] { { "Id" } }, null).getResultSet();
+
+		int selectedCount = 0;
+
+		try{
+			while (rs.next()) {
+				selectedCount++;
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+
+		System.out.println("age="+age);
+		System.out.println(selectedCount + " records are selected.");
+		if(selectedCount >3){
+			System.out.println("reach goal!!.");
+		}
+		else{
+			System.out.println("not reach goal...");
+		}
+    }
+
+    public static void main(String[] args){
+    	int age= CATG.readInt(20);
+
+        Table customers = TableFactory.create("Customers", new String[] { "Id",
+				"Name", "PasswordHash", "Age" }, new int[] { Table.INT,
+				Table.STRING, Table.INT, Table.INT }, new boolean[] { true,
+				false, false, false }, new ForeignKey[] { null, null, null,
+				null });
+        SymbolicTable.insertSymbolicRows(customers, 4);
+
+        testme(customers, age);
+    }
+}
