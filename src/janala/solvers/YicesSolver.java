@@ -130,7 +130,7 @@ public class YicesSolver implements Solver {
     public boolean solve() {
         try {
             Runtime rt = Runtime.getRuntime();
-            Process proc = rt.exec(Config.yicesCommand);
+            Process proc = rt.exec(Config.instance.yicesCommand);
 
             InputReader soln = new InputReader(proc.getInputStream(),inputs);
             PrintStream out = new PrintStream(new BufferedOutputStream(proc.getOutputStream()));
@@ -199,7 +199,7 @@ class InputReader extends Thread {
             if (!line.startsWith("sat")) {
                 if (!line.startsWith("unsat")) {
                     logger.log(Level.SEVERE, "Call to Yices failed (concolic.yices = "
-                            + Config.yicesCommand + ")");
+                            + Config.instance.yicesCommand + ")");
                     Runtime.getRuntime().halt(1);
                 }
                 tester.log(Level.INFO,"-- Infeasible");
@@ -222,7 +222,7 @@ class InputReader extends Thread {
 
             PrintStream out = new PrintStream(
                     new BufferedOutputStream(
-                            new FileOutputStream(Config.inputs)));
+                            new FileOutputStream(Config.instance.inputs)));
             int len = inputs.size();
             for(int i=0; i<len; i++) {
                 Long l = soln.get(i+1);

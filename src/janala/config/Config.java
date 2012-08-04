@@ -7,26 +7,66 @@ package janala.config;
 import janala.solvers.Solver;
 import janala.solvers.Strategy;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 public class Config {
     public static final String mainClass = System.getProperty("janala.mainClass",null);
     public static final int iteration = Integer.getInteger("janala.iteration",0);
-    public static final boolean isTest = System.getProperty("janala.isTest","false").equals("true");
+    public static final String propFile = System.getProperty("janala.conf","catg.conf");
+    public static final Config instance = new Config();
 
-    public static final boolean verbose = System.getProperty("janala.verbose","false").equals("true");
-    public static final boolean printTrace = System.getProperty("janala.printTrace","false").equals("true");
-    public static final String analysisClass = System.getProperty("janala.analysisClass", "janala/logger/DJVM");
-    public static final String traceFileName = System.getProperty("janala.trace","trace");
-    public static final String traceAuxFileName = System.getProperty("janala.trace.aux","trace.aux");
-    public static final String history = System.getProperty("janala.history","history");
-    public static final String inputs = System.getProperty("janala.inputs","inputs");
-    public static final String yicesCommand = System.getProperty("janala.yices", "yices");
-    public static final String formulaFile = System.getProperty("janala.formulaFile", "formula");
-    public static final String testLog = System.getProperty("janala.testLog", "test.log");
-    public static String cvc3Command = System.getProperty("janala.cvc3", "cvc3");
 
-    public static Solver getSolver() {
+
+    public boolean isTest;
+    public boolean verbose;
+    public boolean printTrace;
+    public String analysisClass;
+    public String traceFileName;
+    public String traceAuxFileName;
+    public String history;
+    public String inputs;
+    public String yicesCommand;
+    public String formulaFile;
+    public String testLog;
+    public String cvc3Command;
+    public String[] excludeList;
+    public String[] includeList;
+    private String solver;
+    private String strategy;
+
+    public Config() {
         try {
-            Class solverClass = Class.forName(System.getProperty("janala.solver", "janala.solvers.YicesSolver2"));
+            Properties properties = new Properties();
+    		properties.load(new FileInputStream(propFile));
+            
+            isTest = properties.getProperty("catg.isInternalTestMode","false").equals("true");
+            verbose = properties.getProperty("catg.isVerbose","false").equals("true");
+            printTrace = properties.getProperty("catg.isPrintTrace","false").equals("true");
+            traceFileName = properties.getProperty("catg.traceFile","trace");
+            traceAuxFileName = properties.getProperty("catg.auxTraceFile","trace.aux");
+            history = properties.getProperty("catg.historyFile","history");
+            inputs = properties.getProperty("catg.inputsFile","inputs");
+            yicesCommand = properties.getProperty("catg.yicesCommand", "yices");
+            formulaFile = properties.getProperty("catg.formulaFile", "formula");
+            testLog = properties.getProperty("catg.testLog", "test.log");
+            cvc3Command = properties.getProperty("catg.cvc3Command", "cvc3");
+            analysisClass = properties.getProperty("catg.analysisClass", "janala.logger.DJVM").replace('.','/');
+            solver = properties.getProperty("catg.solverClass", "janala.solvers.YicesSolver2");
+            strategy = properties.getProperty("catg.strategyClass", "janala.solvers.DFSStrategy");
+            excludeList = properties.getProperty("catg.excludeList","").split(",");
+            includeList = properties.getProperty("catg.includeList","catg.CATG").split(",");
+
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+        }
+    }
+
+
+    public Solver getSolver() {
+        try {
+            Class solverClass = Class.forName(solver);
             Solver ret = (Solver)solverClass.newInstance();
             return ret;
         } catch (ClassNotFoundException e) {
@@ -41,11 +81,10 @@ public class Config {
         }
         return null;
     }
-    //public static Solver solver = new ChocoSolver();
 
-    public static Strategy getStrategy() {
+    public Strategy getStrategy() {
         try {
-            Class solverClass = Class.forName(System.getProperty("janala.strategy", "janala.solvers.DFSStrategy"));
+            Class solverClass = Class.forName(strategy);
             Strategy ret = (Strategy)solverClass.newInstance();
             return ret;
         } catch (ClassNotFoundException e) {

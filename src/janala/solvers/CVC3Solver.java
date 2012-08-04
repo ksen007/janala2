@@ -124,7 +124,7 @@ public class CVC3Solver implements Solver {
 
     public boolean solve() {
         try {
-            PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.formulaFile)));
+            PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.instance.formulaFile)));
             int nInputs = inputs.size();
             for (int i = 0; i < nInputs; i++) {
                 out.print("x");
@@ -150,7 +150,7 @@ public class CVC3Solver implements Solver {
             out.close();
 
 
-            ProcessBuilder builder = new ProcessBuilder(new String[]{Config.cvc3Command,Config.formulaFile});
+            ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.cvc3Command,Config.instance.formulaFile});
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -167,7 +167,7 @@ public class CVC3Solver implements Solver {
                 if (!line.contains("Unsat")) {
                     logger.log(Level.SEVERE,line);
                     logger.log(Level.SEVERE, "Call to CVC3 failed (concolic.cvc3 = "
-                            + Config.cvc3Command + ")");
+                            + Config.instance.cvc3Command + ")");
                     Runtime.getRuntime().halt(1);
                 }
                 tester.log(Level.INFO,"-- Infeasible");
@@ -191,7 +191,7 @@ public class CVC3Solver implements Solver {
 
                 out = new PrintStream(
                         new BufferedOutputStream(
-                                new FileOutputStream(Config.inputs)));
+                                new FileOutputStream(Config.instance.inputs)));
                 int len = inputs.size();
                 for(int i=0; i<len; i++) {
                     Long l = soln.get(i+1);

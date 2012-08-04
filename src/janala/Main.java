@@ -134,7 +134,7 @@ public class Main {
         index = 0;
         DataInputStream in = null;
         try{
-            FileInputStream fstream = new FileInputStream(Config.inputs);
+            FileInputStream fstream = new FileInputStream(Config.instance.inputs);
             in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;

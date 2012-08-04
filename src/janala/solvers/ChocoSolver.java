@@ -7,7 +7,6 @@ package janala.solvers;
 import choco.Choco;
 import choco.cp.model.CPModel;
 import choco.cp.solver.CPSolver;
-import choco.kernel.model.constraints.*;
 import choco.kernel.model.variables.integer.IntegerConstantVariable;
 import choco.kernel.model.variables.integer.IntegerExpressionVariable;
 import choco.kernel.model.variables.integer.IntegerVariable;
@@ -15,7 +14,6 @@ import choco.kernel.solver.variables.integer.IntDomainVar;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.*;
-import janala.interpreters.Constraint;
 import janala.utils.MyLogger;
 
 import java.io.BufferedOutputStream;
@@ -147,7 +145,7 @@ public class ChocoSolver implements Solver {
                 try {
                     PrintStream out = new PrintStream(
                             new BufferedOutputStream(
-                                    new FileOutputStream(Config.inputs)));
+                                    new FileOutputStream(Config.instance.inputs)));
                     for(int i=0; i<vars.length; i++) {
                         IntDomainVar var = s.getVar(vars[i]);
 

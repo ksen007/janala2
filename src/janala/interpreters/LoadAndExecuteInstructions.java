@@ -43,13 +43,13 @@ public class LoadAndExecuteInstructions {
         Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
         try {
-            inputStream = new ObjectInputStream(new FileInputStream(Config.traceAuxFileName));
+            inputStream = new ObjectInputStream(new FileInputStream(Config.instance.traceAuxFileName));
             ClassNames cnames = (ClassNames)inputStream.readObject();
             inputStream.close();
             cnames.init();
 
             intp = new ConcolicInterpreter(cnames);
-            inputStream = new ObjectInputStream(new FileInputStream(Config.traceFileName));
+            inputStream = new ObjectInputStream(new FileInputStream(Config.instance.traceFileName));
 
             Instruction inst, next;
             inst=readInst(inputStream);

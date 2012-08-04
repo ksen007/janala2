@@ -24,7 +24,7 @@ public class FileLogger extends Thread implements Logger {
 
     public FileLogger() {
         try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(Config.traceFileName));
+            outputStream = new ObjectOutputStream(new FileOutputStream(Config.instance.traceFileName));
             Runtime.getRuntime().addShutdownHook(this);
         } catch (IOException e) {
             e.printStackTrace();  
@@ -36,7 +36,7 @@ public class FileLogger extends Thread implements Logger {
     public void run() {
         try {
             outputStream.close();
-            outputStream = new ObjectOutputStream(new FileOutputStream(Config.traceAuxFileName));
+            outputStream = new ObjectOutputStream(new FileOutputStream(Config.instance.traceAuxFileName));
             outputStream.writeObject(ClassNames.instance);
             //System.out.println(ClassNames.instance);
             outputStream.close();
@@ -48,7 +48,7 @@ public class FileLogger extends Thread implements Logger {
     }
 
     private void log(Instruction insn) {
-        if (Config.printTrace)
+        if (Config.instance.printTrace)
             System.out.println(insn);
         try {
             outputStream.writeObject(insn);

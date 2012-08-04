@@ -29,7 +29,7 @@ public class MyLogger {
         Logger ret = Logger.getLogger(name);
         ret.setUseParentHandlers(false);
         ret.addHandler(handler);
-        ret.setLevel(Config.verbose?Level.FINE:Level.WARNING);
+        ret.setLevel(Config.instance.verbose?Level.FINE:Level.WARNING);
         return ret;
     }
 
@@ -47,6 +47,8 @@ public class MyLogger {
     }
 
     public static Logger getTestLogger(String name) {
+        if (!Config.instance.isTest)
+            return getLogger(name);
         try {
             String filename = testDataDir+name;
             Logger ret = Logger.getLogger(name);
@@ -71,6 +73,8 @@ public class MyLogger {
     }
 
     public static void checkLog(Logger logger) {
+        if (!Config.instance.isTest)
+            return;
         Handler handlers[] = logger.getHandlers();
         if (handlers.length!=0) {
             if (handlers[0] instanceof FileHandler) {
@@ -83,13 +87,13 @@ public class MyLogger {
 
         if (neW.exists() && old.exists()) {
             if (!compareFiles(neW,old)) {
-                Logger test = getFileLogger(Config.testLog);
+                Logger test = getFileLogger(Config.instance.testLog);
                 test.warning("************* Test "+filename+" failed!! **************");
             }
         }
     }
 
-    static boolean compareFiles(File f1, File f2){
+    static private boolean compareFiles(File f1, File f2){
         try{
             if(f1.length() != f2.length())
                 return false;

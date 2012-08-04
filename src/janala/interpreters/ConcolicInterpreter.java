@@ -38,7 +38,7 @@ public class ConcolicInterpreter implements IVisitor {
         stack.add(currentFrame = new Frame(0));
         this.cnames = cnames;
         objects = new TIntObjectHashMap<Value>();
-        history = History.readHistory(Config.getSolver());
+        history = History.readHistory(Config.instance.getSolver());
 //        inputs = new ArrayList<Value>();
     }
 

@@ -4,6 +4,7 @@
 
 package janala.instrument;
 
+import janala.config.Config;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -20,7 +21,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
 		inst.addTransformer(new SnoopInstructionTransformer());
 	}
 
-	public byte[] transform(ClassLoader loader,String cname, Class<?> c, ProtectionDomain d, byte[] cbuf)
+	public byte[] transformOld(ClassLoader loader,String cname, Class<?> c, ProtectionDomain d, byte[] cbuf)
             throws IllegalClassFormatException {
 
 		if (!cname.startsWith("janala")
@@ -58,4 +59,48 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
 		return cbuf;
 	}
 
+    public byte[] transform(ClassLoader loader,String cname, Class<?> c, ProtectionDomain d, byte[] cbuf)
+            throws IllegalClassFormatException {
+
+        boolean toInstrument = true;
+        String[] tmp = Config.instance.excludeList;
+        for (int i = 0; i < tmp.length; i++) {
+            String s = tmp[i];
+            if (cname.startsWith(s)) {
+                toInstrument = false;
+                break;
+            }
+        }
+        tmp = Config.instance.includeList;
+        for (int i = 0; i < tmp.length; i++) {
+            String s = tmp[i];
+            if (cname.startsWith(s)) {
+                toInstrument = true;
+                break;
+            }
+        }
+
+        if (toInstrument) {
+            //System.err.println("((((((((((((((( transform "+cname);
+            ClassReader cr = new ClassReader(cbuf);
+            ClassWriter cw = new ClassWriter(cr, 0);
+            ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
+//            ClassVisitor cv = new SnoopInstructionClassAdapter(new TraceClassVisitor(cw,new PrintWriter( System.out )));
+            cr.accept(cv, 0);
+
+            byte[] ret = cw.toByteArray();
+//            try {
+//                FileOutputStream out = new FileOutputStream("tmp.class");
+//                out.write(ret);
+//                out.close();
+//            } catch(Exception e) {
+//                e.printStackTrace();
+//            }
+            //System.err.println(")))))))))))))) end transform "+cname);
+            return ret;
+        } else {
+            //System.out.println("--------------- skipping "+cname);
+        }
+        return cbuf;
+    }
 }

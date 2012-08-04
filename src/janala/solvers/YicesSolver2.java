@@ -130,7 +130,7 @@ public class YicesSolver2 implements Solver {
 
     public boolean solve() {
         try {
-            PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.formulaFile)));
+            PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.instance.formulaFile)));
             int nInputs = inputs.size();
             for (int i = 0; i < nInputs; i++) {
                 out.print("(define x");
@@ -147,7 +147,7 @@ public class YicesSolver2 implements Solver {
             out.close();
 
 
-            ProcessBuilder builder = new ProcessBuilder(new String[]{Config.yicesCommand,Config.formulaFile});
+            ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.yicesCommand,Config.instance.formulaFile});
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
@@ -164,7 +164,7 @@ public class YicesSolver2 implements Solver {
                 if (!line.contains("unsat")) {
                     logger.log(Level.SEVERE,line);
                     logger.log(Level.SEVERE, "Call to Yices failed (concolic.yices = "
-                            + Config.yicesCommand + ")");
+                            + Config.instance.yicesCommand + ")");
                     Runtime.getRuntime().halt(1);
                 }
                 tester.log(Level.INFO,"-- Infeasible");
@@ -188,7 +188,7 @@ public class YicesSolver2 implements Solver {
 
                 out = new PrintStream(
                         new BufferedOutputStream(
-                                new FileOutputStream(Config.inputs)));
+                                new FileOutputStream(Config.instance.inputs)));
                 int len = inputs.size();
                 for(int i=0; i<len; i++) {
                     Long l = soln.get(i+1);

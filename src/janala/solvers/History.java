@@ -29,7 +29,7 @@ public class History {
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
     private boolean ignore;
     private ArrayList<Value> inputs;
-    private Strategy strategy = Config.getStrategy();
+    private Strategy strategy = Config.instance.getStrategy();
 
 
     private History(Solver solver) {
@@ -46,7 +46,7 @@ public class History {
         History ret = new History(solver);
 
         try {
-            inputStream = new ObjectInputStream(new FileInputStream(Config.history));
+            inputStream = new ObjectInputStream(new FileInputStream(Config.instance.history));
             Object tmp = inputStream.readObject();
             if (tmp instanceof ArrayList) {
                 ret.history = (ArrayList)tmp;
@@ -118,7 +118,7 @@ public class History {
     }
 
     private void removeHistory() {
-        File f = new File(Config.history);
+        File f = new File(Config.instance.history);
         f.delete();
         logger.log(Level.INFO, "Done with search.");
     }
@@ -133,7 +133,7 @@ public class History {
         }
         ObjectOutputStream outputStream;
         try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(Config.history));
+            outputStream = new ObjectOutputStream(new FileOutputStream(Config.instance.history));
             outputStream.writeObject(history);
             outputStream.close();
 
