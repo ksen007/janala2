@@ -50,7 +50,7 @@ public class Config {
             inputs = properties.getProperty("catg.inputsFile","inputs");
             yicesCommand = properties.getProperty("catg.yicesCommand", "yices");
             formulaFile = properties.getProperty("catg.formulaFile", "formula");
-            testLog = properties.getProperty("catg.testLog", "test.log");
+            testLog = properties.getProperty("catg.testLogFile", "test.log");
             cvc3Command = properties.getProperty("catg.cvc3Command", "cvc3");
             analysisClass = properties.getProperty("catg.analysisClass", "janala.logger.DJVM").replace('.','/');
             solver = properties.getProperty("catg.solverClass", "janala.solvers.YicesSolver2");
