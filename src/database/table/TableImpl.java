@@ -18,12 +18,12 @@ public class TableImpl implements Table {
     private int[] columnTypes;
     private boolean[] isPrimary;
     private ForeignKey[] foreignKeys;
-    private List<Map<String,Object>> rows;
+    private List<Row> rows;
 
     public TableImpl(String name, String[] columnNames) {
         this.name = name;
         this.columnNames = columnNames;
-        rows = new LinkedList<Map<String, Object>>();
+        rows = new LinkedList<Row>();
     }
 
     public TableImpl(String name, String[] columnNames, int[] columnTypes, boolean[] primary, ForeignKey[] foreignKeys) {
@@ -32,12 +32,12 @@ public class TableImpl implements Table {
         this.columnTypes = columnTypes;
         this.foreignKeys = foreignKeys;
         this.isPrimary = primary;
-        rows = new LinkedList<Map<String, Object>>();
+        rows = new LinkedList<Row>();
     }
 
     public void insert(String[] columns, Object[] values) {
         assert(columns.length==values.length);
-        Map<String,Object> row = new TreeMap<String, Object>();
+        Row row = new Row();
         for (int i = 0; i < columns.length; i++) {
             String column = columns[i];
             row.put(column,values[i]);
@@ -48,7 +48,7 @@ public class TableImpl implements Table {
 
     public void insert(Object[] values) {
         assert(columnNames.length==values.length);
-        Map<String,Object> row = new TreeMap<String, Object>();
+        Row row = new Row();
         for (int i = 0; i < columnNames.length; i++) {
             String column = columnNames[i];
             row.put(column,values[i]);
@@ -57,16 +57,16 @@ public class TableImpl implements Table {
         rows.add(row);
     }
 
-    public ListIterator<Map<String,Object>> iterator() {
-        return rows.listIterator();
+    public TableIterator iterator() {
+        return new TableIterator(rows.listIterator());
     }
 
     public int delete(Where where) {
         int ret=0;
-        ListIterator<Map<String,Object>> iterator = rows.listIterator();
-        Map<String,Object> [] tmp = new Map[1];
+        TableIterator iterator = new TableIterator(rows.listIterator());
+        Row[] tmp = new Row[1];
         while (iterator.hasNext()) {
-            Map<String,Object> row = iterator.next();
+            Row row = iterator.next();
             tmp[0] = row;
             if (where.isTrue(tmp)) {
                 ret++;
@@ -78,7 +78,7 @@ public class TableImpl implements Table {
 
     public int update(Where where) {
         int ret=0;
-        for (Map<String, Object> row : rows) {
+        for (Row row : rows) {
             if (where.modify(row)) {
                 ConsistencyChecker.checkRow(this, row);
                 ret++;
@@ -113,10 +113,10 @@ public class TableImpl implements Table {
         }
         Table ret = TableFactory.create(null, tmp);
 
-        ListIterator<Map<String,Object>>[] iterators = new ListIterator[nTables];
+        TableIterator[] iterators = new TableIterator[nTables];
 
         while (hasNext(iterators)) {
-            Map<String,Object>[] rows = next(iterators, this, fromOther);
+            Row[] rows = next(iterators, this, fromOther);
             if (where.isTrue(rows)) {
                 ret.insert(doSelectColumns(nRows, selectColumns, rows));
             }
@@ -125,7 +125,7 @@ public class TableImpl implements Table {
     }
 
     public ResultSet getResultSet() {
-        return new ResultSetImpl(rows.listIterator());
+        return new ResultSetImpl(new TableIterator(rows.listIterator()));
     }
 
     public String getName() {
@@ -148,7 +148,7 @@ public class TableImpl implements Table {
         return foreignKeys;
     }
 
-    private Object[] doSelectColumns(int nCols, String[][] selectColumns, Map<String, Object>[] rows) {
+    private Object[] doSelectColumns(int nCols, String[][] selectColumns, Row[] rows) {
         Object[] ret = new Object[nCols];
         int k = 0;
         for(int i=0 ; i<selectColumns.length; i++) {
@@ -162,8 +162,8 @@ public class TableImpl implements Table {
         return ret;
     }
 
-    private static Map<String, Object>[] next(ListIterator<Map<String, Object>>[] iterators, Table table, Table[] fromOther) {
-        Map<String,Object>[] ret = new Map[iterators.length];
+    private static Row[] next(TableIterator[] iterators, Table table, Table[] fromOther) {
+        Row[] ret = new Row[iterators.length];
         boolean first = true;
         for(int i=iterators.length-1; i>=0; i--) {
             if (iterators[i] == null || (first && !iterators[i].hasNext())) {
@@ -184,7 +184,7 @@ public class TableImpl implements Table {
         return ret;
     }
 
-    private static boolean hasNext(ListIterator<Map<String, Object>>[] iterators) {
+    private static boolean hasNext(TableIterator[] iterators) {
         for (int i=0; i<iterators.length;i++) {
             if (iterators[i]==null || iterators[i].hasNext())
                 return true;

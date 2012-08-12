@@ -4,7 +4,6 @@ import database.table.*;
 import janala.Main;
 
 import java.sql.ResultSet;
-import java.util.Map;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -33,7 +32,7 @@ public class SimpleDBTest {
             Main.MakeSymbolic(cid);
 
             ResultSet rs = Customers.select(new Where() {
-                public boolean isTrue(Map<String, Object>[] rows) {
+                public boolean isTrue(Row[] rows) {
                     Integer i = (Integer)rows[0].get("Id");
                     if (i==null || i!=cid) return false;
                     return true;

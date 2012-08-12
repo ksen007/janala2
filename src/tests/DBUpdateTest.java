@@ -3,8 +3,6 @@ package tests;
 import catg.CATG;
 import database.table.*;
 
-import java.util.Map;
-
 public class DBUpdateTest {
 	public static int l_age;
 
@@ -12,7 +10,7 @@ public class DBUpdateTest {
 		l_age = age;
 
 		int updatedCount = customers.update(new Where() {
-			public boolean modify(Map<String, Object> rows) {
+			public boolean modify(Row rows) {
 				Integer age = (Integer) rows.get("Age");
 				if (age != null && age == 30) {
 					Integer oldAge = (Integer) rows.get("Age");
@@ -23,7 +21,7 @@ public class DBUpdateTest {
 				}
 			}
 
-			public boolean isTrue(Map<String, Object>[] rows) {
+			public boolean isTrue(Row[] rows) {
 				return true;
 			}
 		});

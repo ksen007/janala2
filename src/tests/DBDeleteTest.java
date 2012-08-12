@@ -3,15 +3,13 @@ package tests;
 import catg.CATG;
 import database.table.*;
 
-import java.util.Map;
-
 public class DBDeleteTest {
 	public static int l_age;
 
 	public  static void testme(Table customers, int age){
 		l_age = age;
 		int deletedCount = customers.delete(new Where() {
-			public boolean isTrue(Map<String, Object>[] rows) {
+			public boolean isTrue(Row[] rows) {
 				Integer i = (Integer) rows[0].get("Age");
 				if (i != null && i == l_age)
 					return true;

@@ -8,7 +8,6 @@ import database.table.*;
 import janala.Main;
 
 import java.sql.ResultSet;
-import java.util.Map;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -34,7 +33,7 @@ public class DBStringTest {
             Main.MakeSymbolic(cid);
 
             ResultSet rs = Customers.select(new Where() {
-                public boolean isTrue(Map<String, Object>[] rows) {
+                public boolean isTrue(Row[] rows) {
                     if (!cid.equals(rows[0].get("Id"))) return false;
                     return true;
                 }

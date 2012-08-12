@@ -8,7 +8,6 @@ import janala.Main;
 import janala.interpreters.OrValue;
 
 import java.util.ListIterator;
-import java.util.Map;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -46,9 +45,9 @@ public class SymbolicTable {
 
                 // now assume primary key constraint
                 if (primaries[j]) {
-                    ListIterator<Map<String,Object>> iter = table.iterator();
+                    TableIterator iter = table.iterator();
                     while (iter.hasNext()) {
-                        Map<String,Object> otherRow = iter.next();
+                        Row otherRow = iter.next();
                         Main.Assume(row[j].equals(otherRow.get(columnNames[j]))?0:1);
                     }
                 }
@@ -56,9 +55,9 @@ public class SymbolicTable {
                 // now assume foreign key constraints
                 if (foreignKeys[j]!=null) {
                     OrValue tmp = null;
-                    ListIterator<Map<String,Object>> iter = foreignKeys[j].table.iterator();
+                    TableIterator iter = foreignKeys[j].table.iterator();
                     while (iter.hasNext()) {
-                        Map<String,Object> otherRow = iter.next();
+                        Row otherRow = iter.next();
                         if (tmp==null) {
                             Main.Ignore();
                             tmp = Main.AssumeOrBegin(row[j].equals(otherRow.get(foreignKeys[j].key))?1:0);

@@ -4,7 +4,6 @@ import catg.CATG;
 import database.table.*;
 
 import java.sql.ResultSet;
-import java.util.Map;
 
 public class DBSelectTest {
 	public static int l_age;
@@ -13,7 +12,7 @@ public class DBSelectTest {
 		l_age = age;
 
 		ResultSet rs = customers.select(new Where() {
-			public boolean isTrue(Map<String, Object>[] rows) {
+			public boolean isTrue(Row[] rows) {
 				Integer i = (Integer) rows[0].get("Age");
 				if (i != null && i == l_age)
 					return true;

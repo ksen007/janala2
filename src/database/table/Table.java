@@ -5,8 +5,6 @@
 package database.table;
 
 import java.sql.ResultSet;
-import java.util.ListIterator;
-import java.util.Map;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -22,7 +20,7 @@ public interface Table {
 
     void insert(Object[] values);
 
-    ListIterator<Map<String,Object>> iterator();
+    TableIterator iterator();
 
     int delete(Where where);
 

@@ -8,7 +8,6 @@ import janala.utils.Debugger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.Map;
 
 public class BookStoreNoSQL {
@@ -134,7 +133,7 @@ public class BookStoreNoSQL {
 		}
 		System.out.println();
 
-		ListIterator<Map<String, Object>> ite = table.iterator();
+		TableIterator ite = table.iterator();
 		while (ite.hasNext()) {
 			Map<String, Object> record = ite.next();
 			for (String columnName : names) {
@@ -402,7 +401,7 @@ public class BookStoreNoSQL {
 		// statement.executeQuery("select Id from Customers where Id="+customerId+" and PasswordHash="
 		// + hash(password));
 		ResultSet rs = Customers.select(new Where() {
-			public boolean isTrue(Map<String, Object>[] rows) {
+			public boolean isTrue(Row[] rows) {
 				Integer i = (Integer) rows[0].get("Id");
 				if (i == null || i != cis.customerId)
 					return false;
@@ -439,7 +438,7 @@ public class BookStoreNoSQL {
 			return S04_SEARCH_BOOKS_SCREEN;
 		} else if (cis.whereGoto == BookStoreScreenInputs.GOTO_CANCEL) {
 			ResultSet rs = Orders.select(new Where() {
-				public boolean isTrue(Map<String, Object>[] rows) {
+				public boolean isTrue(Row[] rows) {
 					Integer i = (Integer) rows[0].get("CustomerId");
 					Integer isCanceled = (Integer) rows[0].get("IsCanceled");
 					if (i == null || i != g_customerId)
@@ -481,7 +480,7 @@ public class BookStoreNoSQL {
 		Main.Assume(cis.maxYear <= 2050 ? 1 : 0);
 
 		ResultSet rs = Books.select(new Where() {
-			public boolean isTrue(Map<String, Object>[] rows) {
+			public boolean isTrue(Row[] rows) {
 				if (!rows[0].get("PublisherId").equals(rows[1].get("Id")))
 					return false;
 				if (!cis.title.equals(rows[0].get("Title")))
@@ -540,7 +539,7 @@ public class BookStoreNoSQL {
 		}
 
 		ResultSet rs = Orders.select(new Where() {
-			public boolean isTrue(Map<String, Object>[] rows) {
+			public boolean isTrue(Row[] rows) {
 				Integer i = (Integer) rows[0].get("CustomerId");
 				if (i == null || i != g_customerId)
 					return false;
@@ -606,7 +605,7 @@ public class BookStoreNoSQL {
 
 			try {
 				Books.update(new Where() {
-					public boolean modify(Map<String, Object> rows) {
+					public boolean modify(Row rows) {
 						Integer id = (Integer) rows.get("Id");
 						if (id == null || id != l_orderedBookId) {
 							return false;
@@ -617,7 +616,7 @@ public class BookStoreNoSQL {
 						}
 					}
 
-					public boolean isTrue(Map<String, Object>[] rows) {
+					public boolean isTrue(Row[] rows) {
 						return true;
 					}
 				});
@@ -671,7 +670,7 @@ public class BookStoreNoSQL {
 			for (int selectedOrderId : selectedOrderIdList) {
 				l_selectedOrderId = selectedOrderId;
 				Orders.update(new Where() {
-					public boolean modify(Map<String, Object> rows) {
+					public boolean modify(Row rows) {
 						Integer id = (Integer) rows.get("Id");
 						if (id == null || id != l_selectedOrderId) {
 							return false;
@@ -682,7 +681,7 @@ public class BookStoreNoSQL {
 						}
 					}
 
-					public boolean isTrue(Map<String, Object>[] rows) {
+					public boolean isTrue(Row[] rows) {
 						return true;
 					}
 				});

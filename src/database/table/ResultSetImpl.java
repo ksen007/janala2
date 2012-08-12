@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
 import java.util.Calendar;
-import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -19,10 +18,10 @@ import java.util.Map;
  * Time: 1:04 PM
  */
 public class ResultSetImpl implements ResultSet {
-    ListIterator<Map<String,Object>> iterator;
-    Map<String,Object> currentRow;
+    TableIterator iterator;
+    Row currentRow;
 
-    public ResultSetImpl(ListIterator<Map<String, Object>> iterator) {
+    public ResultSetImpl(TableIterator iterator) {
         this.iterator = iterator;
     }
 
