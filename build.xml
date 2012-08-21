@@ -6,8 +6,8 @@
 <project basedir="." default="build" name="CATG">
   <property environment="env"/>
   <property name="debuglevel" value="source,lines,vars"/>
-  <property name="target" value="1.5"/>
-  <property name="source" value="1.5"/>
+  <property name="target" value="1.6"/>
+  <property name="source" value="1.6"/>
 
     <path id="janala.classpath">
         <pathelement location="out/production/janala"/>
@@ -34,7 +34,7 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="out/production/janala"
                source="${source}" target="${target}" includeantruntime="false">
-            <compilerarg value="-Xlint:deprecated"/>
+            <!--<compilerarg value="-Xlint:deprecated"/>-->
             <src path="src/janala"/>
             <src path="src/catg"/>
             <classpath refid="janala.classpath"/>
@@ -45,7 +45,7 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="out/production/tests"
                source="${source}" target="${target}" includeantruntime="false">
-            <compilerarg value="-Xlint:deprecated"/>
+            <!--<compilerarg value="-Xlint:deprecated"/>-->
             <src path="src/tests"/>
             <src path="src/database"/>
             <classpath refid="janala.classpath"/>

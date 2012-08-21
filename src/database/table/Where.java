@@ -15,4 +15,8 @@ public abstract class Where {
         throw new RuntimeException("Unimplemented modify in Where class");
     }
 
+    public boolean where(Row[] rows) {
+        return true;
+    }
+
 }

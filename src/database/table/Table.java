@@ -16,27 +16,33 @@ public interface Table {
     final public static int STRING = 2;
     final public static int LONG = 3;
 
-    void insert(String[] columns, Object[] values);
+    public void insert(Row row);
 
-    void insert(Object[] values);
+    public void insert(String[] columns, Object[] values);
 
-    TableIterator iterator();
+    public void insert(Object[] values);
 
-    int delete(Where where);
+    public TableIterator iterator();
 
-    int update(Where where);
+    public int delete(Where where);
 
-    Table select(Where where, String[][] selectColumns, Table[] fromOther);
+    public int update(Where where);
 
-    ResultSet getResultSet();
+    public Table select(Where where, String[][] selectColumns, Table[] fromOther);
 
-    String getName();
+    public ResultSet getResultSet();
 
-    String[] getColumnNames();
+    public String getName();
 
-    int[] getColumnTypes();
+    public String[] getColumnNames();
 
-    boolean[] getPrimaries();
+    public int[] getColumnTypes();
 
-    ForeignKey[] getForeignKeys();
+    public boolean[] getPrimaries();
+
+    public ForeignKey[] getForeignKeys();
+
+    public void orderBy(OrderBy orderBy);
+
+    public int size();
 }

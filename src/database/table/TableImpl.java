@@ -35,6 +35,12 @@ public class TableImpl implements Table {
         rows = new LinkedList<Row>();
     }
 
+    public void insert(Row row) {
+        ConsistencyChecker.checkRow(this, row);
+        rows.add(row);
+    }
+
+
     public void insert(String[] columns, Object[] values) {
         assert(columns.length==values.length);
         Row row = new Row();
@@ -146,6 +152,14 @@ public class TableImpl implements Table {
 
     public ForeignKey[] getForeignKeys() {
         return foreignKeys;
+    }
+
+    public void orderBy(OrderBy orderBy) {
+        Collections.sort(rows,orderBy.getComparator());
+    }
+
+    public int size() {
+        return rows.size();
     }
 
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Row[] rows) {

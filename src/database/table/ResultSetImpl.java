@@ -196,6 +196,10 @@ public class ResultSetImpl implements ResultSet {
         throw new RuntimeException("Unimplemented method in ResultSetImpl");
     }
 
+    public Object getObject(String s,Class c) {
+        throw new RuntimeException("Unimplemented method in ResultSetImpl");
+    }
+    
     public int findColumn(String s) throws SQLException {
         throw new RuntimeException("Unimplemented method in ResultSetImpl");
     }
@@ -777,6 +781,10 @@ public class ResultSetImpl implements ResultSet {
     }
 
     public void updateNClob(String s, Reader reader) throws SQLException {
+        throw new RuntimeException("Unimplemented method in ResultSetImpl");
+    }
+
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
         throw new RuntimeException("Unimplemented method in ResultSetImpl");
     }
 
