@@ -4,11 +4,11 @@
 
 package database.table;
 
-import java.util.Comparator;
-
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public interface OrderBy {
-    public Comparator<Row> getComparator();
+public class SingleSetGroupBy implements GroupBy {
+    public Object[] groupBy(Row[] rows) {
+        return new Object[]{1};
+    }
 }

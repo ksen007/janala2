@@ -10,7 +10,6 @@ package database.table;
  * Time: 10:42 AM
  */
 public abstract class Where {
-    public abstract boolean isTrue(Row[] rows);
     public boolean modify(Row row) {
         throw new RuntimeException("Unimplemented modify in Where class");
     }

@@ -6,8 +6,6 @@ package database.table;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 8/19/12
- * Time: 2:14 PM
  */
 public class ArrayBasedTuple {
     public Object[] array;

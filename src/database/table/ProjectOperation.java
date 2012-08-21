@@ -6,17 +6,20 @@ package database.table;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 8/21/12
- * Time: 10:50 PM
  */
-public class ProjectOperation implements Operations {
-    private String columnName;
+public class ProjectOperation extends StandardOperation {
+    private int tableIndex;
 
     public ProjectOperation(String columnName) {
-        this.columnName = columnName;
+        super(0,columnName);
+        this.tableIndex = 0;
+    }
+
+    public ProjectOperation(int tableIndex, String columnName) {
+        super(tableIndex,columnName);
     }
 
     public Object apply(Object old, Row[] rows) {
-        return rows[0].get(columnName);
+        return rows[tableIndex].get(columnName);
     }
 }

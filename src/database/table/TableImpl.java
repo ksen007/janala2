@@ -74,7 +74,7 @@ public class TableImpl implements Table {
         while (iterator.hasNext()) {
             Row row = iterator.next();
             tmp[0] = row;
-            if (where.isTrue(tmp)) {
+            if (where.where(tmp)) {
                 ret++;
                 iterator.remove();
             }
@@ -123,7 +123,7 @@ public class TableImpl implements Table {
 
         while (hasNext(iterators)) {
             Row[] rows = next(iterators, this, fromOther);
-            if (where.isTrue(rows)) {
+            if (where.where(rows)) {
                 ret.insert(doSelectColumns(nRows, selectColumns, rows));
             }
         }

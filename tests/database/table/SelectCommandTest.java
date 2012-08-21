@@ -21,7 +21,7 @@ public class SelectCommandTest extends TestCase {
 				false, false, false }, new ForeignKey[] { null, null, null,
 				null });
         customers.insert(new Object[]{1,"A",12,23});
-        customers.insert(new Object[]{2,"A",13,23});
+        customers.insert(new Object[]{9,"A",13,23});
         customers.insert(new Object[]{7,"C",19,24});
         customers.insert(new Object[]{4,"D",11,24});
         customers.insert(new Object[]{3,"E",10,23});
@@ -49,12 +49,6 @@ public class SelectCommandTest extends TestCase {
                 },
                 new From(new Table[]{customers}),
                 new Where() {
-
-                    @Override
-                    public boolean isTrue(Row[] rows) {
-                        return false;  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
                     @Override
                     public boolean where(Row[] rows) {
                         Integer i = (Integer) rows[0].get("PasswordHash");
@@ -69,7 +63,7 @@ public class SelectCommandTest extends TestCase {
                         return new Object[] {i};
                     }
                 },
-                new Having(),
+                new HavingTrue(),
                 null, false
         )).execute();
         assertEquals(4,t.size());
@@ -93,12 +87,6 @@ public class SelectCommandTest extends TestCase {
                 },
                 new From(new Table[]{customers}),
                 new Where() {
-
-                    @Override
-                    public boolean isTrue(Row[] rows) {
-                        return false;  //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
                     @Override
                     public boolean where(Row[] rows) {
                         Integer i = (Integer) rows[0].get("PasswordHash");
@@ -113,13 +101,141 @@ public class SelectCommandTest extends TestCase {
                         return new Object[] {i};
                     }
                 },
-                new Having(),
+                new HavingTrue(),
                 null, true
         )).execute();
         TableIterator iter = t.iterator();
         System.out.println(iter.next());
         System.out.println(iter.next());
         System.out.println(iter.next());
-        assertEquals(3,t.size());
+        assertEquals(3, t.size());
+    }
+
+    public void testSimpleSingleTableSelect() throws Exception {
+        Table t = (new SelectCommand(
+                new SimpleSingleTableSelect(new String[]{"Id","Age"}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new DefaultGroupBy(),
+                new HavingTrue(),
+                null, false
+        )).execute();
+        assertEquals(5,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+    }
+
+    public void testSimpleSingleTableSelectDistinct() throws Exception {
+        Table t = (new SelectCommand(
+                new SimpleSingleTableSelect(new String[]{"Name","Age"}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new DefaultGroupBy(),
+                new HavingTrue(),
+                null, true
+        )).execute();
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        assertEquals(4, t.size());
+    }
+
+    public void testSimpleOrderBySelect() throws Exception {
+        Table t = (new SelectCommand(
+                new SimpleSingleTableSelect(new String[]{"Id","Age"}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new DefaultGroupBy(),
+                new HavingTrue(),
+                new SimpleOrderBy(new String[]{"Age","Id"},true), false
+        )).execute();
+        assertEquals(5,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+    }
+
+    public void testSimpleGroupBySelect() throws Exception {
+        Table t = (new SelectCommand(
+                new SimpleSingleTableSelect(new String[]{"Id","Age"}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new SimpleGroupBy(new String[]{"Age"}),
+                new HavingTrue(),
+                null, false
+        )).execute();
+        assertEquals(2,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+    }
+
+    public void testMaxGroupBySelect() throws Exception {
+        Table t = (new SelectCommand(
+                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new MaxOperation("Id")}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new SimpleGroupBy(new String[]{"Age"}),
+                new HavingTrue(),
+                null, false
+        )).execute();
+        assertEquals(2,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+    }
+
+    public void testMinGroupBySelect() throws Exception {
+        Table t = (new SelectCommand(
+                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new MinOperation("Id")}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new SimpleGroupBy(new String[]{"Age"}),
+                new HavingTrue(),
+                null, false
+        )).execute();
+        assertEquals(2,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+    }
+
+    public void testSumGroupBySelect() throws Exception {
+        Table t = (new SelectCommand(
+                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new SumOperation("Id")}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new SimpleGroupBy(new String[]{"Age"}),
+                new HavingTrue(),
+                null, false
+        )).execute();
+        assertEquals(2,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
+    }
+
+    public void testCountGroupBySelect() throws Exception {
+        Table t = (new SelectCommand(
+                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new CountOperation("Id")}),
+                new From(new Table[]{customers}),
+                new WhereTrue(),
+                new SimpleGroupBy(new String[]{"Age"}),
+                new HavingTrue(),
+                null, false
+        )).execute();
+        assertEquals(2,t.size());
+        TableIterator iter = t.iterator();
+        System.out.println(iter.next());
+        System.out.println(iter.next());
     }
 }

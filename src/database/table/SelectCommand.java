@@ -8,8 +8,6 @@ import java.util.HashMap;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 8/21/12
- * Time: 6:26 PM
  */
 public class SelectCommand {
     private Select select;
@@ -42,12 +40,14 @@ public class SelectCommand {
         HashMap<ArrayBasedTuple,Row> groups = new HashMap<ArrayBasedTuple, Row>();
 
         while (hasNext(iterators)) {
+            boolean insert = false;
             Row[] rows = next(iterators, tables);
             if (where.where(rows)) {
                 ArrayBasedTuple group = new ArrayBasedTuple(groupBy.groupBy(rows));
                 Row row = groups.get(group);
                 if (row==null) {
                     row = new Row();
+                    insert = true;
                     groups.put(group,row);
                 }
                 Operations[] operations = select.select();
@@ -59,7 +59,7 @@ public class SelectCommand {
                     row.put(columnName,operations[i].apply(row.get(columnName),rows));
                     i++;
                 }
-                if (having.having(row)) {
+                if (insert && having.having(row)) {
                     boolean exists = false;
                     if (isDistinct) {
                         TableIterator iter = ret.iterator();

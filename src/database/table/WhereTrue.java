@@ -4,11 +4,12 @@
 
 package database.table;
 
-import java.util.Comparator;
-
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public interface OrderBy {
-    public Comparator<Row> getComparator();
+public class WhereTrue extends Where {
+    @Override
+    public boolean where(Row[] rows) {
+        return true;
+    }
 }
