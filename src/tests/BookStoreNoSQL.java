@@ -1,6 +1,8 @@
 package tests;
 
 import database.table.*;
+import database.table.internals.*;
+import database.table.where.Where;
 import janala.Main;
 import janala.utils.DebugAction;
 import janala.utils.Debugger;
@@ -214,11 +216,11 @@ public class BookStoreNoSQL {
 		}
 
 		try {
-			Customers = TableFactory.create("Customers", new String[] { "Id",
-					"Name", "PasswordHash", "Age" }, new int[] { Table.INT,
-					Table.STRING, Table.INT, Table.INT }, new boolean[] { true,
-					false, false, false }, new ForeignKey[] { null, null, null,
-					null });
+			Customers = TableFactory.create("Customers", new String[]{"Id",
+                    "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
+                    Table.STRING, Table.INT, Table.INT}, new boolean[]{true,
+                    false, false, false}, new ForeignKey[]{null, null, null,
+                    null});
 
 			Orders = TableFactory.create("Orders", new String[] { "Id",
 					"CustomerId", "OrderDateTime", "CancelDate", "BookId",

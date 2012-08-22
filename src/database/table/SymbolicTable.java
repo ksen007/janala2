@@ -4,10 +4,12 @@
 
 package database.table;
 
+import database.table.internals.ForeignKey;
+import database.table.internals.Row;
+import database.table.internals.Table;
+import database.table.internals.TableIterator;
 import janala.Main;
 import janala.interpreters.OrValue;
-
-import java.util.ListIterator;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)

@@ -4,6 +4,20 @@
 
 package database.table;
 
+import database.table.commands.SelectCommand;
+import database.table.from.From;
+import database.table.groupby.DefaultGroupBy;
+import database.table.groupby.GroupBy;
+import database.table.groupby.SimpleGroupBy;
+import database.table.having.HavingTrue;
+import database.table.internals.*;
+import database.table.operations.*;
+import database.table.orderby.SimpleOrderBy;
+import database.table.select.OperationSingleTableSelect;
+import database.table.select.Select;
+import database.table.select.SimpleSingleTableSelect;
+import database.table.where.Where;
+import database.table.where.WhereTrue;
 import junit.framework.TestCase;
 
 /**
@@ -15,11 +29,11 @@ public class SelectCommandTest extends TestCase {
     private Table customers;
 
     public void setUp() throws Exception {
-        customers = TableFactory.create("Customers", new String[] { "Id",
-				"Name", "PasswordHash", "Age" }, new int[] { Table.INT,
-				Table.STRING, Table.INT, Table.INT }, new boolean[] { true,
-				false, false, false }, new ForeignKey[] { null, null, null,
-				null });
+        customers = TableFactory.create("Customers", new String[]{"Id",
+                "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
+                Table.STRING, Table.INT, Table.INT}, new boolean[]{true,
+                false, false, false}, new ForeignKey[]{null, null, null,
+                null});
         customers.insert(new Object[]{1,"A",12,23});
         customers.insert(new Object[]{9,"A",13,23});
         customers.insert(new Object[]{7,"C",19,24});
@@ -44,7 +58,7 @@ public class SelectCommandTest extends TestCase {
                     }
 
                     public Operations[] select() {
-                        return new Operations[]{new ProjectOperation("Id"), new ProjectOperation("Age")};
+                        return new Operations[]{new IdentityOperation("Id"), new IdentityOperation("Age")};
                     }
                 },
                 new From(new Table[]{customers}),
@@ -82,7 +96,7 @@ public class SelectCommandTest extends TestCase {
                     }
 
                     public Operations[] select() {
-                        return new Operations[]{new ProjectOperation("Name"), new ProjectOperation("Age")};
+                        return new Operations[]{new IdentityOperation("Name"), new IdentityOperation("Age")};
                     }
                 },
                 new From(new Table[]{customers}),
@@ -181,7 +195,7 @@ public class SelectCommandTest extends TestCase {
 
     public void testMaxGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
-                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new MaxOperation("Id")}),
+                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new MaxOperation("Id")}),
                 new From(new Table[]{customers}),
                 new WhereTrue(),
                 new SimpleGroupBy(new String[]{"Age"}),
@@ -196,7 +210,7 @@ public class SelectCommandTest extends TestCase {
 
     public void testMinGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
-                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new MinOperation("Id")}),
+                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new MinOperation("Id")}),
                 new From(new Table[]{customers}),
                 new WhereTrue(),
                 new SimpleGroupBy(new String[]{"Age"}),
@@ -211,7 +225,7 @@ public class SelectCommandTest extends TestCase {
 
     public void testSumGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
-                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new SumOperation("Id")}),
+                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new SumOperation("Id")}),
                 new From(new Table[]{customers}),
                 new WhereTrue(),
                 new SimpleGroupBy(new String[]{"Age"}),
@@ -226,7 +240,7 @@ public class SelectCommandTest extends TestCase {
 
     public void testCountGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
-                new OperationSingleTableSelect(new StandardOperation[]{new ProjectOperation("Age"), new CountOperation("Id")}),
+                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new CountOperation("Id")}),
                 new From(new Table[]{customers}),
                 new WhereTrue(),
                 new SimpleGroupBy(new String[]{"Age"}),

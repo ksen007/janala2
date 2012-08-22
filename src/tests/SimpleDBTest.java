@@ -1,6 +1,11 @@
 package tests;
 
 import database.table.*;
+import database.table.internals.ForeignKey;
+import database.table.internals.Row;
+import database.table.internals.Table;
+import database.table.internals.TableFactory;
+import database.table.where.Where;
 import janala.Main;
 
 import java.sql.ResultSet;
@@ -23,7 +28,7 @@ public class SimpleDBTest {
                     new String[]{"Id", "PasswordHash"},
                     new int[]{Table.INT, Table.INT},
                     new boolean[]{true, false},
-                    new ForeignKey[] {null, null});
+                    new ForeignKey[]{null, null});
 
             SymbolicTable.insertSymbolicRows(Customers, 1);
 

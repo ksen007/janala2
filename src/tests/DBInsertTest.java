@@ -1,10 +1,10 @@
 package tests;
 
 import catg.CATG;
-import database.table.ForeignKey;
+import database.table.internals.ForeignKey;
 import database.table.SymbolicTable;
-import database.table.Table;
-import database.table.TableFactory;
+import database.table.internals.Table;
+import database.table.internals.TableFactory;
 
 public class DBInsertTest {
 	public static int l_age;

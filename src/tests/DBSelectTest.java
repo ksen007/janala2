@@ -2,6 +2,11 @@ package tests;
 
 import catg.CATG;
 import database.table.*;
+import database.table.internals.ForeignKey;
+import database.table.internals.Row;
+import database.table.internals.Table;
+import database.table.internals.TableFactory;
+import database.table.where.Where;
 
 import java.sql.ResultSet;
 
@@ -44,11 +49,11 @@ public class DBSelectTest {
     public static void main(String[] args){
     	int age= CATG.readInt(20);
 
-        Table customers = TableFactory.create("Customers", new String[] { "Id",
-				"Name", "PasswordHash", "Age" }, new int[] { Table.INT,
-				Table.STRING, Table.INT, Table.INT }, new boolean[] { true,
-				false, false, false }, new ForeignKey[] { null, null, null,
-				null });
+        Table customers = TableFactory.create("Customers", new String[]{"Id",
+                "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
+                Table.STRING, Table.INT, Table.INT}, new boolean[]{true,
+                false, false, false}, new ForeignKey[]{null, null, null,
+                null});
         SymbolicTable.insertSymbolicRows(customers, 4);
 
         testme(customers, age);
