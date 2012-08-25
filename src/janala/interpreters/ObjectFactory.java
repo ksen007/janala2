@@ -14,6 +14,9 @@ public class ObjectFactory {
         if (className.equals("java.lang.Integer")) {
             return new IntegerObjectValue();
         }
+        if (className.equals("java.lang.Long")) {
+            return new LongObjectValue();
+        }
         return new ObjectValue(nFields);
     }
 }

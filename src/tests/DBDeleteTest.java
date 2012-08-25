@@ -14,7 +14,7 @@ public class DBDeleteTest {
 	public  static void testme(Table customers, int age){
 		l_age = age;
 		int deletedCount = customers.delete(new Where() {
-			public boolean isTrue(Row[] rows) {
+			public boolean where(Row[] rows) {
 				Integer i = (Integer) rows[0].get("Age");
 				if (i != null && i == l_age)
 					return true;

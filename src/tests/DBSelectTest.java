@@ -17,7 +17,7 @@ public class DBSelectTest {
 		l_age = age;
 
 		ResultSet rs = customers.select(new Where() {
-			public boolean isTrue(Row[] rows) {
+			public boolean where(Row[] rows) {
 				Integer i = (Integer) rows[0].get("Age");
 				if (i != null && i == l_age)
 					return true;

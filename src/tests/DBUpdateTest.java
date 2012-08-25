@@ -26,7 +26,7 @@ public class DBUpdateTest {
 				}
 			}
 
-			public boolean isTrue(Row[] rows) {
+			public boolean where(Row[] rows) {
 				return true;
 			}
 		});

@@ -37,7 +37,7 @@ public class SimpleDBTest {
             Main.MakeSymbolic(cid);
 
             ResultSet rs = Customers.select(new Where() {
-                public boolean isTrue(Row[] rows) {
+                public boolean where(Row[] rows) {
                     Integer i = (Integer)rows[0].get("Id");
                     if (i==null || i!=cid) return false;
                     return true;

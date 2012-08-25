@@ -39,7 +39,8 @@ public class LongObjectValue extends ObjectValue {
                 ret.concrete = ret.concrete==0?1:0;
                 if (ret.symbolic!=null) {
                     ret.symbolic = ret.symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ);
-                    return ret;
+                    IntValue ret2 = new IntValue((int)ret.concrete,ret.symbolic);
+                    return ret2;
                 }
             }
         } else if(name.equals("compareTo")) {
@@ -49,7 +50,8 @@ public class LongObjectValue extends ObjectValue {
                 if (ret.concrete>0) ret.concrete=1;
                 else if (ret.concrete==0) ret.concrete = 0;
                 else ret.concrete = -1;
-                return ret;
+                IntValue ret2 = new IntValue((int)ret.concrete,ret.symbolic);
+                return ret2;
             }
         }
         return PlaceHolder.instance;

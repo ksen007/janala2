@@ -403,7 +403,7 @@ public class BookStoreNoSQL {
 		// statement.executeQuery("select Id from Customers where Id="+customerId+" and PasswordHash="
 		// + hash(password));
 		ResultSet rs = Customers.select(new Where() {
-			public boolean isTrue(Row[] rows) {
+			public boolean where(Row[] rows) {
 				Integer i = (Integer) rows[0].get("Id");
 				if (i == null || i != cis.customerId)
 					return false;
@@ -440,7 +440,7 @@ public class BookStoreNoSQL {
 			return S04_SEARCH_BOOKS_SCREEN;
 		} else if (cis.whereGoto == BookStoreScreenInputs.GOTO_CANCEL) {
 			ResultSet rs = Orders.select(new Where() {
-				public boolean isTrue(Row[] rows) {
+				public boolean where(Row[] rows) {
 					Integer i = (Integer) rows[0].get("CustomerId");
 					Integer isCanceled = (Integer) rows[0].get("IsCanceled");
 					if (i == null || i != g_customerId)
@@ -482,7 +482,7 @@ public class BookStoreNoSQL {
 		Main.Assume(cis.maxYear <= 2050 ? 1 : 0);
 
 		ResultSet rs = Books.select(new Where() {
-			public boolean isTrue(Row[] rows) {
+			public boolean where(Row[] rows) {
 				if (!rows[0].get("PublisherId").equals(rows[1].get("Id")))
 					return false;
 				if (!cis.title.equals(rows[0].get("Title")))
@@ -541,7 +541,7 @@ public class BookStoreNoSQL {
 		}
 
 		ResultSet rs = Orders.select(new Where() {
-			public boolean isTrue(Row[] rows) {
+			public boolean where(Row[] rows) {
 				Integer i = (Integer) rows[0].get("CustomerId");
 				if (i == null || i != g_customerId)
 					return false;
@@ -618,7 +618,7 @@ public class BookStoreNoSQL {
 						}
 					}
 
-					public boolean isTrue(Row[] rows) {
+					public boolean where(Row[] rows) {
 						return true;
 					}
 				});
@@ -683,7 +683,7 @@ public class BookStoreNoSQL {
 						}
 					}
 
-					public boolean isTrue(Row[] rows) {
+					public boolean where(Row[] rows) {
 						return true;
 					}
 				});

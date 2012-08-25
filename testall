@@ -12,6 +12,7 @@ rm -rf test.log
 ./$CATG 4 tests.LongTest
 ./$CATG 4 tests.Testme
 ./$CATG 4 tests.TestmeInteger
+./$CATG 4 tests.TestmeLong
 ./$CATG 3 tests.NonLinear
 ./$CATG 3 tests.BoolTest
 ./$CATG 5 tests.BoolTest2

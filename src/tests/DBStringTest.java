@@ -38,7 +38,7 @@ public class DBStringTest {
             Main.MakeSymbolic(cid);
 
             ResultSet rs = Customers.select(new Where() {
-                public boolean isTrue(Row[] rows) {
+                public boolean where(Row[] rows) {
                     if (!cid.equals(rows[0].get("Id"))) return false;
                     return true;
                 }
