@@ -10,8 +10,12 @@ package database.table.internals;
  * Time: 12:33 PM
  */
 public class TableFactory {
-    public static Table create(String name, String[] columnNames) {
-        return new TableImpl(name,columnNames);
+    private static int anonymousTableCount = 0;
+
+
+    public static Table create(String[] columnNames) {
+        anonymousTableCount++;
+        return new TableImpl("InternalTable"+anonymousTableCount,columnNames);
     }
 
     public static Table create(String name, String[] columnNames, int[] columnTypes, boolean [] primaryKeys, ForeignKey[] foreignKeys) {

@@ -120,7 +120,7 @@ public class TableImpl implements Table {
             tmp[l] = next;
             l++;
         }
-        Table ret = TableFactory.create(null, tmp);
+        Table ret = TableFactory.create(tmp);
 
         TableIterator[] iterators = new TableIterator[nTables];
 
@@ -163,6 +163,35 @@ public class TableImpl implements Table {
 
     public int size() {
         return rows.size();
+    }
+
+    public Object value() {
+        if (columnNames.length!=1) {
+            throw new RuntimeException("Table "+name+" must have one column.");
+        }
+        if (rows.size()!=1) {
+            throw new RuntimeException("Table "+name+" must have one row.");
+        }
+        return rows.get(0).get(columnNames[0]);
+    }
+
+    public boolean in(Object o) {
+        if (columnNames.length!=1) {
+            throw new RuntimeException("Table "+name+" must have one column.");
+        }
+
+        TableIterator iter = iterator();
+        while(iter.hasNext()) {
+            Row row = iter.next();
+            Object value = row.get(columnNames[0]);
+            if (o==null) {
+                if (value==null) return true;
+            } else {
+                if (o.equals(row.get(columnNames[0])))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Row[] rows) {

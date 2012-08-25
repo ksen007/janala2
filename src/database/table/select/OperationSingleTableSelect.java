@@ -4,7 +4,6 @@
 
 package database.table.select;
 
-import database.table.operations.Operations;
 import database.table.operations.StandardOperation;
 
 /**
@@ -12,9 +11,7 @@ import database.table.operations.StandardOperation;
  * Date: 8/22/12
  * Time: 1:34 AM
  */
-public class OperationSingleTableSelect implements Select {
-    private String[] columns;
-    private StandardOperation[] operations;
+public class OperationSingleTableSelect extends StandardOperationsSelect {
 
     public OperationSingleTableSelect(StandardOperation[] operations) {
         this.operations = operations;
@@ -25,11 +22,4 @@ public class OperationSingleTableSelect implements Select {
         }
     }
 
-    public String[] selectAs() {
-        return columns;
-    }
-
-    public Operations[] select() {
-        return operations;
-    }
 }

@@ -18,6 +18,9 @@ public interface Table {
     final public static int INT = 1;
     final public static int STRING = 2;
     final public static int LONG = 3;
+    final public static int DATE = 4;
+    final public static int TIME = 5;
+    final public static int TIMESTAMP = 6;
 
     public void insert(Row row);
 
@@ -48,4 +51,8 @@ public interface Table {
     public void orderBy(OrderBy orderBy);
 
     public int size();
+
+    public Object value();
+
+    public boolean in(Object o);
 }

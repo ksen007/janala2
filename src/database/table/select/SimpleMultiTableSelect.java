@@ -5,34 +5,21 @@
 package database.table.select;
 
 import database.table.operations.IdentityOperation;
-import database.table.operations.Operations;
+import database.table.operations.StandardOperation;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public class SimpleMultiTableSelect implements Select {
-    private String[] columns;
-    private int[] tableIndices;
-    private String[] sourceColumns;
+public class SimpleMultiTableSelect extends StandardOperationsSelect {
 
     public SimpleMultiTableSelect(String[] target, int[] tableIndices, String[] source) {
         if (target.length!=tableIndices.length || target.length!=source.length) {
             throw new RuntimeException("target, tableIndices, source must have same lengths");
         }
         this.columns = target;
-        this.sourceColumns = source;
-        this.tableIndices = tableIndices;
-    }
-
-    public String[] selectAs() {
-        return columns;
-    }
-
-    public Operations[] select() {
-        Operations[] ret =  new Operations[sourceColumns.length];
-        for (int i = 0; i < sourceColumns.length; i++) {
-            ret[i] = new IdentityOperation(tableIndices[i],sourceColumns[i]);
+        this.operations =  new StandardOperation[source.length];
+        for (int i = 0; i < source.length; i++) {
+            operations[i] = new IdentityOperation(tableIndices[i],source[i]);
         }
-        return ret;
     }
 }

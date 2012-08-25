@@ -43,7 +43,7 @@ public class SelectCommand {
         int nTables = tables.length;
 
         String[] selectAs = select.selectAs();
-        Table ret = TableFactory.create(null, selectAs);
+        Table ret = TableFactory.create(selectAs);
 
         TableIterator[] iterators = new TableIterator[nTables];
         HashMap<ArrayBasedTuple,Row> groups = new HashMap<ArrayBasedTuple, Row>();
