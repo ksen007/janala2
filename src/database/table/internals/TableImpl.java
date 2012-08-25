@@ -20,6 +20,8 @@ public class TableImpl implements Table {
     private String[] columnNames;
     private int[] columnTypes;
     private boolean[] isPrimary;
+    private boolean[] isUnique;
+    private boolean[] isNonNull;
     private ForeignKey[] foreignKeys;
     private List<Row> rows;
 
@@ -29,12 +31,14 @@ public class TableImpl implements Table {
         rows = new LinkedList<Row>();
     }
 
-    public TableImpl(String name, String[] columnNames, int[] columnTypes, boolean[] primary, ForeignKey[] foreignKeys) {
+    public TableImpl(String name, String[] columnNames, int[] columnTypes, boolean[] primary, boolean[] unique, boolean[] nonNull, ForeignKey[] foreignKeys) {
         this.name = name;
         this.columnNames = columnNames;
         this.columnTypes = columnTypes;
         this.foreignKeys = foreignKeys;
         this.isPrimary = primary;
+        this.isUnique = unique;
+        this.isNonNull = nonNull;
         rows = new LinkedList<Row>();
     }
 
@@ -152,6 +156,16 @@ public class TableImpl implements Table {
     public boolean[] getPrimaries() {
         return isPrimary;
     }
+
+    public boolean[] getUniques() {
+        return isUnique;
+    }
+
+    public boolean[] getNonNulls() {
+        return isNonNull;
+    }
+
+
 
     public ForeignKey[] getForeignKeys() {
         return foreignKeys;

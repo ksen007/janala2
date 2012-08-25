@@ -31,8 +31,8 @@ public class SelectCommandTest extends TestCase {
     public void setUp() throws Exception {
         customers = TableFactory.create("Customers", new String[]{"Id",
                 "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
-                Table.STRING, Table.INT, Table.INT}, new boolean[]{true,
-                false, false, false}, new ForeignKey[]{null, null, null,
+                Table.STRING, Table.INT, Table.INT}, new int[]{Table.PRIMARY,
+                Table.NONE, Table.NONE, Table.NONE}, new ForeignKey[]{null, null, null,
                 null});
         customers.insert(new Object[]{1,"A",12,23});
         customers.insert(new Object[]{9,"A",13,23});

@@ -27,7 +27,7 @@ public class SimpleDBTest {
             Customers = TableFactory.create("Customers",
                     new String[]{"Id", "PasswordHash"},
                     new int[]{Table.INT, Table.INT},
-                    new boolean[]{true, false},
+                    new int[]{Table.PRIMARY, Table.NONE},
                     new ForeignKey[]{null, null});
 
             SymbolicTable.insertSymbolicRows(Customers, 1);

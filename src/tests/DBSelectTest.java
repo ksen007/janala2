@@ -51,8 +51,8 @@ public class DBSelectTest {
 
         Table customers = TableFactory.create("Customers", new String[]{"Id",
                 "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
-                Table.STRING, Table.INT, Table.INT}, new boolean[]{true,
-                false, false, false}, new ForeignKey[]{null, null, null,
+                Table.STRING, Table.INT, Table.INT}, new int[]{Table.PRIMARY,
+                Table.NONE, Table.NONE, Table.NONE}, new ForeignKey[]{null, null, null,
                 null});
         SymbolicTable.insertSymbolicRows(customers, 4);
 

@@ -21,6 +21,10 @@ public interface Table {
     final public static int DATE = 4;
     final public static int TIME = 5;
     final public static int TIMESTAMP = 6;
+    int NONE = 0;
+    int PRIMARY = 1;
+    int UNIQUE = 2;
+    int NONNULL = 4;
 
     public void insert(Row row);
 
@@ -45,6 +49,10 @@ public interface Table {
     public int[] getColumnTypes();
 
     public boolean[] getPrimaries();
+
+    public boolean[] getUniques();
+
+    public boolean[] getNonNulls();
 
     public ForeignKey[] getForeignKeys();
 

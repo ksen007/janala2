@@ -218,28 +218,28 @@ public class BookStoreNoSQL {
 		try {
 			Customers = TableFactory.create("Customers", new String[]{"Id",
                     "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
-                    Table.STRING, Table.INT, Table.INT}, new boolean[]{true,
-                    false, false, false}, new ForeignKey[]{null, null, null,
+                    Table.STRING, Table.INT, Table.INT}, new int[]{Table.PRIMARY,
+                    Table.NONE, Table.NONE, Table.NONE}, new ForeignKey[]{null, null, null,
                     null});
 
 			Orders = TableFactory.create("Orders", new String[] { "Id",
 					"CustomerId", "OrderDateTime", "CancelDate", "BookId",
 					"IsCanceled" }, new int[] { Table.INT, Table.INT,
 					Table.INT, Table.INT, Table.INT, Table.INT },
-					new boolean[] { true, false, false, false, false, false },
+					new int[] { Table.PRIMARY, Table.NONE, Table.NONE, Table.NONE, Table.NONE, Table.NONE },
 					new ForeignKey[] { null, new ForeignKey(Customers, "Id"),
 							null, null, null, null });
 
 			Publishers = TableFactory.create("Publishers", new String[] { "Id",
 					"Name" }, new int[] { Table.INT, Table.STRING },
-					new boolean[] { true, false }, new ForeignKey[] { null,
+					new int[] { Table.PRIMARY, Table.NONE }, new ForeignKey[] { null,
 							null });
 
 			Books = TableFactory.create("Books", new String[] { "Id", "ISBN",
 					"Title", "Price", "Year", "PublisherId", "Stock" },
 					new int[] { Table.INT, Table.INT, Table.STRING, Table.INT,
-							Table.INT, Table.INT, Table.INT }, new boolean[] {
-							true, false, false, false, false, false, false },
+							Table.INT, Table.INT, Table.INT }, new int[] {Table.PRIMARY,
+                    Table.NONE, Table.NONE, Table.NONE, Table.NONE, Table.NONE, Table.NONE },
 					new ForeignKey[] { null, null, null, null, null,
 							new ForeignKey(Publishers, "Id"), null });
 

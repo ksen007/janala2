@@ -28,7 +28,7 @@ public class DBStringTest {
             Customers = TableFactory.create("Customers",
                     new String[]{"Id", "PasswordHash"},
                     new int[]{Table.STRING, Table.STRING},
-                    new boolean[]{true, false},
+                    new int[]{Table.PRIMARY, Table.NONE},
                     new ForeignKey[]{null, null});
 
             SymbolicTable.insertSymbolicRows(Customers, 2);
