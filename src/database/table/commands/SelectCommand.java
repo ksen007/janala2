@@ -72,7 +72,7 @@ public class SelectCommand {
                     boolean exists = false;
                     if (isDistinct) {
                         TableIterator iter = ret.iterator();
-                        if (iter.hasNext()) {
+                        while (iter.hasNext()) {
                             Row next = iter.next();
                             if (next.equals(row)) {
                                 exists = true;
