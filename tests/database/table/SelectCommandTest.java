@@ -20,6 +20,8 @@ import database.table.where.Where;
 import database.table.where.WhereTrue;
 import junit.framework.TestCase;
 
+import java.sql.ResultSet;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 8/21/12
@@ -49,6 +51,8 @@ public class SelectCommandTest extends TestCase {
     public void testExecute() throws Exception {
 
     }
+
+    /* select Id, Age from Customers where PasswordHash > 10 */
 
     public void testSelect1() throws Exception {
         Table t = (new SelectCommand(
@@ -80,14 +84,23 @@ public class SelectCommandTest extends TestCase {
                 new HavingTrue(),
                 null, false
         )).execute();
-        assertEquals(4,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        assertEquals(4, t.size());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(1,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(9,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(7,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals(4,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+    /* select distinct Name, Age from Customers where PasswordHash > 10 */
     public void testSelectDistinct() throws Exception {
         Table t = (new SelectCommand(
                 new Select() {
@@ -118,13 +131,20 @@ public class SelectCommandTest extends TestCase {
                 new HavingTrue(),
                 null, true
         )).execute();
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
         assertEquals(3, t.size());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals("A",rs.getString("Name"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals("C",rs.getString("Name"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals("D",rs.getString("Name"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+        /* select Id, Age from Customers  */
     public void testSimpleSingleTableSelect() throws Exception {
         Table t = (new SelectCommand(
                 new SimpleSingleTableSelect(new String[]{"Id","Age"}),
@@ -135,13 +155,25 @@ public class SelectCommandTest extends TestCase {
                 null, false
         )).execute();
         assertEquals(5,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(1,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(9,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(7,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals(4,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals(3,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
     }
+
+        /* select distinct Name, Age from Customers */
 
     public void testSimpleSingleTableSelectDistinct() throws Exception {
         Table t = (new SelectCommand(
@@ -152,14 +184,23 @@ public class SelectCommandTest extends TestCase {
                 new HavingTrue(),
                 null, true
         )).execute();
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals("A",rs.getString("Name"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals("C",rs.getString("Name"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals("D",rs.getString("Name"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals("E",rs.getString("Name"));
+        assertEquals(23,rs.getInt("Age"));
         assertEquals(4, t.size());
     }
 
+        /* select Id, Age from Customers  order by Id, Age */
     public void testSimpleOrderBySelect() throws Exception {
         Table t = (new SelectCommand(
                 new SimpleSingleTableSelect(new String[]{"Id","Age"}),
@@ -170,14 +211,25 @@ public class SelectCommandTest extends TestCase {
                 new SimpleOrderBy(new String[]{"Age","Id"},true), false
         )).execute();
         assertEquals(5,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(1,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(3,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(9,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(4,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
+        rs.next();
+        assertEquals(7,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+    /* select Id, Age from Customers  group by Age */
     public void testSimpleGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
                 new SimpleSingleTableSelect(new String[]{"Id","Age"}),
@@ -188,11 +240,16 @@ public class SelectCommandTest extends TestCase {
                 null, false
         )).execute();
         assertEquals(2,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(1,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(7,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+    /* select Age, MAX(Id) from Customers  group by Age */
     public void testMaxGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
                 new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new MaxOperation("Id")}),
@@ -203,11 +260,16 @@ public class SelectCommandTest extends TestCase {
                 null, false
         )).execute();
         assertEquals(2,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(9,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(7,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+    /* select Age, MIN(Id) from Customers  group by Age */
     public void testMinGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
                 new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new MinOperation("Id")}),
@@ -218,11 +280,16 @@ public class SelectCommandTest extends TestCase {
                 null, false
         )).execute();
         assertEquals(2,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(1,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(4,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+    /* select Age, SUM(Id) from Customers  group by Age */
     public void testSumGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
                 new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new SumOperation("Id")}),
@@ -233,11 +300,16 @@ public class SelectCommandTest extends TestCase {
                 null, false
         )).execute();
         assertEquals(2,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(13,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(11,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 
+    /* select Age, COUNT(Id) from Customers  group by Age */
     public void testCountGroupBySelect() throws Exception {
         Table t = (new SelectCommand(
                 new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age"), new CountOperation("Id")}),
@@ -248,8 +320,12 @@ public class SelectCommandTest extends TestCase {
                 null, false
         )).execute();
         assertEquals(2,t.size());
-        TableIterator iter = t.iterator();
-        System.out.println(iter.next());
-        System.out.println(iter.next());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(3,rs.getInt("Id"));
+        assertEquals(23,rs.getInt("Age"));
+        rs.next();
+        assertEquals(2,rs.getInt("Id"));
+        assertEquals(24,rs.getInt("Age"));
     }
 }
