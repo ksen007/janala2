@@ -33,5 +33,6 @@ public abstract class StandardOperation implements Operations {
     }
 
     protected abstract Object operation(Object aggregate, Object current);
+    public abstract String name();
 
 }

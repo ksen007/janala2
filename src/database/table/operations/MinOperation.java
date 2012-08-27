@@ -23,4 +23,9 @@ public class MinOperation extends StandardOperation {
         Comparable ol = (Comparable)aggregate;
         return nu.compareTo(ol)<0? nu:ol;
     }
+
+    @Override
+    public String name() {
+        return "MIN("+columnName+")";
+    }
 }

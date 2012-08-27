@@ -14,10 +14,7 @@ import database.table.having.HavingTrue;
 import database.table.internals.*;
 import database.table.operations.*;
 import database.table.orderby.SimpleOrderBy;
-import database.table.select.OperationMultiTableSelect;
-import database.table.select.OperationSingleTableSelect;
-import database.table.select.SimpleMultiTableSelect;
-import database.table.select.SimpleSingleTableSelect;
+import database.table.select.*;
 import database.table.where.Where;
 import database.table.where.WhereTrue;
 import junit.framework.TestCase;
@@ -91,7 +88,7 @@ public class MultiSelectCommandTest extends TestCase {
         Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
 
         Table t = (new SelectCommand(
-                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Id"),new IdentityOperation("Age")}),
+                new SimpleSingleTableSelect(new String[]{"Id","Age"}),
                 new From(new Table[]{Customers}),
                 new Where() {
                     public boolean where(Row[] rows) {
@@ -163,7 +160,7 @@ public class MultiSelectCommandTest extends TestCase {
         Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
 
         Table t = (new SelectCommand(
-                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("Age")}),
+                new SimpleSingleTableSelect(new String[]{"Age"}),
                 new From(new Table[]{Customers}),
                 new WhereTrue(),
                 new DefaultGroupBy(),
@@ -337,8 +334,7 @@ public class MultiSelectCommandTest extends TestCase {
 
 // 			ResultSet rs = statement.executeQuery("select CustomerId, count() from Orders group by CustomerId");
         Table t = (new SelectCommand(
-                new OperationMultiTableSelect(new String[]{"CustomerId","count"},
-                        new StandardOperation[]{new IdentityOperation(0,"CustomerId"), new CountOperation(0,"CustomerId")}),
+                new OperationSingleTableSelect(new StandardOperation[]{new IdentityOperation("CustomerId"), new CountOperation()}),
                 new From(new Table[]{Orders}),
                 new WhereTrue(),
                 new SimpleGroupBy(new String[]{"CustomerId"}),
@@ -354,13 +350,13 @@ public class MultiSelectCommandTest extends TestCase {
         ResultSet rs = t.getResultSet();
         rs.next();
         assertEquals(1, rs.getInt("CustomerId"));
-        assertEquals(1, rs.getInt("count"));
+        assertEquals(1, rs.getInt("COUNT(*)"));
         rs.next();
         assertEquals(2, rs.getInt("CustomerId"));
-        assertEquals(3, rs.getInt("count"));
+        assertEquals(3, rs.getInt("COUNT(*)"));
         rs.next();
         assertEquals(4, rs.getInt("CustomerId"));
-        assertEquals(1, rs.getInt("count"));
+        assertEquals(1, rs.getInt("COUNT(*)"));
     }
 
     public void testSimpleMax() throws Exception {
@@ -423,7 +419,7 @@ public class MultiSelectCommandTest extends TestCase {
         assertEquals(1,t.size());
         ResultSet rs = t.getResultSet();
         rs.next();
-        assertEquals(30,rs.getInt("Age"));
+        assertEquals(30,rs.getInt("MAX(Age)"));
     }
 
     public void testSimpleView() throws Exception {
@@ -477,7 +473,7 @@ public class MultiSelectCommandTest extends TestCase {
 //			statement.executeUpdate("create view Over20 as select * from Customers where Age >= 20");
 
         Table Over20 = (new SelectCommand(
-                new SimpleSingleTableSelect(new String[]{"Id","Name", "PasswordHash", "Age"}),
+                new SelectStar(Customers),
                 new From(new Table[]{Customers}),
                 new Where() {
 
@@ -661,7 +657,7 @@ public class MultiSelectCommandTest extends TestCase {
         assertEquals(1,t.size());
         ResultSet rs = t.getResultSet();
         rs.next();
-        assertEquals(142, rs.getInt("Age"));
+        assertEquals(142, rs.getInt("SUM(Age)"));
     }
 
     public void testSimpleSubquery_MultipleRecord() throws Exception {
@@ -735,9 +731,7 @@ public class MultiSelectCommandTest extends TestCase {
                 false  /* true means distinct */
         )).execute();
         Table t = (new SelectCommand(
-                new SimpleSingleTableSelect(new String[] { "Id",
-                                "CustomerId", "OrderDateTime", "CancelDate", "BookId",
-                                "IsCanceled" }),
+                new SelectStar(Orders),
                 new From(new Table[]{Orders}),
                 new Where() {
 
@@ -834,9 +828,7 @@ public class MultiSelectCommandTest extends TestCase {
                 false  /* true means distinct */
         )).execute();
         Table t = (new SelectCommand(
-                new SimpleSingleTableSelect(new String[] { "Id",
-                                "CustomerId", "OrderDateTime", "CancelDate", "BookId",
-                                "IsCanceled" }),
+                new SelectStar(Orders),
                 new From(new Table[]{Orders}),
                 new Where() {
 

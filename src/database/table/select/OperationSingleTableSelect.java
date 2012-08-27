@@ -18,7 +18,7 @@ public class OperationSingleTableSelect extends StandardOperationsSelect {
         this.columns = new String[operations.length];
         for (int i = 0; i < operations.length; i++) {
             StandardOperation operation = operations[i];
-            columns[i] = operation.columnName;
+            columns[i] = operation.name();
         }
     }
 

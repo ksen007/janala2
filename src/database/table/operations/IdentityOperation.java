@@ -21,4 +21,10 @@ public class IdentityOperation extends StandardOperation {
     protected Object operation(Object aggregate, Object current) {
         return aggregate;
     }
+
+    @Override
+    public String name() {
+        return columnName;
+    }
+
 }

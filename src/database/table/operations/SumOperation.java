@@ -26,4 +26,10 @@ public class SumOperation extends StandardOperation {
         Integer ol = (Integer)aggregate;
         return nu+ol;
     }
+
+    @Override
+    public String name() {
+        return "SUM("+columnName+")";
+    }
+
 }
