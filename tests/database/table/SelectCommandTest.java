@@ -262,10 +262,10 @@ public class SelectCommandTest extends TestCase {
         assertEquals(2,t.size());
         ResultSet rs = t.getResultSet();
         rs.next();
-        assertEquals(9,rs.getInt("Id"));
+        assertEquals(9,rs.getInt("MAX(Id)"));
         assertEquals(23,rs.getInt("Age"));
         rs.next();
-        assertEquals(7,rs.getInt("Id"));
+        assertEquals(7,rs.getInt("MAX(Id)"));
         assertEquals(24,rs.getInt("Age"));
     }
 
@@ -282,10 +282,10 @@ public class SelectCommandTest extends TestCase {
         assertEquals(2,t.size());
         ResultSet rs = t.getResultSet();
         rs.next();
-        assertEquals(1,rs.getInt("Id"));
+        assertEquals(1,rs.getInt("MIN(Id)"));
         assertEquals(23,rs.getInt("Age"));
         rs.next();
-        assertEquals(4,rs.getInt("Id"));
+        assertEquals(4,rs.getInt("MIN(Id)"));
         assertEquals(24,rs.getInt("Age"));
     }
 
@@ -302,10 +302,10 @@ public class SelectCommandTest extends TestCase {
         assertEquals(2,t.size());
         ResultSet rs = t.getResultSet();
         rs.next();
-        assertEquals(13,rs.getInt("Id"));
+        assertEquals(13,rs.getInt("SUM(Id)"));
         assertEquals(23,rs.getInt("Age"));
         rs.next();
-        assertEquals(11,rs.getInt("Id"));
+        assertEquals(11,rs.getInt("SUM(Id)"));
         assertEquals(24,rs.getInt("Age"));
     }
 
@@ -322,10 +322,10 @@ public class SelectCommandTest extends TestCase {
         assertEquals(2,t.size());
         ResultSet rs = t.getResultSet();
         rs.next();
-        assertEquals(3,rs.getInt("Id"));
+        assertEquals(3,rs.getInt("COUNT(Id)"));
         assertEquals(23,rs.getInt("Age"));
         rs.next();
-        assertEquals(2,rs.getInt("Id"));
+        assertEquals(2,rs.getInt("COUNT(Id)"));
         assertEquals(24,rs.getInt("Age"));
     }
 }
