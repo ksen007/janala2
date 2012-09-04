@@ -37,6 +37,24 @@ public class SymbolicTable {
                     Main.MakeSymbolic(x);
                     Long k = new Long(x);
                     row[j] = k;
+                } else if (types[j]==Table.DATE) {
+                    long x = Main.readLong(1);
+                    Main.MakeSymbolic(x);
+                    Main.Assume(x>0?1:0);
+                    java.sql.Date k = new java.sql.Date(x);
+                    row[j] = k;
+                } else if (types[j]==Table.TIME) {
+                    long x = Main.readLong(1);
+                    Main.MakeSymbolic(x);
+                    Main.Assume(x>0?1:0);
+                    java.sql.Time k = new java.sql.Time(x);
+                    row[j] = k;
+                } else if (types[j]==Table.TIMESTAMP) {
+                    long x = Main.readLong(1);
+                    Main.MakeSymbolic(x);
+                    Main.Assume(x>0?1:0);
+                    java.sql.Timestamp k = new java.sql.Timestamp(x);
+                    row[j] = k;
                 } else if (types[j]==Table.STRING) {
                     String x = Main.readString("");
                     Main.MakeSymbolic(x);

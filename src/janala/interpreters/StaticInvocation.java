@@ -25,6 +25,24 @@ public class StaticInvocation {
                 ret.longValue = (LongValue)args[0];
                 return ret;
             }
+        } else if (owner.equals("java/sql/Date") && name.equals("valueOf")) {
+            SqlDateObjectValue ret = new SqlDateObjectValue();
+            if (args[0] instanceof StringValue) {
+                ret.longValue = new LongValue((java.sql.Date.valueOf(((StringValue)args[0]).getConcrete()).getTime()));
+                return ret;
+            }
+        } else if (owner.equals("java/sql/Time") && name.equals("valueOf")) {
+            SqlDateObjectValue ret = new SqlDateObjectValue();
+            if (args[0] instanceof StringValue) {
+                ret.longValue = new LongValue((java.sql.Time.valueOf(((StringValue)args[0]).getConcrete()).getTime()));
+                return ret;
+            }
+        } else if (owner.equals("java/sql/Timestamp") && name.equals("valueOf")) {
+            SqlDateObjectValue ret = new SqlDateObjectValue();
+            if (args[0] instanceof StringValue) {
+                ret.longValue = new LongValue((java.sql.Timestamp.valueOf(((StringValue)args[0]).getConcrete()).getTime()));
+                return ret;
+            }
         } else if (owner.equals("janala/Main") && name.equals("Assume") && args.length==1) {
             if (((IntValue)args[0]).concrete!=0) {
                 history.setLastBranchDone();

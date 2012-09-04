@@ -47,9 +47,14 @@ public class IntValue extends Value {
         if (symbolic==null) {
             return result?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            return new ConstraintAndResult(result?
-                    symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ):
-                    symbolic.setop(SymbolicInt.COMPARISON_OPS.NE),result);
+            if (symbolic.op== SymbolicInt.COMPARISON_OPS.UN)
+                return new ConstraintAndResult(result?
+                        symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ):
+                        symbolic.setop(SymbolicInt.COMPARISON_OPS.NE),result);
+            else
+                return new ConstraintAndResult(result?
+                        symbolic.not():
+                        symbolic,result);
         }
     }
 
@@ -58,11 +63,15 @@ public class IntValue extends Value {
         if (symbolic==null) {
             return (concrete!=0)?ConstraintAndResult.TRUE:ConstraintAndResult.FALSE;
         } else {
-            //System.out.println("result = " + result);
-            return new ConstraintAndResult(result?
-                    symbolic.setop(SymbolicInt.COMPARISON_OPS.NE):
-                    symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ),result);
-        } 
+            if (symbolic.op== SymbolicInt.COMPARISON_OPS.UN)
+                return new ConstraintAndResult(result?
+                        symbolic.setop(SymbolicInt.COMPARISON_OPS.NE):
+                        symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ),result);
+            else
+                return new ConstraintAndResult(result?
+                        symbolic:
+                        symbolic.not(),result);
+        }
     }
 
     public ConstraintAndResult IFLT() {

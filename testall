@@ -10,6 +10,7 @@ rm -rf test.log
 ./$CATG 4 tests.StringTest3
 ./$CATG 3 tests.StringMapTest
 ./$CATG 4 tests.LongTest
+./$CATG 4 tests.TimestampTest
 ./$CATG 4 tests.Testme
 ./$CATG 4 tests.TestmeInteger
 ./$CATG 4 tests.TestmeLong
@@ -23,6 +24,7 @@ rm -rf test.log
 ./$CATG 20 tests.DBUpdateTest
 ./$CATG 20 tests.DBSelectTest
 ./$CATG 20 tests.DBDeleteTest
+./$CATG 20 tests.DBDateSelectTest
 ./$CATG 9 tests.DBInsertTest
 ./$CATG 5 tests.OrAssumptionTest
 ./$CATG 5 tests.OrAssumptionTest2
