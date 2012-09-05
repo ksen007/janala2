@@ -63,4 +63,6 @@ public interface Table {
     public Object value();
 
     public boolean in(Object o);
+
+    public boolean any(Object o, Predicate p);
 }

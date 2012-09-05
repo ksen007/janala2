@@ -190,6 +190,21 @@ public class TableImpl implements Table {
     }
 
     public boolean in(Object o) {
+        return any(o,new Predicate(){
+
+            public boolean predicate(Object o, Object value) {
+                if (o==null) {
+                    if (value==null) return true;
+                } else {
+                    if (o.equals(value))
+                        return true;
+                }
+                return false;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+        });
+    }
+
+    public boolean any(Object o, Predicate p) {
         if (columnNames.length!=1) {
             throw new RuntimeException("Table "+name+" must have one column.");
         }
@@ -198,12 +213,8 @@ public class TableImpl implements Table {
         while(iter.hasNext()) {
             Row row = iter.next();
             Object value = row.get(columnNames[0]);
-            if (o==null) {
-                if (value==null) return true;
-            } else {
-                if (o.equals(row.get(columnNames[0])))
+                if (p.predicate(o, value))
                     return true;
-            }
         }
         return false;
     }
