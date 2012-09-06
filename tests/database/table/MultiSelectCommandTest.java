@@ -856,4 +856,106 @@ public class MultiSelectCommandTest extends TestCase {
         assertEquals(4, rs.getInt("Id"));
     }
 
+    public void testSimpleSubquery_Any() throws Exception {
+        Customers = TableFactory.create("Customers", new String[]{"Id",
+                "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
+                Table.STRING, Table.INT, Table.INT}, new int[]{Table.PRIMARY,
+                Table.NONE, Table.NONE, Table.NONE}, new ForeignKey[]{null, null, null,
+                null});
+
+        Orders = TableFactory.create("Orders", new String[] { "Id",
+                "CustomerId", "OrderDateTime", "CancelDate", "BookId",
+                "IsCanceled" }, new int[] { Table.INT, Table.INT,
+                Table.INT, Table.INT, Table.INT, Table.INT },
+                new int[] { Table.PRIMARY, Table.NONE, Table.NONE, Table.NONE, Table.NONE, Table.NONE },
+                new ForeignKey[] { null, new ForeignKey(Customers, "Id"),
+                        null, null, null, null });
+
+        Publishers = TableFactory.create("Publishers", new String[] { "Id",
+                "Name" }, new int[] { Table.INT, Table.STRING },
+                new int[] { Table.PRIMARY, Table.NONE }, new ForeignKey[] { null,
+                null });
+
+        Books = TableFactory.create("Books", new String[] { "Id", "ISBN",
+                "Title", "Price", "Year", "PublisherId", "Stock" },
+                new int[] { Table.INT, Table.INT, Table.STRING, Table.INT,
+                        Table.INT, Table.INT, Table.INT }, new int[] {Table.PRIMARY,
+                Table.NONE, Table.NONE, Table.NONE, Table.NONE, Table.NONE, Table.NONE },
+                new ForeignKey[] { null, null, null, null, null,
+                        new ForeignKey(Publishers, "Id"), null });
+        		//Customers
+		Customers.insert(new Object[]{0, "Tanaka", 3,25});
+        Customers.insert(new Object[]{1, "Suzuki", 3,21});
+        Customers.insert(new Object[]{2, "Goto", 3,30});
+        Customers.insert(new Object[]{3, "Honda", 3,30});
+        Customers.insert(new Object[]{4, "Motohashi", 3,18});
+        Customers.insert(new Object[]{5, "Matsumoto", 3,18});
+
+		//Books
+		Books.insert(new Object[]{20, 1234567890, "The Art of C++", 20, 1987, 20, 1});
+        Books.insert(new Object[]{21, 1234567891, "The Art of C#", 25, 2000, 21, 1});
+        Books.insert(new Object[]{22, 1234567892, "The Art of Lisp", 30, 1980, 20, 1});
+        Books.insert(new Object[]{23, 1234567894, "Java HandBook", 5, 1999, 21, 1});
+
+		//Publishers
+        Publishers.insert(new Object[]{20, "Pearson Education"});
+        Publishers.insert(new Object[]{21, "O Reilly"});
+
+		//Orders
+//        Orders.insert(new Object[]{20, 1, 20120310, null, 20, 0});
+        Orders.insert(new Object[]{1, 1, 20120310, null, 20, 0});
+        Orders.insert(new Object[]{2, 2, 20120310, null, 20, 0});
+        Orders.insert(new Object[]{3, 2, 20120310, null, 22, 0});
+        Orders.insert(new Object[]{4, 2, 20120310, null, 23, 0});
+        Orders.insert(new Object[]{5, 4, 20120310, null, 23, 0});
+
+//        ResultSet rs = statement.executeQuery("select * from Orders where customerId = (select id from Customers where name == \"Goto\" )");
+        final Table subTable = (new SelectCommand(
+                new SimpleSingleTableSelect(new String[]{"Id"}),
+                new From(new Table[]{Customers}),
+                new Where() {
+
+                    @Override
+                    public boolean where(Row[] rows) {
+                        Integer age = (Integer)rows[0].get("Age");
+                        return (age!=null && age < 22);
+                    }
+                },
+                new DefaultGroupBy(),
+                new HavingTrue(),
+                null,
+                false  /* true means distinct */
+        )).execute();
+        Table t = (new SelectCommand(
+                new SelectStar(Orders),
+                new From(new Table[]{Orders}),
+                new Where() {
+
+                    @Override
+                    public boolean where(Row[] rows) {
+                        Integer i = (Integer)rows[0].get("CustomerId");
+                        return (i!=null && subTable.any(i, new Predicate() {
+                            public boolean predicate(Object o1, Object o2) {
+                                return (Integer)o1 > (Integer)o2;
+                            }
+                        }));
+                    }
+                },
+                new DefaultGroupBy(),
+                new HavingTrue(),
+                null,
+                false  /* true means distinct */
+        )).execute();
+
+        assertEquals(4,t.size());
+        ResultSet rs = t.getResultSet();
+        rs.next();
+        assertEquals(2, rs.getInt("Id"));
+        rs.next();
+        assertEquals(3, rs.getInt("Id"));
+        rs.next();
+        assertEquals(4, rs.getInt("Id"));
+        rs.next();
+        assertEquals(5, rs.getInt("Id"));
+    }
 }
