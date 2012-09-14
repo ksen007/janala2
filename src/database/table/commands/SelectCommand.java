@@ -13,7 +13,7 @@ import database.table.orderby.OrderBy;
 import database.table.select.Select;
 import database.table.where.Where;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -37,6 +37,16 @@ public class SelectCommand {
         isDistinct = distinct;
     }
 
+    class Pair {
+        ArrayBasedTuple tuple;
+        Row row;
+
+        Pair(ArrayBasedTuple tuple, Row row) {
+            this.tuple = tuple;
+            this.row = row;
+        }
+    }
+
     public Table execute() {
 
         Table[] tables = from.tables();
@@ -46,18 +56,24 @@ public class SelectCommand {
         Table ret = TableFactory.create(selectAs);
 
         TableIterator[] iterators = new TableIterator[nTables];
-        HashMap<ArrayBasedTuple,Row> groups = new HashMap<ArrayBasedTuple, Row>();
+        LinkedList<Pair> groups = new LinkedList<Pair>();
 
         while (hasNext(iterators)) {
             boolean insert = false;
             Row[] rows = next(iterators, tables);
             if (where.where(rows)) {
                 ArrayBasedTuple group = new ArrayBasedTuple(groupBy.groupBy(rows));
-                Row row = groups.get(group);
+                Row row = null;
+                for (Pair tmp:groups) {
+                    if (tmp.tuple.equals(group)) {
+                        row = tmp.row;
+                        break;
+                    }
+                }
                 if (row==null) {
                     row = new Row();
                     insert = true;
-                    groups.put(group,row);
+                    groups.add(new Pair(group,row));
                 }
                 Operations[] operations = select.select();
                 int i = 0;

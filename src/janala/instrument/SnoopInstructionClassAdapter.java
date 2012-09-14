@@ -14,7 +14,7 @@ public class SnoopInstructionClassAdapter extends ClassAdapter {
     }
 
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        //System.err.println("<**************** "+name+" desc "+desc);
+        //System.out.println("<**************** "+name+" desc "+desc);
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
         if (mv != null) {
 //            System.out.println("******************* "+((access & Opcodes.ACC_STATIC)>0));

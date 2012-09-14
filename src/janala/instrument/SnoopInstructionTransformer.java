@@ -36,7 +36,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
                 && !cname.startsWith("database/table/ConsistencyChecker")
                 && !cname.startsWith("com/apple/java")
                 && !cname.startsWith("java/lang")) {
-            //System.err.println("((((((((((((((( transform "+cname);
+            //System.out.println("((((((((((((((( transform "+cname);
             ClassReader cr = new ClassReader(cbuf);
             ClassWriter cw = new ClassWriter(cr, 0);
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);
@@ -81,7 +81,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
         }
 
         if (toInstrument) {
-            //System.err.println("((((((((((((((( transform "+cname);
+            //System.out.println("((((((((((((((( transform "+cname);
             ClassReader cr = new ClassReader(cbuf);
             ClassWriter cw = new ClassWriter(cr, 0);
             ClassVisitor cv = new SnoopInstructionClassAdapter(cw);

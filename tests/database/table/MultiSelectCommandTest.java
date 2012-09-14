@@ -958,4 +958,39 @@ public class MultiSelectCommandTest extends TestCase {
         rs.next();
         assertEquals(5, rs.getInt("Id"));
     }
+
+    public  void testTestme4(){
+
+    	Table Customers = TableFactory.create("Customers", new String[]{"Id",
+                "Name", "PasswordHash", "Age"}, new int[]{Table.INT,
+                Table.STRING, Table.INT, Table.INT}, new int[]{Table.PRIMARY,
+                Table.NONE, Table.NONE, Table.NONE}, new ForeignKey[]{null, null, null,
+                null});
+
+    	Customers.insert(new Object[]{0, "Tanaka", 3,25});
+        Customers.insert(new Object[]{1, "Suzuki", 3,21});
+        Customers.insert(new Object[]{2, "Goto", 3,28});
+        Customers.insert(new Object[]{3, "Honda", 3,30});
+
+        Table t = (new SelectCommand(
+                new SimpleSingleTableSelect(new String[]{"Id","Age"}),
+                new From(new Table[]{Customers}),
+                new Where() {
+                    public boolean where(Row[] rows) {
+                        Integer i = (Integer) rows[0].get("Id");
+                        return (i!=null && i >= 3);
+                    }
+                },
+                new DefaultGroupBy(),
+                new HavingTrue(),
+                new SimpleOrderBy(new String[]{"Age"},true),
+                false
+        )).execute();
+
+        if(t.size() >= 1){
+        	System.out.println("table is not empty");
+        }
+        System.out.println("Table size = "+t.size());
+    }
+
 }
