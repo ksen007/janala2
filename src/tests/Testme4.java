@@ -33,6 +33,7 @@
 
 package tests;
 
+import database.table.SymbolicTable;
 import database.table.commands.SelectCommand;
 import database.table.from.From;
 import database.table.groupby.DefaultGroupBy;
@@ -60,7 +61,8 @@ public class Testme4 {
 //    	Customers.insert(new Object[]{0, "Tanaka", 3,25});
 //        Customers.insert(new Object[]{1, "Suzuki", 3,21});
 //        Customers.insert(new Object[]{2, "Goto", 3,28});
-        Customers.insert(new Object[]{3, "Honda", 3,30});
+//        Customers.insert(new Object[]{3, "Honda", 3,30});
+        SymbolicTable.insertSymbolicRows(Customers, 4);
 
         Table t = (new SelectCommand(
                 new SimpleSingleTableSelect(new String[]{"Id","Age"}),
