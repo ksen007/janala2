@@ -248,6 +248,10 @@ public class TableImpl implements Table {
         return false;
     }
 
+    public void setForeignKeys(ForeignKey[] fkeys) {
+        this.foreignKeys = fkeys;
+    }
+
     private Object[] doSelectColumns(int nCols, String[][] selectColumns, Row[] rows) {
         Object[] ret = new Object[nCols];
         int k = 0;

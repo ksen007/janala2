@@ -94,4 +94,6 @@ public interface Table {
     public boolean in(Object o);
 
     public boolean any(Object o, Predicate p);
+
+    public void setForeignKeys(ForeignKey[] fkeys);
 }
