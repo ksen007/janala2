@@ -99,6 +99,16 @@ public class TableImpl implements Table {
         rows.add(row);
     }
 
+    public void insertNoCheck(Object[] values) {
+        assert(columnNames.length==values.length);
+        Row row = new Row();
+        for (int i = 0; i < columnNames.length; i++) {
+            String column = columnNames[i];
+            row.put(column,values[i]);
+        }
+        rows.add(row);
+    }
+
     public TableIterator iterator() {
         return new TableIterator(rows.listIterator());
     }

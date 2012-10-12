@@ -61,6 +61,8 @@ public interface Table {
 
     public void insert(Object[] values);
 
+    public void insertNoCheck(Object[] row);
+
     public TableIterator iterator();
 
     public int delete(Where where);
