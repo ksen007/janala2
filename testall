@@ -28,6 +28,9 @@
 CATG=concolic
 rm -rf test.log
 
+./$CATG 5 tests.test_q1_q4_min
+./$CATG 9 tests.test_q1_q4
+./$CATG 3 tests.test_q0_q4
 ./$CATG 3 tests.BoolFlow
 ./$CATG 3 tests.BoolFlow2
 ./$CATG 3 tests.BoolTest

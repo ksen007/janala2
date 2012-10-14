@@ -32,6 +32,7 @@ package catg;/*
  */
 
 import janala.Main;
+import janala.interpreters.OrValue;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -82,6 +83,14 @@ public class CATG {
     public static boolean readBool(boolean x) {
         boolean y = Main.readBool(x);
         Main.MakeSymbolic(y);
+        OrValue tmp;
+        Main.Ignore();
+        tmp = Main.AssumeOrBegin(y==true?1:0);
+        Main.Ignore();
+        tmp = Main.AssumeOr(!y?1:0,tmp);
+        if (tmp!=null) {
+            Main.AssumeOrEnd(tmp);
+        }
         return y;
     }
 
