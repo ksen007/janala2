@@ -52,7 +52,7 @@ public class CATG {
         long y = Main.readLong(x);
         Main.MakeSymbolic(y);
         Main.Assume(y <= Long.MAX_VALUE?1:0);
-        Main.Assume(y >= Long.MIN_VALUE?1:0);
+        Main.Assume(y >= Long.MIN_VALUE+1?1:0);
         return y;
     }
 
