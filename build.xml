@@ -43,6 +43,7 @@
         <pathelement location="out/production/tests"/>
         <pathelement location="lib/asm-all-3.3.1.jar"/>
         <pathelement location="lib/choco-solver-2.1.4.jar"/>
+        <pathelement location="lib/automaton.jar"/>
         <pathelement location="lib/trove-3.0.3.jar"/>
     </path>
 
