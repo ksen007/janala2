@@ -32,11 +32,11 @@ rm -rf test.log
 ./$CATG 9 tests.test_q1_q4
 ./$CATG 3 tests.test_q0_q4
 ./$CATG 3 tests.BoolFlow
-./$CATG 3 tests.BoolFlow2
+./$CATG 2 tests.BoolFlow2
 ./$CATG 3 tests.BoolTest
 ./$CATG 5 tests.BoolTest2
 ./$CATG 5 tests.BoolTest3
-./$CATG 4 tests.StringEquals
+./$CATG 3 tests.StringEquals
 ./$CATG 4 tests.StringTest2
 ./$CATG 4 tests.StringTest3
 ./$CATG 3 tests.StringMapTest
@@ -59,7 +59,7 @@ rm -rf test.log
 ./$CATG 20 tests.DBDateSelectTest
 ./$CATG 9 tests.DBInsertTest
 ./$CATG 5 tests.OrAssumptionTest
-./$CATG 5 tests.OrAssumptionTest2
+./$CATG 4 tests.OrAssumptionTest2
 ./$CATG 29 tests.QSort
 ./$CATG 29 tests.QSortLong
 ./$CATG 25 tests.InsertionSort
