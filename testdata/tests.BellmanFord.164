@@ -1,8 +1,13 @@
 INFO: -- Infeasible
 INFO: -- Infeasible
-INFO: 1000001
-INFO: 999999
+INFO: -- Infeasible
+INFO: -- Infeasible
+INFO: -- Infeasible
+INFO: -- Infeasible
+INFO: -- Infeasible
+INFO: 1000000
+INFO: 999997
+INFO: -1000003
+INFO: -6
 INFO: -1000001
-INFO: -3
-INFO: -1000000
-INFO: 1
+INFO: 0

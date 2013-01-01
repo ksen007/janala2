@@ -71,5 +71,4 @@ rm -rf test.log
 ./$CATG 121 tests.SortedListInsert
 ./$CATG 206 tests.BellmanFord
 ./$CATG 206 tests.Dijkstra
-./$CATG 301 tests.Tsp
 ./$CATG 100 tests.BookStoreNoSQL
