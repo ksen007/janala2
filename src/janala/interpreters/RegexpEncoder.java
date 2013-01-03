@@ -41,140 +41,137 @@ import dk.brics.automaton.Transition;
 import java.util.IdentityHashMap;
 import java.util.List;
 
-interface Formula {
-    String toCVC3FormulaString(String x);
-}
+//interface Formula {
+//    String toCVC3FormulaString(String x);
+//}
 
-class RelConstant implements Formula {
-    int varIdx;
-    char constant;
-    String op;
-
-    RelConstant(int varIdx, char constant, String op) {
-        this.varIdx = varIdx;
-        this.constant = constant;
-        this.op = op;
-    }
-
-    public String toCVC3FormulaString(String x) {
-        return " ( "+x+varIdx+" "+op+ " "+((int)constant)+" ) ";
-    }
-}
-
-class AndFormula implements Formula {
-    Formula left;
-    Formula right;
-
-    AndFormula(Formula left, Formula right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    public String toCVC3FormulaString(String x) {
-        return "("+left.toCVC3FormulaString(x)+" AND "+right.toCVC3FormulaString(x)+ ")";
-    }
-}
-
-class OrFormula implements Formula {
-    Formula left;
-    Formula right;
-
-    OrFormula(Formula left, Formula right) {
-        this.left = left;
-        this.right = right;
-    }
-
-    public String toCVC3FormulaString(String x) {
-        return "("+left.toCVC3FormulaString(x)+" OR "+right.toCVC3FormulaString(x)+ ")";
-    }
-}
-
-class TrueFormula implements Formula {
-    public String toCVC3FormulaString(String x) {
-        return "TRUE";
-    }
-
-}
-
-class FalseFormula implements Formula {
-    public String toCVC3FormulaString(String x) {
-        return "FALSE";
-    }
-}
+//class RelConstant implements Formula {
+//    int varIdx;
+//    char constant;
+//    String op;
+//
+//    RelConstant(int varIdx, char constant, String op) {
+//        this.varIdx = varIdx;
+//        this.constant = constant;
+//        this.op = op;
+//    }
+//
+//    public String toCVC3FormulaString(String x) {
+//        return " ( "+x+varIdx+" "+op+ " "+((int)constant)+" ) ";
+//    }
+//}
+//
+//class AndFormula implements Formula {
+//    Formula left;
+//    Formula right;
+//
+//    AndFormula(Formula left, Formula right) {
+//        this.left = left;
+//        this.right = right;
+//    }
+//
+//    public String toCVC3FormulaString(String x) {
+//        return "("+left.toCVC3FormulaString(x)+" AND "+right.toCVC3FormulaString(x)+ ")";
+//    }
+//}
+//
+//class OrFormula implements Formula {
+//    Formula left;
+//    Formula right;
+//
+//    OrFormula(Formula left, Formula right) {
+//        this.left = left;
+//        this.right = right;
+//    }
+//
+//    public String toCVC3FormulaString(String x) {
+//        return "("+left.toCVC3FormulaString(x)+" OR "+right.toCVC3FormulaString(x)+ ")";
+//    }
+//}
+//
+//class TrueFormula implements Formula {
+//    public String toCVC3FormulaString(String x) {
+//        return "TRUE";
+//    }
+//
+//}
+//
+//class FalseFormula implements Formula {
+//    public String toCVC3FormulaString(String x) {
+//        return "FALSE";
+//    }
+//}
 
 public class RegexpEncoder {
-    // Usage: java -cp out/production/jalangijava/:lib/automaton.jar RegexpEncoder [length|content] regexp var_string [content_length|true|false]
-
-    public static void main(String[] args) {
-        boolean isLength = args[0].equals("length");
-        RegExp r = new RegExp(args[1]);
-        String prefix = args[2];
-        int length=0;
-        Automaton a = r.toAutomaton();
-//        System.out.println(a.toDot());
-        if (!isLength) {
-            length = Integer.parseInt(args[3])-1;
-            if (length==-1) {
-                System.out.println("TRUE");
-            } else {
-                System.out.println(toCVC3FormulaString(a,prefix,length));
-            }
-        } else {
-            boolean accept = args[3].equals("true");
-            String example = a.getShortestExample(accept);
-            System.out.println("(" + prefix + " >= " + example.length() + ")");
-        }
-    }
-
-    public static String getRegexpFormulaString(String regexp, String prefix, int length) {
+    public static Constraint getRegexpFormulaString(String regexp, String prefix, int length) {
         RegExp r = new RegExp(regexp);
         Automaton a = r.toAutomaton();
         if (length==-1) {
-            return "TRUE";
+            return SymbolicTrueConstraint.instance;
         } else {
-            return toCVC3FormulaString(a,prefix,length);
+            return createFormula(a, prefix, length);
         }
     }
 
-    public String getLengthFormulaString(String regexp, String prefix, boolean accept) {
+    public static Constraint getLengthFormulaString(String regexp, String prefix, int sym, boolean accept) {
         RegExp r = new RegExp(regexp);
         Automaton a = r.toAutomaton();
         String example = a.getShortestExample(accept);
-        return "(" + prefix + " >= " + example.length() + ")";
+        return intCompare(prefix, sym, example.length(), SymbolicIntCompareConstraint.COMPARISON_OPS.GE);
     }
 
 
-    public static String toCVC3FormulaString(Automaton A, String x, int n) {
-        Formula tmp = createFormula(A, n);
-        String ret = tmp.toCVC3FormulaString(x);
-        return ret;
-    }
-
-    public static Formula createFormula(Automaton A, int n) {
+    public static Constraint createFormula(Automaton A, String prefix, int n) {
         State root = A.getInitialState();
         if (n==0) {
             if (root.isAccept()) {
-                return new TrueFormula();
+                return SymbolicTrueConstraint.instance;
             } else {
-                return new FalseFormula();
+                return SymbolicFalseConstraint.instance;
             }
         } else {
-            Formula ret = createFormula(root,0,n);
-            return ret==null? new FalseFormula() : ret;
+            Constraint ret = createFormula(root, prefix, 0,n);
+            return ret==null? SymbolicFalseConstraint.instance : ret;
         }
     }
 
-    public static Formula createFormula(State root, int i, int n) {
-        IdentityHashMap<State, Formula> ret = new IdentityHashMap<State, Formula>();
-        Formula collect = null;
+    private static Constraint intCompare(String prefix, int sym, int constant, SymbolicIntCompareConstraint.COMPARISON_OPS op) {
+        return new SymbolicIntCompareConstraint(prefix, sym, constant, op);
+    }
+
+    private static Constraint andFormula(Constraint f1, Constraint f2) {
+        if (f1 instanceof SymbolicAndConstraint) {
+            return ((SymbolicAndConstraint)f1).AND(f2);
+        } else if (f2 instanceof SymbolicAndConstraint) {
+            return ((SymbolicAndConstraint)f2).AND(f1);
+        } else {
+            return (new SymbolicAndConstraint(f1)).AND(f2);
+        }
+    }
+
+    private static Constraint orFormula(Constraint f1, Constraint f2) {
+        if (f1 instanceof SymbolicOrConstraint) {
+            return ((SymbolicOrConstraint)f1).OR(f2);
+        } else if (f2 instanceof SymbolicOrConstraint) {
+            return ((SymbolicOrConstraint)f2).OR(f1);
+        } else {
+            return (new SymbolicOrConstraint(f1)).OR(f2);
+        }
+    }
+
+
+    public static Constraint createFormula(State root, String prefix, int i, int n) {
+        IdentityHashMap<State, Constraint> ret = new IdentityHashMap<State, Constraint>();
+        Constraint collect = null;
 
         List<Transition> transitions = root.getSortedTransitions(false);
         for (Transition transition : transitions) {
             State next = transition.getDest();
-            AndFormula tmp1 = new AndFormula(new RelConstant(i,transition.getMin(),">="), new RelConstant(i,transition.getMax(),"<="));
-            Formula tmp2 = ret.get(next);
+            Constraint tmp1 = andFormula(intCompare(prefix, i, transition.getMin(), SymbolicIntCompareConstraint.COMPARISON_OPS.GE),
+                    intCompare(prefix, i, transition.getMax(), SymbolicIntCompareConstraint.COMPARISON_OPS.LE));
+            Constraint tmp2 = ret.get(next);
             if (tmp2 != null) {
-                OrFormula tmp3 = new OrFormula(tmp2,tmp1);
+                Constraint tmp3 = orFormula(tmp2,tmp1);
                 ret.put(next, tmp3);
             } else {
                 ret.put(next,tmp1);
@@ -182,13 +179,13 @@ public class RegexpEncoder {
         }
         if (i < n) {
             for (State next : ret.keySet()) {
-                Formula suffix = createFormula(next, i + 1, n);
+                Constraint suffix = createFormula(next, prefix, i + 1, n);
                 if (suffix != null) {
-                    Formula tmp4 = new AndFormula(ret.get(next), suffix);
+                    Constraint tmp4 = andFormula(ret.get(next), suffix);
                     if (collect == null) {
                         collect = tmp4;
                     } else {
-                        collect = new OrFormula(collect, tmp4);
+                        collect = orFormula(collect, tmp4);
                     }
                 }
             }
@@ -198,7 +195,7 @@ public class RegexpEncoder {
                     if (collect == null) {
                         collect = ret.get(next);
                     } else {
-                        collect = new OrFormula(collect, ret.get(next));
+                        collect = orFormula(collect, ret.get(next));
                     }
                 }
             }

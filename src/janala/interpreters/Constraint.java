@@ -44,4 +44,5 @@ public abstract class Constraint {
 
     public abstract void accept(ConstraintVisitor v);
     public abstract Constraint not();
+
 }

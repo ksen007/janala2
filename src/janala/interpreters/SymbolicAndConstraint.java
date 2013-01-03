@@ -81,7 +81,7 @@ public class SymbolicAndConstraint extends Constraint {
         constraints.addAll(c.constraints);
     }
 
-    public SymbolicAndConstraint OR(Constraint c) {
+    public SymbolicAndConstraint AND(Constraint c) {
         if (c!=null) {
             SymbolicAndConstraint ret = new SymbolicAndConstraint(this);
             ret.constraints.add(c);

@@ -319,7 +319,7 @@ public class SymbolicStringPredicate extends Constraint {
         return null;
     }
 
-//    public Constraint getFormulaString(ArrayList<String> freeVars, String mode, ArrayList<Value> assignments) {
+//    public Constraint getFormula(ArrayList<String> freeVars, String mode, ArrayList<Value> assignments) {
 //        StringBuilder sb = new StringBuilder();
 //        //, s1, s2, formula, cmd, length1 = 0, length2 = 0, j;
 //        IntValue s1 = (this.left instanceof String)?
@@ -329,8 +329,6 @@ public class SymbolicStringPredicate extends Constraint {
 //                new IntValue(((String)this.right).length()):
 //                ((SymbolicStringExpression)this.right).getField("length");
 //        IntValue formula;
-////        s1 = $7.GF(0,this.left,"length");
-////        s2 = $7.GF(0,this.right,"length");
 //
 //        if (mode.equals("integer")) {
 //            switch(this.op) {
@@ -338,35 +336,18 @@ public class SymbolicStringPredicate extends Constraint {
 //                    formula = s1.IF_ICMPEQ(s2);
 //                    return formula.symbolic;
 //                case NE:
-//                    //formula = $7.B(0,"!=",s1,s2);
-//                    //return formula.symbolic.getFormulaString(freeVars,mode, assignments);
-//                    return "TRUE";
+//                    return SymbolicTrueConstraint.instance;
 //                case IN:
-//                    RegexpEncoder.
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder " +
-//                        "length \""+
-//                        regex_escape(this.right+"")+
-//                        "\" "+s1.symbolic+" true";
-//                    freeVars[s1.symbolic+""] = true;
-//                    sb = stdout(cmd);
-//                    break;
+//                    // @todo regex_escape
+//                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.symbolic.linear.keys()[0],true);
 //                case NOTIN:
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder " +
-//                        "length \""+
-//                        regex_escape(this.right+"")+
-//                        "\" "+s1.symbolic+" false";
-//                    freeVars[s1.symbolic+""] = true;
-//                    sb = stdout(cmd);
-//                    break;
+//                    // @todo regex_escape
+//                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.symbolic.linear.keys()[0],false);
 //            }
-//        } else if (mode === "string") {
+//        } else if (mode.equals("string")) {
 //            switch(this.op) {
-//                case SymbolicStringPredicate.EQ:
-//                    if (s1.symbolic) {
+//                case EQ:
+//                    if (s1.symbolic != null) {
 //                        length1 = s1.symbolic.substitute(assignments);
 //                    } else {
 //                        length1 = s1;
@@ -381,7 +362,7 @@ public class SymbolicStringPredicate extends Constraint {
 //                    } else {
 //                        return getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments);
 //                    }
-//                case SymbolicStringPredicate.NE:
+//                case NE:
 //                    if (s1.symbolic) {
 //                        length1 = s1.symbolic.substitute(assignments);
 //                    } else {
@@ -398,7 +379,7 @@ public class SymbolicStringPredicate extends Constraint {
 //                        return "(NOT "+getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments)+")";
 //                    }
 ////                    return (length1 !== length2)?"TRUE":"FALSE";
-//                case SymbolicStringPredicate.IN:
+//                case IN:
 //                    length1 = s1.symbolic.substitute(assignments);
 //                    cmd = "java -cp " +
 //                        classpath +
@@ -412,7 +393,7 @@ public class SymbolicStringPredicate extends Constraint {
 //                    }
 //                    sb = stdout(cmd);
 //                    break;
-//                case SymbolicStringPredicate.NOTIN:
+//                case NOTIN:
 //                    length1 = s1.symbolic.substitute(assignments);
 //                    cmd = "java -cp " +
 //                        classpath +

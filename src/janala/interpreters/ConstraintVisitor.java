@@ -44,7 +44,7 @@ public interface ConstraintVisitor {
     void visitSymbolicStringPredicate(SymbolicStringPredicate c);
     void visitSymbolicAnd(SymbolicAndConstraint c);
     void visitSymbolicNot(SymbolicNotConstraint c);
-
     void visitSymbolicTrue(SymbolicTrueConstraint c);
     void visitSymbolicFalse(SymbolicFalseConstraint c);
+    void visitSymbolicIntCompare(SymbolicIntCompareConstraint c);
 }

@@ -76,6 +76,12 @@ public class YicesSolver2 implements Solver {
         constraints.add(c);
     }
 
+    public void visitSymbolicIntCompare(SymbolicIntCompareConstraint c) {
+        c = (SymbolicIntCompareConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
     public void visitSymbolicOr(SymbolicOrConstraint c) {
         c = (SymbolicOrConstraint)initSolver(c);
         logger.log(Level.INFO,"{0}",c);

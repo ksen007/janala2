@@ -92,6 +92,10 @@ public class ChocoSolver implements Solver {
         m.addConstraint(createSymbolicInt((SymbolicInt) tmp));
     }
 
+    public void visitSymbolicIntCompare(SymbolicIntCompareConstraint c) {
+        throw new RuntimeException("Unimplemented feature");
+    }
+
     public choco.kernel.model.constraints.Constraint createSymbolicInt(SymbolicInt c) {
         logger.log(Level.INFO,"{0}",c);
         boolean first2 = true;

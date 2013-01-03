@@ -76,6 +76,12 @@ public class CVC3Solver implements Solver {
         constraints.add(c);
     }
 
+    public void visitSymbolicIntCompare(SymbolicIntCompareConstraint c) {
+        c = (SymbolicIntCompareConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
     public void visitSymbolicOr(SymbolicOrConstraint c) {
         c = (SymbolicOrConstraint)initSolver(c);
         logger.log(Level.INFO,"{0}",c);
@@ -149,6 +155,29 @@ public class CVC3Solver implements Solver {
             } else if (c.op == SymbolicInt.COMPARISON_OPS.GE) {
                 out.print(" >= ");
             } else if (c.op == SymbolicInt.COMPARISON_OPS.GT) {
+                out.print(" > ");
+            }
+            out.print("0");
+        } else if (con instanceof SymbolicIntCompareConstraint) {
+            SymbolicIntCompareConstraint c = (SymbolicIntCompareConstraint)con;
+            out.print(c.prefix);
+            out.print(c.sym);
+            if (c.constant != 0) {
+                out.print("+(");
+                out.print(c.constant);
+                out.print(')');
+            }
+            if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.EQ) {
+                out.print(" = ");
+            } else if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.NE) {
+                out.print(" /= ");
+            } else if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.LE) {
+                out.print(" <= ");
+            } else if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.LT) {
+                out.print(" < ");
+            } else if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.GE) {
+                out.print(" >= ");
+            } else if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.GT) {
                 out.print(" > ");
             }
             out.print("0");

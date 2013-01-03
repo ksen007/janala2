@@ -76,6 +76,10 @@ public class YicesSolver implements Solver {
         constraints.add(c);
     }
 
+    public void visitSymbolicIntCompare(SymbolicIntCompareConstraint c) {
+        throw new RuntimeException("Unimplemented feature");
+    }
+
     public void visitSymbolicOr(SymbolicOrConstraint c) {
         throw new RuntimeException("Unimplemented feature");
     }
