@@ -80,6 +80,10 @@ public class YicesSolver implements Solver {
         throw new RuntimeException("Unimplemented feature");
     }
 
+    public void visitSymbolicStringPredicate(SymbolicStringPredicate symbolicStringPredicate) {
+        throw new RuntimeException("String functions and regular expressions are not supported with Choco solver");
+    }
+
     private void print(Constraint con, PrintStream out) {
         if (con instanceof SymbolicInt) {
             SymbolicInt c = (SymbolicInt)con;

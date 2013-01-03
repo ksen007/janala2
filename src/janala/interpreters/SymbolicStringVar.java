@@ -27,19 +27,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
-
 package janala.interpreters;
+
+import java.util.ArrayList;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/22/12
- * Time: 4:31 PM
  */
-public interface ConstraintVisitor {
-    void visitSymbolicInt(SymbolicInt c);
-    void visitSymbolicOr(SymbolicOrConstraint c);
-    void visitSymbolicStringPredicate(SymbolicStringPredicate symbolicStringPredicate);
+public class SymbolicStringVar {
+    int sym;
+    IntValue length;
+
+    public SymbolicStringVar(int sym, IntValue length) {
+        this.sym = sym;
+        this.length = length;
+    }
+
+    @Override
+    public String toString() {
+        return this.sym +"";
+    }
+
+    public SymbolicStringVar substitute(ArrayList<Value> assignments) {
+        return this;
+    }
+
+    public Value getField(String offset) {
+        if (offset.equals("length")) {
+            return this.length;
+        }
+        return null;
+    }
+
+
 }

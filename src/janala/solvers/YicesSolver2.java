@@ -82,6 +82,12 @@ public class YicesSolver2 implements Solver {
         constraints.add(c);
     }
 
+    public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
+        c = (SymbolicStringPredicate)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
     private void print(Constraint con, PrintStream out) {
         if (con instanceof SymbolicInt) {
             SymbolicInt c = (SymbolicInt)con;

@@ -148,6 +148,10 @@ public class ChocoSolver implements Solver {
         m.addConstraint(old);
     }
 
+    public void visitSymbolicStringPredicate(SymbolicStringPredicate symbolicStringPredicate) {
+        throw new RuntimeException("String functions and regular expressions are not supported with Choco solver");
+    }
+
 
 //    public void visitPointerConstraint(PointerConstraint c) {
 //        initSolver(c);
