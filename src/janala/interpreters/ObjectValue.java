@@ -60,24 +60,24 @@ public class ObjectValue extends Value {
     }
 
 
-    public ConstraintAndResult IF_ACMPEQ(ObjectValue o2) {
+    public IntValue IF_ACMPEQ(ObjectValue o2) {
         boolean result = this==o2;
-        return new ConstraintAndResult(null,result);
+        return new IntValue(result?1:0, null);
     }
 
-    public ConstraintAndResult IF_ACMPNE(ObjectValue o2) {
+    public IntValue IF_ACMPNE(ObjectValue o2) {
         boolean result = this!=o2;
-        return new ConstraintAndResult(null,result);
+        return new IntValue(result?1:0, null);
     }
 
-    public ConstraintAndResult IFNULL() {
+    public IntValue IFNULL() {
         boolean result = this.address==0;
-        return new ConstraintAndResult(null,result);
+        return new IntValue(result?1:0, null);
     }
 
-    public ConstraintAndResult IFNONNULL() {
+    public IntValue IFNONNULL() {
         boolean result = this.address!=0;
-        return new ConstraintAndResult(null,result);
+        return new IntValue(result?1:0, null);
     }
 
     public Value getField(int fieldId) {

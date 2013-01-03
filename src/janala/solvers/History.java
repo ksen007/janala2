@@ -35,7 +35,6 @@ package janala.solvers;
 
 import janala.config.Config;
 import janala.interpreters.Constraint;
-import janala.interpreters.ConstraintAndResult;
 import janala.interpreters.Value;
 import janala.utils.MyLogger;
 
@@ -93,31 +92,31 @@ public class History {
         return ret;
     }
 
-    public void checkAndSetBranch(ConstraintAndResult result,int iid) {
+    public void checkAndSetBranch(boolean result, Constraint constraint, int iid) {
         BranchElement current;
         if (index < history.size()) {
             current = history.get(index);
-            if (!ignore && current.branch != result.result) {
+            if (!ignore && current.branch != result) {
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
-                logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+result.constraint);
+                logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+constraint);
                 int len = history.size();
                 for (int j=len-1; j>index; j--) {
                     history.remove(j);
                 }
-                current.branch = result.result;
+                current.branch = result;
                 current.done = false;
                 current.iid = iid;
             }
         } else {
-            current = new BranchElement(result.result,false,-1,iid);
+            current = new BranchElement(result,false,-1,iid);
             history.add(current);
         }
-        if (result.constraint!=null) {
-            result.constraint.iid = iid;
-            result.constraint.index = index;
-            pathConstraint.add(result.constraint);
+        if (constraint!=null) {
+            constraint.iid = iid;
+            constraint.index = index;
+            pathConstraint.add(constraint);
             current.pathConstraintIndex = pathConstraint.size()-1;
         } else {
             current.pathConstraintIndex = -1;

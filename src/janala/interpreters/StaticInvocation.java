@@ -98,7 +98,7 @@ public class StaticInvocation {
                 c = b.symbolic.not();
             else
                 c = b.symbolic;
-            history.checkAndSetBranch(new ConstraintAndResult(c,res),iid);
+            history.checkAndSetBranch(res, c, iid);
             if (b.concrete) {
                 history.setLastBranchDone();
             }

@@ -78,11 +78,11 @@ public class ConcolicInterpreter implements IVisitor {
         }
     }
 
-    private void checkAndSetBranch(ConstraintAndResult cr) {
-        cr.result = false;
+    private void checkAndSetBranch(IntValue cr) {
+        cr.concrete = 0;
         if (next instanceof SPECIAL) {
             if (((SPECIAL)next).i==1) {
-                cr.result = true;
+                cr.concrete = 1;
             }
         }
     }
@@ -696,122 +696,122 @@ public class ConcolicInterpreter implements IVisitor {
 
     public void visitIFEQ(IFEQ inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IFEQ();
+        IntValue result = i1.IFEQ();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic, inst.iid);
     }
 
     public void visitIFGE(IFGE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IFGE();
+        IntValue result = i1.IFGE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIFGT(IFGT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IFGT();
+        IntValue result = i1.IFGT();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIFLE(IFLE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IFLE();
+        IntValue result = i1.IFLE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIFLT(IFLT inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IFLT();
+        IntValue result = i1.IFLT();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIFNE(IFNE inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IFNE();
+        IntValue result = i1.IFNE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        ConstraintAndResult result = o1.IFNONNULL();
+        IntValue result = o1.IFNONNULL();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIFNULL(IFNULL inst) {
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        ConstraintAndResult result = o1.IFNULL();
+        IntValue result = o1.IFNULL();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        ConstraintAndResult result = o1.IF_ACMPEQ(o2);
+        IntValue result = o1.IF_ACMPEQ(o2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
         ObjectValue o2 = (ObjectValue)currentFrame.pop();
         ObjectValue o1 = (ObjectValue)currentFrame.pop();
-        ConstraintAndResult result = o1.IF_ACMPNE(o2);
+        IntValue result = o1.IF_ACMPNE(o2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IF_ICMPEQ(i2);
+        IntValue result = i1.IF_ICMPEQ(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IF_ICMPGE(i2);
+        IntValue result = i1.IF_ICMPGE(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IF_ICMPGT(i2);
+        IntValue result = i1.IF_ICMPGT(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IF_ICMPLE(i2);
+        IntValue result = i1.IF_ICMPLE(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IF_ICMPLT(i2);
+        IntValue result = i1.IF_ICMPLT(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
         IntValue i2 = (IntValue)currentFrame.pop();
         IntValue i1 = (IntValue)currentFrame.pop();
-        ConstraintAndResult result = i1.IF_ICMPNE(i2);
+        IntValue result = i1.IF_ICMPNE(i2);
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
     }
 
     public void visitIINC(IINC inst) {
@@ -1331,18 +1331,18 @@ public class ConcolicInterpreter implements IVisitor {
         int[] keys = inst.keys;
         IntValue i1 = (IntValue)currentFrame.pop();
         for (int key : keys) {
-            ConstraintAndResult result = i1.IF_ICMPEQ(new IntValue(key));
-            history.checkAndSetBranch(result,inst.iid);
-            if (result.result) return;
+            IntValue result = i1.IF_ICMPEQ(new IntValue(key));
+            history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+            if (result.concrete==1) return;
         }
     }
 
     public void visitTABLESWITCH(TABLESWITCH inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
         for (int i=inst.min; i<=inst.max; i++) {
-            ConstraintAndResult result = i1.IF_ICMPEQ(new IntValue(i));
-            history.checkAndSetBranch(result,inst.iid);
-            if (result.result) return;
+            IntValue result = i1.IF_ICMPEQ(new IntValue(i));
+            history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+            if (result.concrete==1) return;
         }
     }
 
