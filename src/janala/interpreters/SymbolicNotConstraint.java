@@ -27,24 +27,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
-
 package janala.interpreters;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/22/12
- * Time: 4:31 PM
+ * Date: 1/2/13
+ * Time: 10:52 PM
  */
-public interface ConstraintVisitor {
-    void visitSymbolicInt(SymbolicInt c);
-    void visitSymbolicOr(SymbolicOrConstraint c);
-    void visitSymbolicStringPredicate(SymbolicStringPredicate c);
-    void visitSymbolicAnd(SymbolicAndConstraint c);
-    void visitSymbolicNot(SymbolicNotConstraint c);
+public class SymbolicNotConstraint extends Constraint {
+        public Constraint constraint;
 
-    void visitSymbolicTrue(SymbolicTrueConstraint c);
-    void visitSymbolicFalse(SymbolicFalseConstraint c);
+        public SymbolicNotConstraint(Constraint c) {
+            constraint = c;
+        }
+
+        @Override
+        public void accept(ConstraintVisitor v) {
+            v.visitSymbolicNot(this);
+        }
+
+        @Override
+        public Constraint not() {
+            return constraint;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(" ! ");
+            sb.append(constraint);
+            return sb.toString();
+        }
 }

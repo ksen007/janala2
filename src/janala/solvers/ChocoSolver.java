@@ -152,6 +152,21 @@ public class ChocoSolver implements Solver {
         throw new RuntimeException("String functions and regular expressions are not supported with Choco solver");
     }
 
+    public void visitSymbolicAnd(SymbolicAndConstraint c) {
+        throw new RuntimeException("Unsupported");
+    }
+
+    public void visitSymbolicNot(SymbolicNotConstraint c) {
+        throw new RuntimeException("Unsupported");
+    }
+
+    public void visitSymbolicTrue(SymbolicTrueConstraint c) {
+        throw new RuntimeException("Unsupported");
+    }
+
+    public void visitSymbolicFalse(SymbolicFalseConstraint c) {
+        throw new RuntimeException("Unsupported");
+    }
 
 //    public void visitPointerConstraint(PointerConstraint c) {
 //        initSolver(c);

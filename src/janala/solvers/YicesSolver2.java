@@ -82,6 +82,31 @@ public class YicesSolver2 implements Solver {
         constraints.add(c);
     }
 
+    public void visitSymbolicAnd(SymbolicAndConstraint c) {
+        c = (SymbolicAndConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+    public void visitSymbolicNot(SymbolicNotConstraint c) {
+        c = (SymbolicNotConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+    public void visitSymbolicTrue(SymbolicTrueConstraint c) {
+        c = (SymbolicTrueConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+    public void visitSymbolicFalse(SymbolicFalseConstraint c) {
+        c = (SymbolicFalseConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+
     public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
         c = (SymbolicStringPredicate)initSolver(c);
         logger.log(Level.INFO,"{0}",c);

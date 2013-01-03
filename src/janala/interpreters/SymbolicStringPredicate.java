@@ -319,7 +319,7 @@ public class SymbolicStringPredicate extends Constraint {
         return null;
     }
 
-//    public String getFormulaString(ArrayList<String> freeVars, String mode, ArrayList<Value> assignments) {
+//    public Constraint getFormulaString(ArrayList<String> freeVars, String mode, ArrayList<Value> assignments) {
 //        StringBuilder sb = new StringBuilder();
 //        //, s1, s2, formula, cmd, length1 = 0, length2 = 0, j;
 //        IntValue s1 = (this.left instanceof String)?
@@ -335,14 +335,14 @@ public class SymbolicStringPredicate extends Constraint {
 //        if (mode.equals("integer")) {
 //            switch(this.op) {
 //                case EQ:
-//                    formula = s1.
-//                    formula = $7.B(0,"==",s1,s2);
-//                    return formula.symbolic.getFormulaString(freeVars, mode, assignments);
-//                case SymbolicStringPredicate.NE:
+//                    formula = s1.IF_ICMPEQ(s2);
+//                    return formula.symbolic;
+//                case NE:
 //                    //formula = $7.B(0,"!=",s1,s2);
 //                    //return formula.symbolic.getFormulaString(freeVars,mode, assignments);
 //                    return "TRUE";
-//                case SymbolicStringPredicate.IN:
+//                case IN:
+//                    RegexpEncoder.
 //                    cmd = "java -cp " +
 //                        classpath +
 //                        "RegexpEncoder " +
@@ -352,7 +352,7 @@ public class SymbolicStringPredicate extends Constraint {
 //                    freeVars[s1.symbolic+""] = true;
 //                    sb = stdout(cmd);
 //                    break;
-//                case SymbolicStringPredicate.NOTIN:
+//                case NOTIN:
 //                    cmd = "java -cp " +
 //                        classpath +
 //                        "RegexpEncoder " +
@@ -431,6 +431,6 @@ public class SymbolicStringPredicate extends Constraint {
 //        }
 //
 //        return sb;
-//    },
+//    }
 
 }

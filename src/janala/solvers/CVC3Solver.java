@@ -82,6 +82,30 @@ public class CVC3Solver implements Solver {
         constraints.add(c);
     }
 
+    public void visitSymbolicAnd(SymbolicAndConstraint c) {
+        c = (SymbolicAndConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+    public void visitSymbolicNot(SymbolicNotConstraint c) {
+        c = (SymbolicNotConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+    public void visitSymbolicTrue(SymbolicTrueConstraint c) {
+        c = (SymbolicTrueConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
+    public void visitSymbolicFalse(SymbolicFalseConstraint c) {
+        c = (SymbolicFalseConstraint)initSolver(c);
+        logger.log(Level.INFO,"{0}",c);
+        constraints.add(c);
+    }
+
     public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
         c = (SymbolicStringPredicate)initSolver(c);
         logger.log(Level.INFO,"{0}",c);
@@ -131,9 +155,6 @@ public class CVC3Solver implements Solver {
         } else if (con instanceof SymbolicOrConstraint) {
             SymbolicOrConstraint or = (SymbolicOrConstraint)con;
 
-            if (or.isNegated) {
-                out.print("NOT (");
-            }
             boolean first2 = true;
             for(Constraint c:or.constraints) {
                 if (first2) {
@@ -148,11 +169,35 @@ public class CVC3Solver implements Solver {
             if (or.constraints.isEmpty()) {
                 out.print(" TRUE ");
             }
-            if (or.isNegated) {
+        } else if (con instanceof SymbolicAndConstraint) {
+            SymbolicAndConstraint and = (SymbolicAndConstraint)con;
+
+            boolean first2 = true;
+            for(Constraint c:and.constraints) {
+                if (first2) {
+                    first2 = false;
+                } else {
+                    out.print(" AND ");
+                }
+                out.print("(");
+                print(c,out);
                 out.print(")");
             }
-
-        } else {
+            if (and.constraints.isEmpty()) {
+                out.print(" FALSE ");
+            }
+        } else if (con instanceof SymbolicNotConstraint) {
+            SymbolicNotConstraint not = (SymbolicNotConstraint)con;
+            out.print(" NOT ");
+            out.print("(");
+            print(not.constraint,out);
+            out.print(")");
+        } else if (con instanceof SymbolicTrueConstraint) {
+            out.print(" TRUE ");
+        } else if (con instanceof SymbolicFalseConstraint) {
+            out.print(" FALSE ");
+        }
+        else {
             throw new RuntimeException("Unimplemented constraint type "+con);
         }
     }
