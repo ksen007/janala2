@@ -71,51 +71,51 @@ public class CVC3Solver implements Solver {
     }
 
     public void visitSymbolicInt(SymbolicInt c) {
-        c = (SymbolicInt)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicIntCompare(SymbolicIntCompareConstraint c) {
-        c = (SymbolicIntCompareConstraint)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicOr(SymbolicOrConstraint c) {
-        c = (SymbolicOrConstraint)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicAnd(SymbolicAndConstraint c) {
-        c = (SymbolicAndConstraint)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicNot(SymbolicNotConstraint c) {
-        c = (SymbolicNotConstraint)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicTrue(SymbolicTrueConstraint c) {
-        c = (SymbolicTrueConstraint)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicFalse(SymbolicFalseConstraint c) {
-        c = (SymbolicFalseConstraint)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
-        c = (SymbolicStringPredicate)initSolver(c);
-        logger.log(Level.INFO,"{0}",c);
-        constraints.add(c);
+        Constraint c2 = initSolver(c);
+        logger.log(Level.INFO,"{0}",c2);
+        constraints.add(c2);
     }
 
     private void print(Constraint con, PrintStream out) {

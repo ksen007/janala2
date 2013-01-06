@@ -33,6 +33,8 @@
 
 package janala.interpreters;
 
+import java.util.Map;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/22/12
@@ -44,5 +46,5 @@ public abstract class Constraint {
 
     public abstract void accept(ConstraintVisitor v);
     public abstract Constraint not();
-
+    public abstract Constraint substitute(Map<String, Integer> assignments);
 }

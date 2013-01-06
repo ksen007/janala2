@@ -146,9 +146,6 @@ public class ChocoSolver implements Solver {
                 old = Choco.or(old,createSymbolicInt((SymbolicInt)tmp));
             }
         }
-        if (or.isNegated) {
-            old = Choco.not(old);
-        }
         m.addConstraint(old);
     }
 

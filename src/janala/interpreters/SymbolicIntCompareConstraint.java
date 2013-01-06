@@ -29,6 +29,8 @@
 
 package janala.interpreters;
 
+import java.util.Map;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 1/3/13
@@ -74,15 +76,45 @@ public class SymbolicIntCompareConstraint extends Constraint {
         return ret;
     }
 
+    public Constraint substitute(Map<String, Integer> assignments) {
+        long val;
+        Constraint ret2 = null;
+
+        if (assignments.containsKey(prefix+sym)) {
+            val = assignments.get(prefix+sym)-constant;
+        } else {
+            return this;
+        }
+        if (this.op == COMPARISON_OPS.EQ) {
+            ret2 = (val == 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+        } else
+        if (this.op == COMPARISON_OPS.NE) {
+            ret2 = (val != 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+        } else
+        if (this.op == COMPARISON_OPS.LE) {
+            ret2 = (val <= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+        } else
+        if (this.op == COMPARISON_OPS.LT) {
+            ret2 = (val < 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+        } else
+        if (this.op == COMPARISON_OPS.GE) {
+            ret2 = (val >= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+        } else
+        if (this.op == COMPARISON_OPS.GT) {
+            ret2 = (val > 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+        }
+        return ret2;
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
-                sb.append(prefix);
-                sb.append(sym);
+        sb.append(prefix);
+        sb.append(sym);
         if (constant != 0) {
             if (constant > 0) {
                 sb.append('-');
                 sb.append(constant);
-            } else {
+            } else if (constant < 0) {
                 sb.append('+');
                 sb.append(-constant);
             }

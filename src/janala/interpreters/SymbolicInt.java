@@ -38,6 +38,8 @@ package janala.interpreters;
 import gnu.trove.iterator.TIntLongIterator;
 import gnu.trove.map.hash.TIntLongHashMap;
 
+import java.util.Map;
+
 public class SymbolicInt extends Constraint {
     public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};
 
@@ -201,6 +203,56 @@ public class SymbolicInt extends Constraint {
         return ret;
     }
 
+    public Constraint substitute(Map<String, Integer> assignments) {
+        long val = 0;
+        SymbolicInt ret = null;
+        boolean isSymbolic = false;
+        Constraint ret2 = null;
+
+        for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
+            it.advance();
+            
+            int key = it.key();
+            long l = it.value();
+            if (assignments.containsKey("x"+key)) {
+                val += assignments.get("x"+key)*l;
+            } else {
+                isSymbolic = true;
+                if (ret == null) {
+                    ret = new SymbolicInt();
+                }
+                ret.linear.put(key,l);
+            }
+        }
+        val += this.constant;
+        if (ret != null) {
+            ret.constant = val;
+        }
+        if (!isSymbolic) {
+            if (this.op == COMPARISON_OPS.EQ) {
+                ret2 = (val == 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            } else
+            if (this.op == COMPARISON_OPS.NE) {
+                ret2 = (val != 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            } else
+            if (this.op == COMPARISON_OPS.LE) {
+                ret2 = (val <= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            } else
+            if (this.op == COMPARISON_OPS.LT) {
+                ret2 = (val < 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            } else
+            if (this.op == COMPARISON_OPS.GE) {
+                ret2 = (val >= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            } else
+            if (this.op == COMPARISON_OPS.GT) {
+                ret2 = (val > 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            }
+            return ret2;
+        } else {
+            ret.op = this.op;
+            return ret;
+        }
+    }
 
 
     public String toString() {

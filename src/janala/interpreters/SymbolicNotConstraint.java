@@ -29,6 +29,8 @@
 
 package janala.interpreters;
 
+import java.util.Map;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 1/2/13
@@ -51,7 +53,23 @@ public class SymbolicNotConstraint extends Constraint {
             return constraint;
         }
 
-        @Override
+    @Override
+    public Constraint substitute(Map<String, Integer> assignments) {
+        Constraint constraint = this.constraint.substitute(assignments);
+
+        if (constraint == SymbolicTrueConstraint.instance) {
+            return SymbolicFalseConstraint.instance;
+        } else if (constraint == SymbolicFalseConstraint.instance) {
+            return SymbolicTrueConstraint.instance;
+        } else if (constraint == this.constraint) {
+            return this;
+        } else {
+            return new SymbolicNotConstraint(constraint);
+        }
+
+    }
+
+    @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
             sb.append(" ! ");

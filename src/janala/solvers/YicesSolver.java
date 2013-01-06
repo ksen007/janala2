@@ -155,9 +155,6 @@ public class YicesSolver implements Solver {
             out.print(") 0)");
         } else if (con instanceof SymbolicOrConstraint) {
             SymbolicOrConstraint or = (SymbolicOrConstraint)con;
-            if (or.isNegated) {
-                out.print("(not ");
-            }
             if (or.constraints.size()>1) {
                 out.print("(or ");
             }
@@ -171,9 +168,11 @@ public class YicesSolver implements Solver {
             if (or.constraints.isEmpty()) {
                 out.print(" true ");
             }
-            if (or.isNegated) {
-                out.print(")");
-            }
+        } else if (con instanceof SymbolicNotConstraint) {
+            SymbolicNotConstraint not = (SymbolicNotConstraint)con;
+            out.print("(NOT ");
+            print(not.constraint,out);
+            out.print(")");
         } else {
             throw new RuntimeException("Unimplemented constraint type "+con);
         }

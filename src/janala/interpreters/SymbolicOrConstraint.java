@@ -34,6 +34,7 @@
 package janala.interpreters;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -42,17 +43,18 @@ import java.util.LinkedList;
  */
 public class SymbolicOrConstraint extends Constraint {
     public LinkedList<Constraint> constraints;
-    public boolean isNegated;
+
+    private SymbolicOrConstraint() {
+
+    }
 
     public SymbolicOrConstraint(Constraint c) {
-        isNegated = false;
         constraints = new LinkedList<Constraint>();
         if (c!=null)
             constraints.add(c);
     }
 
     private SymbolicOrConstraint(SymbolicOrConstraint c) {
-        isNegated = c.isNegated;
         constraints = new LinkedList<Constraint>();
         constraints.addAll(c.constraints);
     }
@@ -74,9 +76,28 @@ public class SymbolicOrConstraint extends Constraint {
 
     @Override
     public Constraint not() {
-        SymbolicOrConstraint ret = new SymbolicOrConstraint(this);
-        ret.isNegated = !ret.isNegated;
-        return ret;
+        return new SymbolicNotConstraint(this);
+    }
+
+    @Override
+    public Constraint substitute(Map<String, Integer> assignments) {
+        LinkedList<Constraint> tmp = new LinkedList<Constraint>();
+        Constraint c2;
+        for(Constraint c: constraints) {
+            c2 = c.substitute(assignments);
+            if (c2 == SymbolicTrueConstraint.instance) {
+                return SymbolicTrueConstraint.instance;
+            } else if (c2 != SymbolicFalseConstraint.instance) {
+                tmp.add(c2);
+            }
+        }
+        if (!tmp.isEmpty()) {
+            SymbolicOrConstraint ret = new SymbolicOrConstraint();
+            ret.constraints = tmp;
+            return ret;
+        } else {
+            return SymbolicFalseConstraint.instance;
+        }
     }
 
 //    @Override
@@ -100,9 +121,6 @@ public class SymbolicOrConstraint extends Constraint {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (isNegated) {
-            sb.append("!(");
-        }
         boolean first = true;
         for(Constraint c:constraints) {
             if (first) {
@@ -112,9 +130,6 @@ public class SymbolicOrConstraint extends Constraint {
             }
             sb.append("(");
             sb.append(c);
-            sb.append(")");
-        }
-        if (isNegated) {
             sb.append(")");
         }
         return sb.toString();

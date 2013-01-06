@@ -66,6 +66,7 @@ package janala.interpreters;
  */
 
 import java.util.LinkedList;
+import java.util.Map;
 
 public class SymbolicAndConstraint extends Constraint {
     public LinkedList<Constraint> constraints;
@@ -79,6 +80,10 @@ public class SymbolicAndConstraint extends Constraint {
     private SymbolicAndConstraint(SymbolicOrConstraint c) {
         constraints = new LinkedList<Constraint>();
         constraints.addAll(c.constraints);
+    }
+
+    private SymbolicAndConstraint() {
+
     }
 
     public SymbolicAndConstraint AND(Constraint c) {
@@ -99,6 +104,27 @@ public class SymbolicAndConstraint extends Constraint {
     @Override
     public Constraint not() {
         return new SymbolicNotConstraint(this);
+    }
+
+    @Override
+    public Constraint substitute(Map<String, Integer> assignments) {
+        LinkedList<Constraint> tmp = new LinkedList<Constraint>();
+        Constraint c2;
+        for(Constraint c: constraints) {
+            c2 = c.substitute(assignments);
+            if (c2 == SymbolicFalseConstraint.instance) {
+                return SymbolicFalseConstraint.instance;
+            } else if (c2 != SymbolicTrueConstraint.instance) {
+                tmp.add(c2);
+            }
+        }
+        if (!tmp.isEmpty()) {
+            SymbolicAndConstraint ret = new SymbolicAndConstraint();
+            ret.constraints = tmp;
+            return ret;
+        } else {
+            return SymbolicTrueConstraint.instance;
+        }
     }
 
     @Override

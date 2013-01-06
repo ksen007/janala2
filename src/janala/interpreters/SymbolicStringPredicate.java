@@ -34,6 +34,7 @@ package janala.interpreters;
  */
 
 import java.util.ArrayList;
+import java.util.Map;
 
 //function execSync(cmd) {
 //    var FFI = require("node-ffi");
@@ -299,6 +300,11 @@ public class SymbolicStringPredicate extends Constraint {
                 break;
         }
         return ret;
+    }
+
+    @Override
+    public Constraint substitute(Map<String, Integer> assignments) {
+        return this;
     }
 
     public Constraint substitute(ArrayList<Value> assignments) {

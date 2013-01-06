@@ -29,6 +29,8 @@
 
 package janala.interpreters;
 
+import java.util.Map;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
@@ -46,6 +48,11 @@ public class SymbolicTrueConstraint extends Constraint {
     @Override
     public Constraint not() {
         return SymbolicFalseConstraint.instance;
+    }
+
+    @Override
+    public Constraint substitute(Map<String, Integer> assignments) {
+        return this;
     }
 
     @Override
