@@ -46,5 +46,5 @@ public abstract class Constraint {
 
     public abstract void accept(ConstraintVisitor v);
     public abstract Constraint not();
-    public abstract Constraint substitute(Map<String, Integer> assignments);
+    public abstract Constraint substitute(Map<String, Long> assignments);
 }

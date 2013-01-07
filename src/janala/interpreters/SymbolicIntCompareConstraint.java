@@ -40,22 +40,19 @@ public class SymbolicIntCompareConstraint extends Constraint {
 
     public enum COMPARISON_OPS {EQ, NE, GT, GE, LT, LE, UN};
 
-    public String prefix;
-    public int sym;
-    public long constant;
+    public SymOrInt left;
+    public SymOrInt right;
     public COMPARISON_OPS op;
 
-    public SymbolicIntCompareConstraint(String prefix, int sym, long constant, COMPARISON_OPS op) {
-        this.prefix = prefix;
-        this.sym = sym;
-        this.constant = constant;
+    public SymbolicIntCompareConstraint(SymOrInt left, SymOrInt right, COMPARISON_OPS op) {
+        this.left = left;
+        this.right = right;
         this.op = op;
     }
 
     public SymbolicIntCompareConstraint(SymbolicIntCompareConstraint from) {
-        this.prefix = from.prefix;
-        this.sym = from.sym;
-        this.constant = from.constant;
+        this.left = from.left;
+        this.right = from.right;
         this.op = from.op;
     }
 
@@ -76,31 +73,39 @@ public class SymbolicIntCompareConstraint extends Constraint {
         return ret;
     }
 
-    public Constraint substitute(Map<String, Integer> assignments) {
+    public Constraint substitute(Map<String, Long> assignments) {
         long val;
+        SymOrInt tmp1, tmp2;
         Constraint ret2 = null;
 
-        if (assignments.containsKey(prefix+sym)) {
-            val = assignments.get(prefix+sym)-constant;
+        if (left.sym != null && assignments.containsKey(left.sym)) {
+            tmp1 = new SymOrInt(assignments.get(left.sym));
         } else {
-            return this;
+            tmp1 = left;
         }
+        if (right.sym != null && assignments.containsKey(right.sym)) {
+            tmp2 = new SymOrInt(assignments.get(right.sym));
+        } else {
+            tmp2 = right;
+        }
+
+        if (tmp1.sym == null && tmp2.sym == null) {
+            val = tmp1.constant - tmp2.constant;
+        } else {
+            return new SymbolicIntCompareConstraint(tmp1,tmp2,this.op);
+        }
+
         if (this.op == COMPARISON_OPS.EQ) {
             ret2 = (val == 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
-        } else
-        if (this.op == COMPARISON_OPS.NE) {
+        } else if (this.op == COMPARISON_OPS.NE) {
             ret2 = (val != 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
-        } else
-        if (this.op == COMPARISON_OPS.LE) {
+        } else if (this.op == COMPARISON_OPS.LE) {
             ret2 = (val <= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
-        } else
-        if (this.op == COMPARISON_OPS.LT) {
+        } else if (this.op == COMPARISON_OPS.LT) {
             ret2 = (val < 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
-        } else
-        if (this.op == COMPARISON_OPS.GE) {
+        } else if (this.op == COMPARISON_OPS.GE) {
             ret2 = (val >= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
-        } else
-        if (this.op == COMPARISON_OPS.GT) {
+        } else if (this.op == COMPARISON_OPS.GT) {
             ret2 = (val > 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
         }
         return ret2;
@@ -108,17 +113,9 @@ public class SymbolicIntCompareConstraint extends Constraint {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(prefix);
-        sb.append(sym);
-        if (constant != 0) {
-            if (constant > 0) {
-                sb.append('-');
-                sb.append(constant);
-            } else if (constant < 0) {
-                sb.append('+');
-                sb.append(-constant);
-            }
-        }
+        sb.append(left);
+        sb.append('-');
+        sb.append(right);
         if (op == COMPARISON_OPS.EQ) {
             sb.append("==");
             sb.append('0');

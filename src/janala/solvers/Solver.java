@@ -33,6 +33,7 @@
 
 package janala.solvers;
 
+import janala.interpreters.Constraint;
 import janala.interpreters.ConstraintVisitor;
 import janala.interpreters.Value;
 
@@ -46,4 +47,6 @@ import java.util.ArrayList;
 public interface Solver extends ConstraintVisitor {
     public boolean solve();
     public void setInputs(ArrayList<Value> inputs);
+    public void setPathConstraint(ArrayList<Constraint> pathConstraint);
+    public void setPathConstraintIndex(int pathConstraintIndex);
 }

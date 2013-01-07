@@ -136,7 +136,7 @@ public class RegexpEncoder {
     }
 
     private static Constraint intCompare(String prefix, int sym, int constant, SymbolicIntCompareConstraint.COMPARISON_OPS op) {
-        return new SymbolicIntCompareConstraint(prefix, sym, constant, op);
+        return new SymbolicIntCompareConstraint(new SymOrInt(prefix+sym), new SymOrInt(constant), op);
     }
 
     private static Constraint andFormula(Constraint f1, Constraint f2) {

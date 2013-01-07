@@ -51,7 +51,7 @@ public class SymbolicFalseConstraint extends Constraint {
     }
 
     @Override
-    public Constraint substitute(Map<String, Integer> assignments) {
+    public Constraint substitute(Map<String, Long> assignments) {
         return this;
     }
 

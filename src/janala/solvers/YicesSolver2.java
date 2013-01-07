@@ -61,6 +61,14 @@ public class YicesSolver2 implements Solver {
         this.first = true;
     }
 
+    public void setPathConstraint(ArrayList<Constraint> pathConstraint) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setPathConstraintIndex(int pathConstraintIndex) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private Constraint initSolver(Constraint c) {
         if (first) {
             first = false;

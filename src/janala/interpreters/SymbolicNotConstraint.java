@@ -54,7 +54,7 @@ public class SymbolicNotConstraint extends Constraint {
         }
 
     @Override
-    public Constraint substitute(Map<String, Integer> assignments) {
+    public Constraint substitute(Map<String, Long> assignments) {
         Constraint constraint = this.constraint.substitute(assignments);
 
         if (constraint == SymbolicTrueConstraint.instance) {

@@ -50,72 +50,46 @@ import java.util.logging.Logger;
  * Time: 10:03 AM
  */
 public class CVC3Solver implements Solver {
-    boolean first = true;
     ArrayList<Value> inputs;
     ArrayList<Constraint> constraints;
+    int pathConstraintIndex;
     private final static Logger logger = MyLogger.getLogger(CVC3Solver.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
     public void setInputs(ArrayList<Value> inputs) {
         this.inputs = inputs;
-        this.first = true;
     }
 
-    private Constraint initSolver(Constraint c) {
-        if (first) {
-            first = false;
-            constraints = new ArrayList<Constraint>();
-            return c.not();
-        }
-        return c;
+    public void setPathConstraint(ArrayList<Constraint> pathConstraint) {
+        this.constraints = pathConstraint;
+    }
+
+    public void setPathConstraintIndex(int pathConstraintIndex) {
+        this.pathConstraintIndex = pathConstraintIndex;
     }
 
     public void visitSymbolicInt(SymbolicInt c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicIntCompare(SymbolicIntCompareConstraint c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicOr(SymbolicOrConstraint c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicAnd(SymbolicAndConstraint c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicNot(SymbolicNotConstraint c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicTrue(SymbolicTrueConstraint c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicFalse(SymbolicFalseConstraint c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
-        Constraint c2 = initSolver(c);
-        logger.log(Level.INFO,"{0}",c2);
-        constraints.add(c2);
     }
 
     private void print(Constraint con, PrintStream out) {
@@ -160,13 +134,13 @@ public class CVC3Solver implements Solver {
             out.print("0");
         } else if (con instanceof SymbolicIntCompareConstraint) {
             SymbolicIntCompareConstraint c = (SymbolicIntCompareConstraint)con;
-            out.print(c.prefix);
-            out.print(c.sym);
-            if (c.constant != 0) {
-                out.print("+(");
-                out.print(c.constant);
-                out.print(')');
-            }
+            out.print('(');
+            out.print(c.left);
+            out.print(')');
+            out.print('-');
+            out.print('(');
+            out.print(c.right);
+            out.print(')');
             if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.EQ) {
                 out.print(" = ");
             } else if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.NE) {
@@ -231,7 +205,7 @@ public class CVC3Solver implements Solver {
         }
     }
 
-    public boolean solve() {
+    private void writeFormula() {
         try {
             PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.instance.formulaFile)));
             int nInputs = inputs.size();
@@ -241,23 +215,56 @@ public class CVC3Solver implements Solver {
                 out.println(" : INT;");
             }
             Constraint last = null;
-            for (Constraint next : constraints) {
-                if (last==null) {
-                    last = next;
-                } else {
-                    out.print("ASSERT ");
-                    print(next,out);
-                    out.println(";");
-                }
-            }
-            if (last!=null) {
-                out.print("CHECKSAT ");
-                print(last,out);
+            for (int i=0; i<pathConstraintIndex;i++) {
+                out.print("ASSERT ");
+                print(constraints.get(i),out);
                 out.println(";");
             }
+            out.print("CHECKSAT ");
+            print(constraints.get(pathConstraintIndex).not(),out);
+            out.println(";");
             out.println("COUNTERMODEL;");
             out.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            logger.log(Level.SEVERE,"{0}",ioe);
+            Runtime.getRuntime().halt(1);
+        }
+    }
 
+    private void writeInputs(TreeMap<Integer, Long> soln) {
+        try {
+            PrintStream out = new PrintStream(
+                    new BufferedOutputStream(
+                            new FileOutputStream(Config.instance.inputs)));
+            int len = inputs.size();
+            for(int i=0; i<len; i++) {
+                Long l = soln.get(i+1);
+                Value input = inputs.get(i);
+                if (l!=null) {
+                    if (input instanceof janala.interpreters.StringValue) {
+                        tester.log(Level.INFO, StringConstants.instance.get((int)(long)l));
+                        out.println(StringConstants.instance.get((int)(long)l));
+                    } else {
+                        tester.log(Level.INFO,l+"");
+                        out.println(l);
+                    }
+                } else {
+                    tester.log(Level.INFO,input.getConcrete().toString());
+                    out.println(input.getConcrete());
+                }
+            }
+            out.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            logger.log(Level.SEVERE,"{0}",ioe);
+            Runtime.getRuntime().halt(1);
+        }
+    }
+
+    public boolean solve() {
+        try {
+            writeFormula();
 
             ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.cvc3Command,Config.instance.formulaFile});
             builder.redirectErrorStream(true);
@@ -298,27 +305,7 @@ public class CVC3Solver implements Solver {
                 }
                 br.close();
 
-                out = new PrintStream(
-                        new BufferedOutputStream(
-                                new FileOutputStream(Config.instance.inputs)));
-                int len = inputs.size();
-                for(int i=0; i<len; i++) {
-                    Long l = soln.get(i+1);
-                    Value input = inputs.get(i);
-                    if (l!=null) {
-                        if (input instanceof janala.interpreters.StringValue) {
-                            tester.log(Level.INFO, StringConstants.instance.get((int)(long)l));
-                            out.println(StringConstants.instance.get((int)(long)l));
-                        } else {
-                            tester.log(Level.INFO,l+"");
-                            out.println(l);
-                        }
-                    } else {
-                        tester.log(Level.INFO,input.getConcrete().toString());
-                        out.println(input.getConcrete());
-                    }
-                }
-                out.close();
+                writeInputs(soln);
             }
 
             process.waitFor();

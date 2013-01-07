@@ -59,6 +59,10 @@ public class IntValue extends Value {
         this.symbolic = symbolic;
     }
 
+    public int getSymbol() {
+        return symbolic.linear.keys()[0];
+    }
+
     public void MAKE_SYMBOLIC(int symbol) {
         symbolic = new SymbolicInt(symbol);
     }

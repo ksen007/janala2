@@ -203,7 +203,25 @@ public class SymbolicInt extends Constraint {
         return ret;
     }
 
-    public Constraint substitute(Map<String, Integer> assignments) {
+    public long substituteInLinear(Map<String, Integer> assignments) {
+        long val = 0;
+
+        for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
+            it.advance();
+
+            int key = it.key();
+            long l = it.value();
+            if (assignments.containsKey("x"+key)) {
+                val += assignments.get("x"+key)*l;
+            } else {
+                throw new RuntimeException("SymbolicInt cannot be fully concretized");
+            }
+        }
+        val += this.constant;
+        return val;
+    }
+
+    public Constraint substitute(Map<String, Long> assignments) {
         long val = 0;
         SymbolicInt ret = null;
         boolean isSymbolic = false;
@@ -246,6 +264,8 @@ public class SymbolicInt extends Constraint {
             } else
             if (this.op == COMPARISON_OPS.GT) {
                 ret2 = (val > 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+            } else {
+                return null;
             }
             return ret2;
         } else {

@@ -34,6 +34,7 @@ package janala.interpreters;
  */
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 //function execSync(cmd) {
@@ -303,7 +304,7 @@ public class SymbolicStringPredicate extends Constraint {
     }
 
     @Override
-    public Constraint substitute(Map<String, Integer> assignments) {
+    public Constraint substitute(Map<String, Long> assignments) {
         return this;
     }
 
@@ -325,99 +326,150 @@ public class SymbolicStringPredicate extends Constraint {
         return null;
     }
 
-//    public Constraint getFormula(ArrayList<String> freeVars, String mode, ArrayList<Value> assignments) {
-//        StringBuilder sb = new StringBuilder();
-//        //, s1, s2, formula, cmd, length1 = 0, length2 = 0, j;
-//        IntValue s1 = (this.left instanceof String)?
-//                new IntValue(((String)this.left).length()):
-//                ((SymbolicStringExpression)this.left).getField("length");
-//        IntValue s2 = (this.right instanceof String)?
-//                new IntValue(((String)this.right).length()):
-//                ((SymbolicStringExpression)this.right).getField("length");
-//        IntValue formula;
-//
-//        if (mode.equals("integer")) {
-//            switch(this.op) {
-//                case EQ:
-//                    formula = s1.IF_ICMPEQ(s2);
-//                    return formula.symbolic;
-//                case NE:
-//                    return SymbolicTrueConstraint.instance;
-//                case IN:
-//                    // @todo regex_escape
-//                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.symbolic.linear.keys()[0],true);
-//                case NOTIN:
-//                    // @todo regex_escape
-//                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.symbolic.linear.keys()[0],false);
-//            }
-//        } else if (mode.equals("string")) {
-//            switch(this.op) {
-//                case EQ:
-//                    if (s1.symbolic != null) {
-//                        length1 = s1.symbolic.substitute(assignments);
-//                    } else {
-//                        length1 = s1;
-//                    }
-//                    if (s2.symbolic) {
-//                        length2 = s2.symbolic.substitute(assignments);
-//                    } else {
-//                        length2 = s2;
-//                    }
-//                    if (length1 !== length2) {
-//                        return "FALSE";
-//                    } else {
-//                        return getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments);
-//                    }
-//                case NE:
-//                    if (s1.symbolic) {
-//                        length1 = s1.symbolic.substitute(assignments);
-//                    } else {
-//                        length1 = s1;
-//                    }
-//                    if (s2.symbolic) {
-//                        length2 = s2.symbolic.substitute(assignments);
-//                    } else {
-//                        length2 = s2;
-//                    }
-//                    if (length1 !== length2) {
-//                        return "TRUE";
-//                    } else {
-//                        return "(NOT "+getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments)+")";
-//                    }
-////                    return (length1 !== length2)?"TRUE":"FALSE";
-//                case IN:
-//                    length1 = s1.symbolic.substitute(assignments);
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder content \""+
-//                        regex_escape(this.right+"")+
-//                        "\" "+
-//                        this.left+
-//                        "__ "+length1;
-//                    for(j=0; j<length1; j++) {
-//                        freeVars[this.left+"__"+j] = true;
-//                    }
-//                    sb = stdout(cmd);
-//                    break;
-//                case NOTIN:
-//                    length1 = s1.symbolic.substitute(assignments);
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder content \""+
-//                        "~("+regex_escape(this.right+"")+
-//                        ")\" "+
-//                        this.left+
-//                        "__ "+length1;
-//                    for(j=0; j<length1; j++) {
-//                        freeVars[this.left+"__"+j] = true;
-//                    }
-//                    sb = stdout(cmd);
-//                    break;
-//            }
-//
-//        }
-//
-//        return sb;
-//    }
+    class ExprAt {
+        public boolean isSymbolic;
+        public String prefix;
+        public int symOrVal;
+
+        ExprAt(boolean symbolic, String prefix, int symOrVal) {
+            isSymbolic = symbolic;
+            this.prefix = prefix;
+            this.symOrVal = symOrVal;
+        }
+    }
+
+    private SymOrInt exprAt(Object sExpr, int i, LinkedHashSet<String> freeVars, Map<String, Integer> assignments) {
+        //var j, len, s, idx, tmp, length;
+        if (sExpr instanceof String) {
+            return new SymOrInt(((String)sExpr).charAt(i));
+        } else {
+            SymbolicStringExpression tmp = (SymbolicStringExpression) sExpr;
+            int len = tmp.list.size();
+            for (int j=0; j<len; j++) {
+                Object s = tmp.list.get(j);
+                if (s instanceof String) {
+                    if (i < ((String) s).length()) {
+                        return new SymOrInt(((String)s).charAt(i));
+                    } else {
+                        i = i - ((String) s).length();
+                    }
+                } else {
+                    String idx = s.toString();
+                    int length = (int)((SymbolicStringVar)s).getField("length").symbolic.substituteInLinear(assignments);
+                    if (i < length) {
+                        freeVars.add(idx+"__"+i);
+                        return new SymOrInt(idx+"__"+i);
+                    } else {
+                        i = i - length;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
+    private Constraint getStringEqualityFormula(Object left, Object right, long length, LinkedHashSet<String> freeVars, Map<String, Integer> assignments) {
+        SymbolicAndConstraint and = null;
+
+        if (length <= 0) {
+            return SymbolicTrueConstraint.instance;
+        }
+        for(int i=0; i<length; i++) {
+            SymOrInt e1 = exprAt(left,i,freeVars,assignments);
+            SymOrInt e2 = exprAt(right,i,freeVars,assignments);
+            Constraint c;
+            c = new SymbolicIntCompareConstraint(e1,e2,SymbolicIntCompareConstraint.COMPARISON_OPS.EQ);
+
+            if (i !=0 ) {
+                and.AND(c);
+            } else {
+                and = new SymbolicAndConstraint(c);
+            }
+        }
+        return and;
+    }
+
+    public Constraint getFormula(LinkedHashSet<String> freeVars, String mode, Map<String, Integer> assignments) {
+        StringBuilder sb = new StringBuilder();
+        long length1, length2;
+        int j;
+        //, s1, s2, formula, cmd, length1 = 0, length2 = 0, j;
+        IntValue s1 = (this.left instanceof String)?
+                new IntValue(((String)this.left).length()):
+                ((SymbolicStringExpression)this.left).getField("length");
+        IntValue s2 = (this.right instanceof String)?
+                new IntValue(((String)this.right).length()):
+                ((SymbolicStringExpression)this.right).getField("length");
+        IntValue formula;
+
+        if (mode.equals("integer")) {
+            switch(this.op) {
+                case EQ:
+                    formula = s1.IF_ICMPEQ(s2);
+                    return formula.symbolic;
+                case NE:
+                    return SymbolicTrueConstraint.instance;
+                case IN:
+                    // @todo regex_escape
+                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.getSymbol(),true);
+                case NOTIN:
+                    // @todo regex_escape
+                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.getSymbol(),false);
+            }
+        } else if (mode.equals("string")) {
+            switch(this.op) {
+                case EQ:
+                    if (s1.symbolic != null) {
+                        length1 = s1.symbolic.substituteInLinear(assignments);
+                    } else {
+                        length1 = s1.concrete;
+                    }
+                    if (s2.symbolic != null) {
+                        length2 = s2.symbolic.substituteInLinear(assignments);
+                    } else {
+                        length2 = s2.concrete;
+                    }
+                    if (length1 != length2) {
+                        return SymbolicFalseConstraint.instance;
+                    } else {
+                        return getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments);
+                    }
+                case NE:
+                    if (s1.symbolic != null) {
+                        length1 = s1.symbolic.substituteInLinear(assignments);
+                    } else {
+                        length1 = s1.concrete;
+                    }
+                    if (s2.symbolic != null) {
+                        length2 = s2.symbolic.substituteInLinear(assignments);
+                    } else {
+                        length2 = s2.concrete;
+                    }
+                    if (length1 != length2) {
+                        return SymbolicTrueConstraint.instance;
+                    } else {
+                        return new SymbolicNotConstraint(getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments));
+                    }
+//                    return (length1 !== length2)?"TRUE":"FALSE";
+                case IN:
+                    length1 = s1.symbolic.substituteInLinear(assignments);
+                    for(j=0; j<length1; j++) {
+                        freeVars.add(this.left+"__"+j);
+                    }
+                    // @todo regex_escape
+                    return RegexpEncoder.getRegexpFormulaString((String)this.right, this.left+"__", (int)length1);
+                case NOTIN:
+                    length1 = s1.symbolic.substituteInLinear(assignments);
+                    for(j=0; j<length1; j++) {
+                        freeVars.add(this.left+"__"+j);
+                    }
+                    // @todo regex_escape
+                    return RegexpEncoder.getRegexpFormulaString("~("+(String)this.right+")", this.left+"__", (int)length1);
+            }
+
+        }
+        return null;
+    }
 
 }

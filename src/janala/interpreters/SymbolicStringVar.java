@@ -52,7 +52,7 @@ public class SymbolicStringVar {
         return this;
     }
 
-    public Value getField(String offset) {
+    public IntValue getField(String offset) {
         if (offset.equals("length")) {
             return this.length;
         }

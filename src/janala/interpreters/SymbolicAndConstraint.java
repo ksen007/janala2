@@ -107,7 +107,7 @@ public class SymbolicAndConstraint extends Constraint {
     }
 
     @Override
-    public Constraint substitute(Map<String, Integer> assignments) {
+    public Constraint substitute(Map<String, Long> assignments) {
         LinkedList<Constraint> tmp = new LinkedList<Constraint>();
         Constraint c2;
         for(Constraint c: constraints) {
