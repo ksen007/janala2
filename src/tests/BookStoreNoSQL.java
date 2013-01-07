@@ -29,7 +29,8 @@
 
 package tests;
 
-import database.table.*;
+import catg.CATG;
+import database.table.SymbolicTable;
 import database.table.internals.*;
 import database.table.where.Where;
 import janala.Main;
@@ -300,8 +301,8 @@ public class BookStoreNoSQL {
 			Main.MakeSymbolic(is.customerId);
 			is.password = Main.readInt(1);
 			Main.MakeSymbolic(is.password);
-			is.isBackToMenu = Main.readBool(false);
-			Main.MakeSymbolic(is.isBackToMenu);
+			is.isBackToMenu = CATG.readBool(false);
+			//Main.MakeSymbolic(is.isBackToMenu);
 			is.title = Main.readString("The Art of C#");
 			Main.MakeSymbolic(is.title);
 			is.publisherName = Main.readString("O Reilly");
@@ -319,8 +320,8 @@ public class BookStoreNoSQL {
 			// is.isOderderOK = Main.readBool(is.isOderderOK);
 			// Main.MakeSymbolic(true);
 			is.isOderderOK = true;
-			is.isTooExpensiveOk = Main.readBool(true);
-			Main.MakeSymbolic(is.isTooExpensiveOk);
+			is.isTooExpensiveOk = CATG.readBool(true);
+			//Main.MakeSymbolic(is.isTooExpensiveOk);
 			// is.whereGoto = Main.readInt(BookStoreScreenInputs.GOTO_CANCEL);
 			// Main.MakeSymbolic(is.whereGoto);
 			is.whereGoto = BookStoreScreenInputs.GOTO_ORDER;

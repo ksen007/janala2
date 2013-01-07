@@ -33,6 +33,7 @@
 
 package tests;
 
+import catg.CATG;
 import janala.Main;
 
 /**
@@ -45,12 +46,9 @@ public class BoolTest2 {
         boolean  a, b, c;
 
 
-        a = Main.readBool(false);
-        Main.MakeSymbolic(a);
-        b = Main.readBool(false);
-        Main.MakeSymbolic(b);
-        c = Main.readBool(false);
-        Main.MakeSymbolic(c);
+        a = CATG.readBool(false);
+        b = CATG.readBool(false);
+        c = CATG.readBool(false);
 
         if (a && b && c) {
             System.out.println("Hello");

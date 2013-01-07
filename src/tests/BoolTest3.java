@@ -37,6 +37,7 @@
 
 package tests;
 
+import catg.CATG;
 import janala.Main;
 
 import java.util.ArrayList;
@@ -69,12 +70,9 @@ public class BoolTest3 {
 //        Main.MakeSymbolic(x);
 //        bh.c = x;
 
-        bh.a = Main.readBool(false);
-        Main.MakeSymbolic(bh.a);
-        bh.b = Main.readBool(false);
-        Main.MakeSymbolic(bh.b);
-        bh.c = Main.readBool(false);
-        Main.MakeSymbolic(bh.c);
+        bh.a = CATG.readBool(false);
+        bh.b = CATG.readBool(false);
+        bh.c = CATG.readBool(false);
 
         if (bh.a && bh.b && bh.c) {
             System.out.println("Hello");

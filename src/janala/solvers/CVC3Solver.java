@@ -40,6 +40,7 @@ import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,7 +93,7 @@ public class CVC3Solver implements Solver {
     public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
     }
 
-    private void print(Constraint con, PrintStream out) {
+    private void print(Constraint con, PrintStream out, LinkedHashSet<String> freeVars) {
         if (con instanceof SymbolicInt) {
             SymbolicInt c = (SymbolicInt)con;
             boolean first2 = true;
@@ -100,6 +101,7 @@ public class CVC3Solver implements Solver {
                 it.advance();
 
                 int integer = it.key();
+                freeVars.add("x"+integer);
                 long l = it.value();
                 if (first2) {
                     first2 = false;
@@ -135,10 +137,12 @@ public class CVC3Solver implements Solver {
         } else if (con instanceof SymbolicIntCompareConstraint) {
             SymbolicIntCompareConstraint c = (SymbolicIntCompareConstraint)con;
             out.print('(');
+            if (c.left.sym!=null) freeVars.add(c.left.sym);
             out.print(c.left);
             out.print(')');
             out.print('-');
             out.print('(');
+            if (c.right.sym!=null) freeVars.add(c.right.sym);
             out.print(c.right);
             out.print(')');
             if (c.op == SymbolicIntCompareConstraint.COMPARISON_OPS.EQ) {
@@ -166,7 +170,7 @@ public class CVC3Solver implements Solver {
                     out.print(" OR ");
                 }
                 out.print("(");
-                print(c,out);
+                print(c,out, freeVars);
                 out.print(")");
             }
             if (or.constraints.isEmpty()) {
@@ -183,7 +187,7 @@ public class CVC3Solver implements Solver {
                     out.print(" AND ");
                 }
                 out.print("(");
-                print(c,out);
+                print(c,out, freeVars);
                 out.print(")");
             }
             if (and.constraints.isEmpty()) {
@@ -193,38 +197,59 @@ public class CVC3Solver implements Solver {
             SymbolicNotConstraint not = (SymbolicNotConstraint)con;
             out.print(" NOT ");
             out.print("(");
-            print(not.constraint,out);
+            print(not.constraint,out, freeVars);
             out.print(")");
         } else if (con instanceof SymbolicTrueConstraint) {
             out.print(" TRUE ");
         } else if (con instanceof SymbolicFalseConstraint) {
             out.print(" FALSE ");
-        }
-        else {
+        } else {
             throw new RuntimeException("Unimplemented constraint type "+con);
         }
     }
 
+    private void concatFile(LinkedHashSet<String> freeVars, String from, String to) throws java.io.IOException {
+        PrintStream pw = new PrintStream(new BufferedOutputStream(new FileOutputStream(to)));
+
+        for(String var:freeVars) {
+            pw.print(var);
+            pw.println(" :INT;");
+        }
+
+        BufferedReader br = new BufferedReader(new FileReader(from));
+        String line = br.readLine();
+        while (line != null) {
+            pw.println(line);
+            line = br.readLine();
+        }
+        br.close();
+        pw.close();
+    }
+
     private void writeFormula() {
         try {
-            PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.instance.formulaFile)));
-            int nInputs = inputs.size();
-            for (int i = 0; i < nInputs; i++) {
-                out.print("x");
-                out.print(i+1);
-                out.println(" : INT;");
-            }
-            Constraint last = null;
+            PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.instance.formulaFile+".tmp")));
+//            int nInputs = inputs.size();
+//            for (int i = 0; i < nInputs; i++) {
+//                out.print("x");
+//                out.print(i+1);
+//                out.println(" : INT;");
+//            }
+//
+            LinkedHashSet<String> freeVars = new LinkedHashSet<String>();
             for (int i=0; i<pathConstraintIndex;i++) {
                 out.print("ASSERT ");
-                print(constraints.get(i),out);
+                print(constraints.get(i),out, freeVars);
                 out.println(";");
             }
             out.print("CHECKSAT ");
-            print(constraints.get(pathConstraintIndex).not(),out);
+            print(constraints.get(pathConstraintIndex).not(),out, freeVars);
             out.println(";");
             out.println("COUNTERMODEL;");
             out.close();
+
+            concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile);
+
         } catch (IOException ioe) {
             ioe.printStackTrace();
             logger.log(Level.SEVERE,"{0}",ioe);
@@ -262,22 +287,10 @@ public class CVC3Solver implements Solver {
         }
     }
 
-    public boolean solve() {
+    private TreeMap<Integer, Long> processInputs(BufferedReader br) {
+        String line = null;
+
         try {
-            writeFormula();
-
-            ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.cvc3Command,Config.instance.formulaFile});
-            builder.redirectErrorStream(true);
-            Process process = builder.start();
-
-            (new StreamGobbler(process.getErrorStream(),"ERROR")).start();
-
-            boolean result = true;
-            InputStream is = process.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String line = null;
-
             line = br.readLine();
             if (!line.startsWith("Satisfiable")) {
                 if (!line.contains("Unsat")) {
@@ -288,11 +301,10 @@ public class CVC3Solver implements Solver {
                 }
                 tester.log(Level.INFO,"-- Infeasible");
                 logger.log(Level.INFO,"-- Infeasible");
-                result = false;
                 while ((line = br.readLine()) != null) { }
                 br.close();
+                return null;
             } else {
-                result = true;
                 TreeMap<Integer,Long> soln = new TreeMap<Integer, Long>();
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("ASSERT")) {
@@ -304,10 +316,37 @@ public class CVC3Solver implements Solver {
                     }
                 }
                 br.close();
-
-                writeInputs(soln);
+                return soln;
             }
+        }  catch (IOException ioe) {
+            ioe.printStackTrace();
+            logger.log(Level.SEVERE,"{0}",ioe);
+            Runtime.getRuntime().halt(1);
+            return null;
+        }
+    }
 
+    public boolean solve() {
+        try {
+            writeFormula();
+
+            ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.cvc3Command,Config.instance.formulaFile});
+            builder.redirectErrorStream(true);
+            Process process = builder.start();
+
+            (new StreamGobbler(process.getErrorStream(),"ERROR")).start();
+
+            boolean result;
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            TreeMap<Integer,Long> soln = processInputs(br);
+            if (soln != null) {
+                writeInputs(soln);
+                result = true;
+            } else {
+                result = false;
+            }
             process.waitFor();
             return result;
 
