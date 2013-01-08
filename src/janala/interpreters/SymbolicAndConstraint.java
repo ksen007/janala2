@@ -110,6 +110,9 @@ public class SymbolicAndConstraint extends Constraint {
     public Constraint substitute(Map<String, Long> assignments) {
         LinkedList<Constraint> tmp = new LinkedList<Constraint>();
         Constraint c2;
+        if (constraints.isEmpty()) {
+            return SymbolicTrueConstraint.instance;
+        }
         for(Constraint c: constraints) {
             c2 = c.substitute(assignments);
             if (c2 == SymbolicFalseConstraint.instance) {

@@ -226,8 +226,10 @@ public class CVC3Solver implements Solver {
         pw.close();
     }
 
-    private void writeFormula() {
+    private boolean writeFormula(String extra, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
         try {
+            boolean allTrue = true;
+            Constraint tmp;
             PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(Config.instance.formulaFile+".tmp")));
 //            int nInputs = inputs.size();
 //            for (int i = 0; i < nInputs; i++) {
@@ -239,32 +241,47 @@ public class CVC3Solver implements Solver {
             LinkedHashSet<String> freeVars = new LinkedHashSet<String>();
             for (int i=0; i<pathConstraintIndex;i++) {
                 out.print("ASSERT ");
-                print(constraints.get(i),out, freeVars);
+                tmp = constraints.get(i).substitute(soln);
+                if (tmp != SymbolicTrueConstraint.instance) {
+                    allTrue = false;
+                }
+                print(tmp, out, freeVars);
                 out.println(";");
             }
+            if (extra != null) {
+                out.print("ASSERT ");
+                out.print(extra);
+                out.println(";");
+            }
+
             out.print("CHECKSAT ");
-            print(constraints.get(pathConstraintIndex).not(),out, freeVars);
+            tmp = constraints.get(pathConstraintIndex).not().substitute(soln);
+            if (tmp != SymbolicTrueConstraint.instance) {
+                allTrue = false;
+            }
+            print(tmp,out, freeVars);
             out.println(";");
             out.println("COUNTERMODEL;");
             out.close();
 
             concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile);
-
+            return allTrue;
         } catch (IOException ioe) {
             ioe.printStackTrace();
             logger.log(Level.SEVERE,"{0}",ioe);
             Runtime.getRuntime().halt(1);
+            return false;
         }
     }
 
-    private void writeInputs(TreeMap<Integer, Long> soln) {
+    private void writeInputs(TreeMap<String, Long> soln) {
         try {
             PrintStream out = new PrintStream(
                     new BufferedOutputStream(
                             new FileOutputStream(Config.instance.inputs)));
             int len = inputs.size();
             for(int i=0; i<len; i++) {
-                Long l = soln.get(i+1);
+                Long l = soln.get("x"+(i+1));
                 Value input = inputs.get(i);
                 if (l!=null) {
                     if (input instanceof janala.interpreters.StringValue) {
@@ -287,8 +304,9 @@ public class CVC3Solver implements Solver {
         }
     }
 
-    private TreeMap<Integer, Long> processInputs(BufferedReader br) {
+    private String processInputs(BufferedReader br, TreeMap<String, Long> soln) {
         String line = null;
+        String negatedSolution = null;
 
         try {
             line = br.readLine();
@@ -304,18 +322,25 @@ public class CVC3Solver implements Solver {
                 br.close();
                 return null;
             } else {
-                TreeMap<Integer,Long> soln = new TreeMap<Integer, Long>();
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("ASSERT")) {
+                        if (negatedSolution != null) {
+                            negatedSolution += " AND "+line.substring(line.indexOf("("),line.indexOf(")")+1);
+                        } else {
+                            negatedSolution = line.substring(line.indexOf("("),line.indexOf(")")+1);
+                        }
+
                         String[] tokens = line.split(" ");
-                        int xi = Integer.parseInt(tokens[1].substring(2));
+//                        int xi = Integer.parseInt(tokens[1].substring(2));
                         String tmp = tokens[3].trim();
                         long val = Long.parseLong(tmp.substring(0, tmp.indexOf(")")));
-                        soln.put(xi, val);
+                        soln.put(tokens[1].substring(1), val);
                     }
                 }
                 br.close();
-                return soln;
+
+                negatedSolution = "(NOT ("+negatedSolution+"))";
+                return negatedSolution;
             }
         }  catch (IOException ioe) {
             ioe.printStackTrace();
@@ -326,8 +351,40 @@ public class CVC3Solver implements Solver {
     }
 
     public boolean solve() {
+        int count = 0, MAX_COUNT = 100;
+        String extra = null, negatedSolution, negatedSolution2;
+        //console.log("Doing search at "+i+ " with tail "+(tail+1));
+        while(count < MAX_COUNT) {
+            TreeMap<String, Long> soln = new TreeMap<String, Long>();
+            negatedSolution = solve(extra, CONSTRAINT_TYPE.INT, soln);
+            if (negatedSolution != null) {
+                negatedSolution2 = solve(null, CONSTRAINT_TYPE.STR, soln);
+                if (negatedSolution2 != null) {
+                    writeInputs(soln);
+                    return true;
+                } else {
+                    if (extra != null) {
+                        extra = extra + " AND " + negatedSolution;
+                    } else {
+                        extra = negatedSolution;
+                    }
+                }
+            } else {
+                return false;
+            }
+            count++;
+        }
+        return false;
+    }
+
+    enum CONSTRAINT_TYPE {INT, STR};
+
+    public String solve(String extra, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
         try {
-            writeFormula();
+            String negatedSolution;
+            if (writeFormula(extra, type, soln)) {
+                return "";
+            }
 
             ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.cvc3Command,Config.instance.formulaFile});
             builder.redirectErrorStream(true);
@@ -335,31 +392,25 @@ public class CVC3Solver implements Solver {
 
             (new StreamGobbler(process.getErrorStream(),"ERROR")).start();
 
-            boolean result;
             InputStream is = process.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
-            TreeMap<Integer,Long> soln = processInputs(br);
-            if (soln != null) {
-                writeInputs(soln);
-                result = true;
-            } else {
-                result = false;
-            }
+
+            negatedSolution = processInputs(br, soln);
             process.waitFor();
-            tester.log(Level.INFO,"Feasible = "+result+" at "+pathConstraintIndex);
-            return result;
+            tester.log(Level.INFO,"Feasible = "+(negatedSolution != null) +" at "+pathConstraintIndex);
+            return negatedSolution;
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
             logger.log(Level.SEVERE,"{0}",ioe);
             Runtime.getRuntime().halt(1);
-            return false;
+            return null;
         } catch (InterruptedException ie) {
             ie.printStackTrace();
             logger.log(Level.SEVERE,"{0}",ie);
             Runtime.getRuntime().halt(1);
-            return false;
+            return null;
         }
     }
 }

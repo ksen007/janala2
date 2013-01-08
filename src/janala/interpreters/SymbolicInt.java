@@ -242,28 +242,28 @@ public class SymbolicInt extends Constraint {
                 ret.linear.put(key,l);
             }
         }
-        val += this.constant;
+        //val += this.constant;
         if (ret != null) {
-            ret.constant = val;
+            ret.constant = val + this.constant;
         }
         if (!isSymbolic) {
             if (this.op == COMPARISON_OPS.EQ) {
-                ret2 = (val == 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+                ret2 = (val == -this.constant)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
             } else
             if (this.op == COMPARISON_OPS.NE) {
-                ret2 = (val != 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+                ret2 = (val != -this.constant)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
             } else
             if (this.op == COMPARISON_OPS.LE) {
-                ret2 = (val <= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+                ret2 = (val <= -this.constant)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
             } else
             if (this.op == COMPARISON_OPS.LT) {
-                ret2 = (val < 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+                ret2 = (val < -this.constant)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
             } else
             if (this.op == COMPARISON_OPS.GE) {
-                ret2 = (val >= 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+                ret2 = (val >= -this.constant)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
             } else
             if (this.op == COMPARISON_OPS.GT) {
-                ret2 = (val > 0)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
+                ret2 = (val > -this.constant)?SymbolicTrueConstraint.instance:SymbolicFalseConstraint.instance;
             } else {
                 return null;
             }
