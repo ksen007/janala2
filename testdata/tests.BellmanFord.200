@@ -1,6 +1,4 @@
-INFO: 1000003
-INFO: 999997
-INFO: -1000011
-INFO: -9
-INFO: -1000000
-INFO: 6
+INFO: Feasible = false at 14
+INFO: Feasible = false at 13
+INFO: Feasible = false at 12
+INFO: Feasible = true at 11

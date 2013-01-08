@@ -1,5 +1,3 @@
-INFO: -2147483648
-INFO: -2147483647
-INFO: -2147483648
-INFO: 0
-INFO: 0
+INFO: Feasible = false at 17
+INFO: Feasible = false at 11
+INFO: Feasible = true at 9

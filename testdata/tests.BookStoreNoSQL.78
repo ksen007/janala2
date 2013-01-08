@@ -1,100 +1,18 @@
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: 2
-INFO: string0
-INFO: 0
-INFO: 0
-INFO: 1
-INFO: string0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: string0
-INFO: 0
-INFO: 0
-INFO: 3
-INFO: string0
-INFO: 3
-INFO: 0
-INFO: 3
-INFO: 3
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 2
-INFO: 3
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 1
-INFO: 3
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 3
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 3
-INFO: string0
-INFO: 2
-INFO: string0
-INFO: 1
-INFO: string0
-INFO: 0
-INFO: string0
-INFO: 3
-INFO: 0
-INFO: string0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 2
-INFO: 0
-INFO: string0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 1
-INFO: 0
-INFO: string0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: string0
-INFO: 0
-INFO: 1950
-INFO: 0
-INFO: 1
-INFO: 3
-INFO: 0
-INFO: 0
-INFO: string0
-INFO: string0
-INFO: 1950
-INFO: 1950
-INFO: 0
+INFO: Prediction failed
+INFO: Feasible = false at 158
+INFO: Feasible = false at 157
+INFO: Feasible = false at 156
+INFO: Feasible = false at 155
+INFO: Feasible = false at 154
+INFO: Feasible = false at 153
+INFO: Feasible = false at 152
+INFO: Feasible = false at 151
+INFO: Feasible = false at 150
+INFO: Feasible = false at 149
+INFO: Feasible = false at 148
+INFO: Feasible = false at 147
+INFO: Feasible = false at 146
+INFO: Feasible = false at 145
+INFO: Feasible = false at 144
+INFO: Feasible = false at 143
+INFO: Feasible = true at 142

@@ -1,13 +1,2 @@
-INFO: -- Infeasible
-INFO: 999997
-INFO: 999994
-INFO: 999994
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: 0
-INFO: -3
-INFO: 0
-INFO: 3
-INFO: 0
+INFO: Feasible = false at 11
+INFO: Feasible = true at 10

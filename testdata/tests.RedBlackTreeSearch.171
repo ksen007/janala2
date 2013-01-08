@@ -1,6 +1,2 @@
-INFO: -- Infeasible
-INFO: 2
-INFO: 1
-INFO: 0
-INFO: 2
-INFO: 0
+INFO: Feasible = false at 7
+INFO: Feasible = true at 6

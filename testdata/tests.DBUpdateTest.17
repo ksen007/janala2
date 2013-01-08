@@ -1,20 +1,7 @@
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -2147483648
-INFO: 1
-INFO: string0
-INFO: 0
-INFO: 30
-INFO: 0
-INFO: string0
-INFO: 0
-INFO: 30
-INFO: 3
-INFO: string0
-INFO: 0
-INFO: 30
-INFO: 2
-INFO: string0
-INFO: 0
-INFO: 0
+INFO: Feasible = false at 26
+INFO: Feasible = false at 25
+INFO: Feasible = false at 24
+INFO: Feasible = false at 22
+INFO: Feasible = false at 21
+INFO: Feasible = false at 20
+INFO: Feasible = true at 19

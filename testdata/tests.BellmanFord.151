@@ -1,14 +1,9 @@
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: -- Infeasible
-INFO: 1000002
-INFO: 999997
-INFO: -1000002
-INFO: -8
-INFO: -1000000
-INFO: 2
+INFO: Feasible = false at 15
+INFO: Feasible = false at 14
+INFO: Feasible = false at 13
+INFO: Feasible = false at 12
+INFO: Feasible = false at 11
+INFO: Feasible = false at 10
+INFO: Feasible = false at 9
+INFO: Feasible = false at 5
+INFO: Feasible = true at 3

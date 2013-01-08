@@ -1,4 +1,2 @@
-INFO: 0
-INFO: 1
-INFO: 2
-INFO: 3
+INFO: Feasible = false at 4
+INFO: Feasible = true at 3

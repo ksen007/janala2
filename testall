@@ -46,8 +46,7 @@ rm -rf test.log
 ./$CATG 4 tests.Testme
 ./$CATG 4 tests.TestmeInteger
 ./$CATG 4 tests.TestmeLong
-./$CATG 3 tests.NonLinear
-./$CATG 3 tests.BoolTest
+./$CATG 4 tests.NonLinear
 ./$CATG 5 tests.BoolTest2
 ./$CATG 8 tests.SwitchTest
 ./$CATG 3 tests.SwitchTest2
@@ -70,5 +69,5 @@ rm -rf test.log
 ./$CATG 217 tests.RedBlackTreeSearch
 ./$CATG 121 tests.SortedListInsert
 ./$CATG 206 tests.BellmanFord
-./$CATG 206 tests.Dijkstra
+./$CATG 157 tests.Dijkstra
 ./$CATG 100 tests.BookStoreNoSQL

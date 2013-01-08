@@ -268,14 +268,14 @@ public class CVC3Solver implements Solver {
                 Value input = inputs.get(i);
                 if (l!=null) {
                     if (input instanceof janala.interpreters.StringValue) {
-                        tester.log(Level.INFO, StringConstants.instance.get((int)(long)l));
+                        //tester.log(Level.INFO, StringConstants.instance.get((int)(long)l));
                         out.println(StringConstants.instance.get((int)(long)l));
                     } else {
-                        tester.log(Level.INFO,l+"");
+                        //tester.log(Level.INFO,l+"");
                         out.println(l);
                     }
                 } else {
-                    tester.log(Level.INFO,input.getConcrete().toString());
+                    //tester.log(Level.INFO,input.getConcrete().toString());
                     out.println(input.getConcrete());
                 }
             }
@@ -299,7 +299,6 @@ public class CVC3Solver implements Solver {
                             + Config.instance.cvc3Command + ")");
                     Runtime.getRuntime().halt(1);
                 }
-                tester.log(Level.INFO,"-- Infeasible");
                 logger.log(Level.INFO,"-- Infeasible");
                 while ((line = br.readLine()) != null) { }
                 br.close();
@@ -348,6 +347,7 @@ public class CVC3Solver implements Solver {
                 result = false;
             }
             process.waitFor();
+            tester.log(Level.INFO,"Feasible = "+result+" at "+pathConstraintIndex);
             return result;
 
         } catch (IOException ioe) {

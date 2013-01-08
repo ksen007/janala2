@@ -1,6 +1,9 @@
-INFO: -4
-INFO: 1000005
-INFO: 0
-INFO: 1000008
-INFO: -1000011
-INFO: -1000011
+INFO: Feasible = false at 17
+INFO: Feasible = false at 16
+INFO: Feasible = false at 15
+INFO: Feasible = false at 14
+INFO: Feasible = false at 13
+INFO: Feasible = false at 12
+INFO: Feasible = false at 11
+INFO: Feasible = false at 9
+INFO: Feasible = true at 8
