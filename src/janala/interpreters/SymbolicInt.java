@@ -203,7 +203,7 @@ public class SymbolicInt extends Constraint {
         return ret;
     }
 
-    public long substituteInLinear(Map<String, Integer> assignments) {
+    public long substituteInLinear(Map<String, Long> assignments) {
         long val = 0;
 
         for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {

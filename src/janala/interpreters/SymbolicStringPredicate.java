@@ -33,6 +33,8 @@ package janala.interpreters;
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
 
+import janala.solvers.CVC3Solver;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -338,7 +340,7 @@ public class SymbolicStringPredicate extends Constraint {
         }
     }
 
-    private SymOrInt exprAt(Object sExpr, int i, LinkedHashSet<String> freeVars, Map<String, Integer> assignments) {
+    private SymOrInt exprAt(Object sExpr, int i, LinkedHashSet<String> freeVars, Map<String, Long> assignments) {
         //var j, len, s, idx, tmp, length;
         if (sExpr instanceof String) {
             return new SymOrInt(((String)sExpr).charAt(i));
@@ -369,7 +371,7 @@ public class SymbolicStringPredicate extends Constraint {
     }
 
 
-    private Constraint getStringEqualityFormula(Object left, Object right, long length, LinkedHashSet<String> freeVars, Map<String, Integer> assignments) {
+    private Constraint getStringEqualityFormula(Object left, Object right, long length, LinkedHashSet<String> freeVars, Map<String, Long> assignments) {
         SymbolicAndConstraint and = null;
 
         if (length <= 0) {
@@ -390,7 +392,7 @@ public class SymbolicStringPredicate extends Constraint {
         return and;
     }
 
-    public Constraint getFormula(LinkedHashSet<String> freeVars, String mode, Map<String, Integer> assignments) {
+    public Constraint getFormula(LinkedHashSet<String> freeVars, CVC3Solver.CONSTRAINT_TYPE mode, Map<String, Long> assignments) {
         StringBuilder sb = new StringBuilder();
         long length1, length2;
         int j;
@@ -403,7 +405,7 @@ public class SymbolicStringPredicate extends Constraint {
                 ((SymbolicStringExpression)this.right).getField("length");
         IntValue formula;
 
-        if (mode.equals("integer")) {
+        if (mode == CVC3Solver.CONSTRAINT_TYPE.INT) {
             switch(this.op) {
                 case EQ:
                     formula = s1.IF_ICMPEQ(s2);
@@ -415,9 +417,9 @@ public class SymbolicStringPredicate extends Constraint {
                     return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.getSymbol(),true);
                 case NOTIN:
                     // @todo regex_escape
-                    return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.getSymbol(),false);
+                    return RegexpEncoder.getLengthFormulaString((String) this.right, "x", s1.getSymbol(), false);
             }
-        } else if (mode.equals("string")) {
+        } else if (mode == CVC3Solver.CONSTRAINT_TYPE.STR) {
             switch(this.op) {
                 case EQ:
                     if (s1.symbolic != null) {

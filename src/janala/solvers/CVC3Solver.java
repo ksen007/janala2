@@ -93,7 +93,7 @@ public class CVC3Solver implements Solver {
     public void visitSymbolicStringPredicate(SymbolicStringPredicate c) {
     }
 
-    private void print(Constraint con, PrintStream out, LinkedHashSet<String> freeVars) {
+    private void print(Constraint con, PrintStream out, LinkedHashSet<String> freeVars, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
         if (con instanceof SymbolicInt) {
             SymbolicInt c = (SymbolicInt)con;
             boolean first2 = true;
@@ -170,7 +170,7 @@ public class CVC3Solver implements Solver {
                     out.print(" OR ");
                 }
                 out.print("(");
-                print(c,out, freeVars);
+                print(c,out, freeVars, type, soln);
                 out.print(")");
             }
             if (or.constraints.isEmpty()) {
@@ -187,7 +187,7 @@ public class CVC3Solver implements Solver {
                     out.print(" AND ");
                 }
                 out.print("(");
-                print(c,out, freeVars);
+                print(c,out, freeVars, type, soln);
                 out.print(")");
             }
             if (and.constraints.isEmpty()) {
@@ -197,12 +197,16 @@ public class CVC3Solver implements Solver {
             SymbolicNotConstraint not = (SymbolicNotConstraint)con;
             out.print(" NOT ");
             out.print("(");
-            print(not.constraint,out, freeVars);
+            print(not.constraint,out, freeVars, type, soln);
             out.print(")");
         } else if (con instanceof SymbolicTrueConstraint) {
             out.print(" TRUE ");
         } else if (con instanceof SymbolicFalseConstraint) {
             out.print(" FALSE ");
+        } else if (con instanceof SymbolicStringPredicate) {
+            SymbolicStringPredicate str = (SymbolicStringPredicate) con;
+            Constraint intConstraint = str.getFormula(freeVars, type, soln);
+            print(con, out, freeVars, type, soln);
         } else {
             throw new RuntimeException("Unimplemented constraint type "+con);
         }
@@ -245,7 +249,7 @@ public class CVC3Solver implements Solver {
                 if (tmp != SymbolicTrueConstraint.instance) {
                     allTrue = false;
                 }
-                print(tmp, out, freeVars);
+                print(tmp, out, freeVars, type, soln);
                 out.println(";");
             }
             if (extra != null) {
@@ -259,7 +263,7 @@ public class CVC3Solver implements Solver {
             if (tmp != SymbolicTrueConstraint.instance) {
                 allTrue = false;
             }
-            print(tmp,out, freeVars);
+            print(tmp,out, freeVars, type, soln);
             out.println(";");
             out.println("COUNTERMODEL;");
             out.close();
@@ -377,7 +381,7 @@ public class CVC3Solver implements Solver {
         return false;
     }
 
-    enum CONSTRAINT_TYPE {INT, STR};
+    public enum CONSTRAINT_TYPE {INT, STR};
 
     public String solve(String extra, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
         try {
