@@ -40,6 +40,7 @@ import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -51,13 +52,13 @@ import java.util.logging.Logger;
  * Time: 10:03 AM
  */
 public class CVC3Solver implements Solver {
-    ArrayList<Value> inputs;
+    LinkedHashMap<Integer,Value> inputs;
     ArrayList<Constraint> constraints;
     int pathConstraintIndex;
     private final static Logger logger = MyLogger.getLogger(CVC3Solver.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
-    public void setInputs(ArrayList<Value> inputs) {
+    public void setInputs(LinkedHashMap<Integer,Value> inputs) {
         this.inputs = inputs;
     }
 
@@ -206,7 +207,7 @@ public class CVC3Solver implements Solver {
         } else if (con instanceof SymbolicStringPredicate) {
             SymbolicStringPredicate str = (SymbolicStringPredicate) con;
             Constraint intConstraint = str.getFormula(freeVars, type, soln);
-            print(con, out, freeVars, type, soln);
+            print(intConstraint, out, freeVars, type, soln);
         } else {
             throw new RuntimeException("Unimplemented constraint type "+con);
         }
@@ -215,6 +216,7 @@ public class CVC3Solver implements Solver {
     private void concatFile(LinkedHashSet<String> freeVars, String from, String to) throws java.io.IOException {
         PrintStream pw = new PrintStream(new BufferedOutputStream(new FileOutputStream(to)));
 
+//        System.out.println("Concat:");
         for(String var:freeVars) {
             pw.print(var);
             pw.println(" :INT;");
@@ -224,6 +226,7 @@ public class CVC3Solver implements Solver {
         String line = br.readLine();
         while (line != null) {
             pw.println(line);
+//            System.out.println(line);
             line = br.readLine();
         }
         br.close();
@@ -278,28 +281,87 @@ public class CVC3Solver implements Solver {
         }
     }
 
+//    for (var key in input) {
+//        if (HOP(input, key) && key.indexOf("x")===0) {
+//            if (HOP(newInputs,key)) {
+//                fs.writeSync(fd,PREFIX1+".setInput(\""+key +"\","+newInputs[key]+");\n");
+//            } else {
+//                if (typeof input[key].concrete === 'string' && (len = input[key].symbolic.getField("length").symbolic.substitute(newInputs)) !== undefined ) {
+//                    newInputs[key] = "";
+//                    for (i=0; i<len; i++) {
+//                        if ((c = newInputs[key+"__"+i]) !== undefined) {
+//                            newInputs[key] += String.fromCharCode(c);
+//                        } else {
+//                            newInputs[key] += "a";
+//                        }
+//                    }
+//                    fs.writeSync(fd,PREFIX1+".setInput(\""+key +"\",\""+newInputs[key].replace('"','\\"')+"\");\n");
+//                } else {
+//                    fs.writeSync(fd,PREFIX1+".setInput(\""+key +"\","+input[key].concrete+");\n");
+//                }
+//            }
+//        }
+//    }
+
+
     private void writeInputs(TreeMap<String, Long> soln) {
         try {
             PrintStream out = new PrintStream(
                     new BufferedOutputStream(
                             new FileOutputStream(Config.instance.inputs)));
-            int len = inputs.size();
-            for(int i=0; i<len; i++) {
-                Long l = soln.get("x"+(i+1));
-                Value input = inputs.get(i);
-                if (l!=null) {
-                    if (input instanceof janala.interpreters.StringValue) {
-                        //tester.log(Level.INFO, StringConstants.instance.get((int)(long)l));
-                        out.println(StringConstants.instance.get((int)(long)l));
-                    } else {
-                        //tester.log(Level.INFO,l+"");
-                        out.println(l);
-                    }
+
+            for (Integer sym: inputs.keySet()) {
+                Value val = inputs.get(sym);
+                Long l = soln.get("x"+sym);
+                if (l != null) {
+                    out.println(l);
                 } else {
-                    //tester.log(Level.INFO,input.getConcrete().toString());
-                    out.println(input.getConcrete());
+                    if (val instanceof StringValue) {
+                        StringValue sval = (StringValue)val;
+                        IntValue tmp = sval.getSymbolic().getField("length");
+                        Long Len;
+                        if ((Len = soln.get("x"+tmp.getSymbol())) != null) {
+                            int len = (int)(long)Len;
+                            StringBuilder ret = new StringBuilder();
+                            for (int i=0 ; i< len; i++) {
+                                Long v = soln.get("x"+sym+"__"+i);
+
+                                char c;
+                                if (v != null) {
+                                    c = (char)(long)v;
+                                } else {
+                                    c = 'a';
+                                }
+                                ret.append(c);
+                                out.println(ret);
+                            }
+                        } else {
+                            out.println(val.getConcrete());
+                        }
+                    } else {
+                        out.println(val.getConcrete());
+                    }
+
                 }
             }
+
+//            int len = inputs.size();
+//            for(int i=0; i<len; i++) {
+//                Long l = soln.get("x"+(i+1));
+//                Value input = inputs.get(i+1);
+//                if (l!=null) {
+//                    if (input instanceof janala.interpreters.StringValue) {
+//                        //tester.log(Level.INFO, StringConstants.instance.get((int)(long)l));
+//                        out.println(StringConstants.instance.get((int)(long)l));
+//                    } else {
+//                        //tester.log(Level.INFO,l+"");
+//                        out.println(l);
+//                    }
+//                } else {
+//                    //tester.log(Level.INFO,input.getConcrete().toString());
+//                    out.println(input.getConcrete());
+//                }
+//            }
             out.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -365,6 +427,7 @@ public class CVC3Solver implements Solver {
                 negatedSolution2 = solve(null, CONSTRAINT_TYPE.STR, soln);
                 if (negatedSolution2 != null) {
                     writeInputs(soln);
+                    tester.log(Level.INFO,"Feasible = true at "+pathConstraintIndex);
                     return true;
                 } else {
                     if (extra != null) {
@@ -374,10 +437,12 @@ public class CVC3Solver implements Solver {
                     }
                 }
             } else {
+                tester.log(Level.INFO,"Feasible = false at "+pathConstraintIndex);
                 return false;
             }
             count++;
         }
+        tester.log(Level.INFO,"Feasible = false at "+pathConstraintIndex);
         return false;
     }
 
@@ -402,7 +467,6 @@ public class CVC3Solver implements Solver {
 
             negatedSolution = processInputs(br, soln);
             process.waitFor();
-            tester.log(Level.INFO,"Feasible = "+(negatedSolution != null) +" at "+pathConstraintIndex);
             return negatedSolution;
 
         } catch (IOException ioe) {

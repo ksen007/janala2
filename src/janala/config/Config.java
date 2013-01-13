@@ -51,6 +51,7 @@ public class Config {
     public boolean isTest;
     public boolean verbose;
     public boolean printTrace;
+    public boolean printConstraints;
     public String analysisClass;
     public String traceFileName;
     public String traceAuxFileName;
@@ -73,6 +74,7 @@ public class Config {
             isTest = properties.getProperty("catg.isInternalTestMode","false").equals("true");
             verbose = properties.getProperty("catg.isVerbose","false").equals("true");
             printTrace = properties.getProperty("catg.isPrintTrace","false").equals("true");
+            printConstraints = properties.getProperty("catg.isPrintConstraints","false").equals("true");
             traceFileName = properties.getProperty("catg.traceFile","trace");
             traceAuxFileName = properties.getProperty("catg.auxTraceFile","trace.aux");
             history = properties.getProperty("catg.historyFile","history");

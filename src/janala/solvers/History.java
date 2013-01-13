@@ -40,6 +40,7 @@ import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,14 +57,16 @@ public class History {
     private final static Logger logger = MyLogger.getLogger(History.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
     private boolean ignore;
-    private ArrayList<Value> inputs;
+
+    private LinkedHashMap<Integer,Value> inputs;
+//    private ArrayList<Value> inputs;
     private Strategy strategy = Config.instance.getStrategy();
 
 
     private History(Solver solver) {
         history = new ArrayList<BranchElement>(1024);
         pathConstraint = new ArrayList<Constraint>(1024);
-        inputs = new ArrayList<Value>();
+        inputs = new LinkedHashMap<Integer,Value>();
         index = 0;
         this.solver = solver;
         this.ignore = false;
@@ -129,7 +132,13 @@ public class History {
     }
 
     public void solveAndSave() {
-        int i;
+        int i = 0;
+        if (Config.instance.printConstraints) {
+            for(Constraint c:pathConstraint) {
+                System.out.println(i+":"+c);
+                i++;
+            }
+        }
         if ((i=strategy.solve(history,index,this))>=0) {
             writeHistory(i);
         } else {
@@ -197,7 +206,7 @@ public class History {
         ignore = true;
     }
 
-    public void addInput(Value value) {
-        inputs.add(value);
+    public void addInput(int symbol, Value value) {
+        inputs.put(symbol, value);
     }
 }

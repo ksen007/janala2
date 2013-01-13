@@ -33,6 +33,10 @@
 
 package janala.interpreters;
 
+import gnu.trove.iterator.TIntLongIterator;
+
+import java.util.Map;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/19/12
@@ -40,6 +44,7 @@ package janala.interpreters;
  */
 public class IntValue extends Value {
     public SymbolicInt symbolic;
+    public SymbolicStringPredicate symbolicStringPredicate;
     public int concrete;
     final static public IntValue TRUE = new IntValue(1);
     final static public IntValue FALSE = new IntValue(0);
@@ -52,20 +57,52 @@ public class IntValue extends Value {
     public IntValue(int i) {
         concrete = i;
         symbolic = null;
+        symbolicStringPredicate = null;
     }
 
     public IntValue(int i, SymbolicInt symbolic) {
         concrete = i;
         this.symbolic = symbolic;
+        symbolicStringPredicate = null;
+    }
+
+    public IntValue(int concrete, SymbolicStringPredicate symbolicStringPredicate) {
+        this.concrete = concrete;
+        symbolic = null;
+        this.symbolicStringPredicate = symbolicStringPredicate;
     }
 
     public int getSymbol() {
         return symbolic.linear.keys()[0];
     }
 
-    public void MAKE_SYMBOLIC(int symbol) {
-        symbolic = new SymbolicInt(symbol);
+    public int MAKE_SYMBOLIC() {
+        symbolic = new SymbolicInt(symbol++);
+        return symbol-1;
     }
+
+    public long substituteInLinear(Map<String, Long> assignments) {
+        long val = 0;
+
+        if (symbolic == null) {
+            return concrete;
+        }
+        for ( TIntLongIterator it = symbolic.linear.iterator(); it.hasNext(); ) {
+            it.advance();
+
+            int key = it.key();
+            long l = it.value();
+            if (assignments.containsKey("x"+key)) {
+                val += assignments.get("x"+key)*l;
+            } else {
+                return this.concrete;
+            }
+        }
+        val += symbolic.constant;
+        return val;
+    }
+
+
 
     public IntValue IINC(int increment) {
         IntValue ret = new IntValue(concrete+increment);
@@ -77,9 +114,9 @@ public class IntValue extends Value {
 
     public IntValue IFEQ() {
         boolean result = concrete==0;
-        if (symbolic==null) {
+        if (symbolic==null && symbolicStringPredicate == null) {
             return result?IntValue.TRUE:IntValue.FALSE;
-        } else {
+        } else if (symbolic != null) {
             if (symbolic.op== SymbolicInt.COMPARISON_OPS.UN)
                 return new IntValue(result?1:0, result?
                         symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ):
@@ -88,14 +125,18 @@ public class IntValue extends Value {
                 return new IntValue(result?1:0,result?
                         (SymbolicInt)symbolic.not():
                         symbolic);
+        } else {
+            return new IntValue(result?1:0,result?
+                                    (SymbolicStringPredicate)symbolicStringPredicate.not():
+                                    symbolicStringPredicate);
         }
     }
 
     public IntValue IFNE() {
         boolean result = concrete!=0;
-        if (symbolic==null) {
+        if (symbolic==null && symbolicStringPredicate == null) {
             return (concrete!=0)?IntValue.TRUE:IntValue.FALSE;
-        } else {
+        } else if (symbolic != null) {
             if (symbolic.op== SymbolicInt.COMPARISON_OPS.UN)
                 return new IntValue(result?1:0,result?
                         symbolic.setop(SymbolicInt.COMPARISON_OPS.NE):
@@ -104,6 +145,10 @@ public class IntValue extends Value {
                 return new IntValue(result?1:0, result?
                         symbolic:
                         (SymbolicInt)symbolic.not());
+        } else {
+            return new IntValue(result?1:0,result?
+                    symbolicStringPredicate:
+                    (SymbolicStringPredicate)symbolicStringPredicate.not());
         }
     }
 
@@ -410,5 +455,9 @@ public class IntValue extends Value {
                 "symbolic=" + symbolic +
                 ", concrete=" + concrete +
                 '}';
+    }
+
+    public Constraint getSymbolic() {
+        return symbolic !=null? symbolic:(symbolicStringPredicate != null? symbolicStringPredicate: null);
     }
 }

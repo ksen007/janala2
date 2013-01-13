@@ -203,24 +203,6 @@ public class SymbolicInt extends Constraint {
         return ret;
     }
 
-    public long substituteInLinear(Map<String, Long> assignments) {
-        long val = 0;
-
-        for ( TIntLongIterator it = linear.iterator(); it.hasNext(); ) {
-            it.advance();
-
-            int key = it.key();
-            long l = it.value();
-            if (assignments.containsKey("x"+key)) {
-                val += assignments.get("x"+key)*l;
-            } else {
-                throw new RuntimeException("SymbolicInt cannot be fully concretized");
-            }
-        }
-        val += this.constant;
-        return val;
-    }
-
     public Constraint substitute(Map<String, Long> assignments) {
         long val = 0;
         SymbolicInt ret = null;

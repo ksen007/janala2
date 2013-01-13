@@ -39,8 +39,10 @@ package janala.interpreters;
  * Time: 8:27 AM
  */
 public class Value {
-    public void MAKE_SYMBOLIC(int symbol) {
+    public static int symbol = 1;
 
+    public int MAKE_SYMBOLIC() {
+        throw new RuntimeException("Cannot make "+this+" symbolic");
     }
 
     public Object getConcrete() {

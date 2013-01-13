@@ -62,22 +62,22 @@ public class ObjectValue extends Value {
 
     public IntValue IF_ACMPEQ(ObjectValue o2) {
         boolean result = this==o2;
-        return new IntValue(result?1:0, null);
+        return new IntValue(result?1:0);
     }
 
     public IntValue IF_ACMPNE(ObjectValue o2) {
         boolean result = this!=o2;
-        return new IntValue(result?1:0, null);
+        return new IntValue(result?1:0);
     }
 
     public IntValue IFNULL() {
         boolean result = this.address==0;
-        return new IntValue(result?1:0, null);
+        return new IntValue(result?1:0);
     }
 
     public IntValue IFNONNULL() {
         boolean result = this.address!=0;
-        return new IntValue(result?1:0, null);
+        return new IntValue(result?1:0);
     }
 
     public Value getField(int fieldId) {

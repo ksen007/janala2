@@ -57,8 +57,9 @@ public class LongValue extends Value {
         this.symbolic = symbolic;
     }
 
-    public void MAKE_SYMBOLIC(int symbol) {
-         symbolic = new SymbolicInt(symbol);
+    public int MAKE_SYMBOLIC() {
+         symbolic = new SymbolicInt(symbol++);
+        return symbol - 1;
      }
 
     public LongValue LADD(LongValue i) {

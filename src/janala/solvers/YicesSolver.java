@@ -40,6 +40,7 @@ import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,12 +52,12 @@ import java.util.logging.Logger;
  */
 public class YicesSolver implements Solver {
     boolean first = true;
-    ArrayList<Value> inputs;
+    LinkedHashMap<Integer,Value> inputs;
     ArrayList<Constraint> constraints;
     private final static Logger logger = MyLogger.getLogger(YicesSolver.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
-    public void setInputs(ArrayList<Value> inputs) {
+    public void setInputs(LinkedHashMap<Integer,Value> inputs) {
         this.inputs = inputs;
         this.first = true;
     }
@@ -240,12 +241,12 @@ public class YicesSolver implements Solver {
 class InputReader extends Thread {
     private InputStream is;
     boolean result;
-    ArrayList<Value> inputs;
+    LinkedHashMap<Integer,Value> inputs;
     private final static Logger logger = MyLogger.getLogger(InputReader.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
 
-    InputReader(InputStream is, ArrayList<Value> inputs) {
+    InputReader(InputStream is, LinkedHashMap<Integer,Value> inputs) {
         this.is = is;
         this.inputs = inputs;
     }
@@ -287,7 +288,7 @@ class InputReader extends Thread {
             int len = inputs.size();
             for(int i=0; i<len; i++) {
                 Long l = soln.get(i+1);
-                Value input = inputs.get(i);
+                Value input = inputs.get(i+1);
                 if (l!=null) {
                     if (input instanceof janala.interpreters.StringValue) {
                         tester.log(Level.INFO,StringConstants.instance.get((int)(long)l));

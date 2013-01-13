@@ -357,10 +357,10 @@ public class SymbolicStringPredicate extends Constraint {
                     }
                 } else {
                     String idx = s.toString();
-                    int length = (int)((SymbolicStringVar)s).getField("length").symbolic.substituteInLinear(assignments);
+                    int length = (int)((SymbolicStringVar)s).getField("length").substituteInLinear(assignments);
                     if (i < length) {
-                        freeVars.add(idx+"__"+i);
-                        return new SymOrInt(idx+"__"+i);
+                        freeVars.add("x"+idx+"__"+i);
+                        return new SymOrInt("x"+idx+"__"+i);
                     } else {
                         i = i - length;
                     }
@@ -423,12 +423,12 @@ public class SymbolicStringPredicate extends Constraint {
             switch(this.op) {
                 case EQ:
                     if (s1.symbolic != null) {
-                        length1 = s1.symbolic.substituteInLinear(assignments);
+                        length1 = s1.substituteInLinear(assignments);
                     } else {
                         length1 = s1.concrete;
                     }
                     if (s2.symbolic != null) {
-                        length2 = s2.symbolic.substituteInLinear(assignments);
+                        length2 = s2.substituteInLinear(assignments);
                     } else {
                         length2 = s2.concrete;
                     }
@@ -439,12 +439,12 @@ public class SymbolicStringPredicate extends Constraint {
                     }
                 case NE:
                     if (s1.symbolic != null) {
-                        length1 = s1.symbolic.substituteInLinear(assignments);
+                        length1 = s1.substituteInLinear(assignments);
                     } else {
                         length1 = s1.concrete;
                     }
                     if (s2.symbolic != null) {
-                        length2 = s2.symbolic.substituteInLinear(assignments);
+                        length2 = s2.substituteInLinear(assignments);
                     } else {
                         length2 = s2.concrete;
                     }
@@ -455,19 +455,19 @@ public class SymbolicStringPredicate extends Constraint {
                     }
 //                    return (length1 !== length2)?"TRUE":"FALSE";
                 case IN:
-                    length1 = s1.symbolic.substituteInLinear(assignments);
+                    length1 = s1.substituteInLinear(assignments);
                     for(j=0; j<length1; j++) {
                         freeVars.add(this.left+"__"+j);
                     }
                     // @todo regex_escape
-                    return RegexpEncoder.getRegexpFormulaString((String)this.right, this.left+"__", (int)length1);
+                    return RegexpEncoder.getRegexpFormulaString((String)this.right, "x"+this.left+"__", (int)length1);
                 case NOTIN:
-                    length1 = s1.symbolic.substituteInLinear(assignments);
+                    length1 = s1.substituteInLinear(assignments);
                     for(j=0; j<length1; j++) {
                         freeVars.add(this.left+"__"+j);
                     }
                     // @todo regex_escape
-                    return RegexpEncoder.getRegexpFormulaString("~("+(String)this.right+")", this.left+"__", (int)length1);
+                    return RegexpEncoder.getRegexpFormulaString("~("+(String)this.right+")", "x"+this.left+"__", (int)length1);
             }
 
         }

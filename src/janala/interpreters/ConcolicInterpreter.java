@@ -57,7 +57,6 @@ public class ConcolicInterpreter implements IVisitor {
     private Frame currentFrame;
     private ClassNames cnames;
     private TIntObjectHashMap<Value> objects;
-    private int symbol = 1;
     private History history;
     private Instruction next;
     private final static Logger logger = MyLogger.getLogger(ConcolicInterpreter.class.getName());
@@ -698,7 +697,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         IntValue result = i1.IFEQ();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result.concrete==1, result.symbolic, inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.getSymbolic(), inst.iid);
     }
 
     public void visitIFGE(IFGE inst) {
@@ -733,7 +732,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         IntValue result = i1.IFNE();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        history.checkAndSetBranch(result.concrete==1, result.getSymbolic(),inst.iid);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
@@ -1285,12 +1284,13 @@ public class ConcolicInterpreter implements IVisitor {
     }
 
     public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
+        int symbol;
         if (currentFrame.peek()==PlaceHolder.instance) {
-            currentFrame.peek2().MAKE_SYMBOLIC(symbol++);
-            history.addInput(currentFrame.peek2());
+            symbol = currentFrame.peek2().MAKE_SYMBOLIC();
+            history.addInput(symbol, currentFrame.peek2());
         } else {
-            currentFrame.peek().MAKE_SYMBOLIC(symbol++);
-            history.addInput(currentFrame.peek());
+            symbol = currentFrame.peek().MAKE_SYMBOLIC();
+            history.addInput(symbol, currentFrame.peek());
         }
     }
 
