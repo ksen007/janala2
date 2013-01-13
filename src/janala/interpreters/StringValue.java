@@ -94,6 +94,13 @@ public class StringValue extends ObjectValue {
                     return new StringValue(result, null);
                 }
             }
+        } else if (name.equals("length")) {
+            int result = string.length();
+            if (symbolic != null) {
+                return symbolic.getField("length");
+            } else {
+                return new IntValue(result);
+            }
         }
         return super.invokeMethod(name, args);
     }

@@ -39,6 +39,8 @@ rm -rf test.log
 ./$CATG 3 tests.StringEquals
 ./$CATG 4 tests.StringTest2
 ./$CATG 4 tests.StringTest3
+./$CATG 4 tests.StringTest4
+./$CATG 3 tests.StringTest5
 ./$CATG 3 tests.StringMapTest
 ./$CATG 4 tests.LongTest
 ./$CATG 7 tests.LongTest3
