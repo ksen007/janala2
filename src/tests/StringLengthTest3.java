@@ -1,4 +1,4 @@
-package tests.string;
+package tests;
 
 import catg.CATG;
 
