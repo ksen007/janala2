@@ -69,12 +69,10 @@ public class StringValue extends ObjectValue {
                 StringValue other = (StringValue)args[0];
                 boolean result = string.equals(other.string);
                 if (symbolic !=null && other.symbolic !=null) {
-//                    SymbolicInt ret = symbolic.subtract(other.symbolic);
                     return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.EQ,symbolic,other.symbolic));
                 } else if (symbolic != null) {
                     return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.EQ,symbolic,other.string));
                 } else if (other.symbolic!=null) {
-//                    SymbolicInt ret = other.symbolic.subtract(StringConstants.instance.get(string));
                     return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.EQ,string,other.symbolic));
                 } else {
                     return new IntValue(result?1:0);
@@ -94,12 +92,22 @@ public class StringValue extends ObjectValue {
                     return new StringValue(result, null);
                 }
             }
-        } else if (name.equals("length")) {
+        } else if (name.equals("length") && args.length == 0) {
             int result = string.length();
             if (symbolic != null) {
                 return symbolic.getField("length");
             } else {
                 return new IntValue(result);
+            }
+        } else if (name.equals("matches") && args.length == 1) {
+            if (args[0] instanceof StringValue) {
+                StringValue other = (StringValue)args[0];
+                boolean result = string.matches(other.string);
+                if (symbolic != null) {
+                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,".*"+other.string+".*"));
+                } else {
+                    return new IntValue(result?1:0);
+                }
             }
         }
         return super.invokeMethod(name, args);

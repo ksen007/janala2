@@ -457,14 +457,14 @@ public class SymbolicStringPredicate extends Constraint {
                 case IN:
                     length1 = s1.substituteInLinear(assignments);
                     for(j=0; j<length1; j++) {
-                        freeVars.add(this.left+"__"+j);
+                        freeVars.add("x"+this.left+"__"+j);
                     }
                     // @todo regex_escape
                     return RegexpEncoder.getRegexpFormulaString((String)this.right, "x"+this.left+"__", (int)length1);
                 case NOTIN:
                     length1 = s1.substituteInLinear(assignments);
                     for(j=0; j<length1; j++) {
-                        freeVars.add(this.left+"__"+j);
+                        freeVars.add("x"+this.left+"__"+j);
                     }
                     // @todo regex_escape
                     return RegexpEncoder.getRegexpFormulaString("~("+(String)this.right+")", "x"+this.left+"__", (int)length1);

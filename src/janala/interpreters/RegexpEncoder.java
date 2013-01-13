@@ -106,6 +106,7 @@ public class RegexpEncoder {
     public static Constraint getRegexpFormulaString(String regexp, String prefix, int length) {
         RegExp r = new RegExp(regexp);
         Automaton a = r.toAutomaton();
+        length--;
         if (length==-1) {
             return SymbolicTrueConstraint.instance;
         } else {
