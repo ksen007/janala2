@@ -34,6 +34,7 @@
 package janala.interpreters;
 
 import gnu.trove.iterator.TIntLongIterator;
+import janala.solvers.History;
 
 import java.util.Map;
 
@@ -76,7 +77,7 @@ public class IntValue extends Value {
         return symbolic.linear.keys()[0];
     }
 
-    public int MAKE_SYMBOLIC() {
+    public int MAKE_SYMBOLIC(History history) {
         symbolic = new SymbolicInt(symbol++);
         //System.out.println("Int symbol x"+(symbol-1)+" = "+concrete);
         return symbol-1;

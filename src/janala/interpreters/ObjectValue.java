@@ -33,6 +33,8 @@
 
 package janala.interpreters;
 
+import janala.solvers.History;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/19/12
@@ -98,7 +100,7 @@ public class ObjectValue extends Value {
         this.address = address;
     }
 
-    public Value invokeMethod(String name, Value[] args) {
+    public Value invokeMethod(String name, Value[] args, History history) {
         return PlaceHolder.instance;
     }
 }

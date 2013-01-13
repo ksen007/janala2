@@ -33,6 +33,8 @@
 
 package janala.interpreters;
 
+import janala.solvers.History;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 7/2/12
@@ -46,7 +48,7 @@ public class IntegerObjectValue extends ObjectValue {
     }
 
     @Override
-    public Value invokeMethod(String name, Value[] args) {
+    public Value invokeMethod(String name, Value[] args, History history) {
         if (name.equals("<init>")) {
             if (args[0] instanceof IntValue)
                 this.intValue = (IntValue)args[0];

@@ -33,6 +33,8 @@
 
 package janala.interpreters;
 
+import janala.solvers.History;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/19/12
@@ -41,7 +43,7 @@ package janala.interpreters;
 public class Value {
     public static int symbol = 1;
 
-    public int MAKE_SYMBOLIC() {
+    public int MAKE_SYMBOLIC(History history) {
         throw new RuntimeException("Cannot make "+this+" symbolic");
     }
 

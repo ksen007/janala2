@@ -881,7 +881,7 @@ public class ConcolicInterpreter implements IVisitor {
 
         if (next instanceof INVOKEMETHOD_END || next instanceof INVOKEMETHOD_EXCEPTION || next == null) {
             if (isInstance) {
-                currentFrame.ret = instance.invokeMethod(name,tmpValues);
+                currentFrame.ret = instance.invokeMethod(name,tmpValues, history);
             } else {
 //                checkAssumption(owner,name,tmpValues);
                 currentFrame.ret = StaticInvocation.invokeMethod(inst.iid,owner,name,tmpValues, history);
@@ -1286,10 +1286,10 @@ public class ConcolicInterpreter implements IVisitor {
     public void visitMAKE_SYMBOLIC(MAKE_SYMBOLIC inst) {
         int symbol;
         if (currentFrame.peek()==PlaceHolder.instance) {
-            symbol = currentFrame.peek2().MAKE_SYMBOLIC();
+            symbol = currentFrame.peek2().MAKE_SYMBOLIC(history);
             history.addInput(symbol, currentFrame.peek2());
         } else {
-            symbol = currentFrame.peek().MAKE_SYMBOLIC();
+            symbol = currentFrame.peek().MAKE_SYMBOLIC(history);
             history.addInput(symbol, currentFrame.peek());
         }
     }

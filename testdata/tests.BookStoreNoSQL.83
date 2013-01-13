@@ -1,13 +1,2 @@
-INFO: Feasible = false at 158
-INFO: Feasible = false at 157
-INFO: Feasible = false at 156
-INFO: Feasible = false at 155
-INFO: Feasible = false at 154
-INFO: Feasible = false at 153
-INFO: Feasible = false at 152
-INFO: Feasible = false at 151
-INFO: Feasible = false at 150
-INFO: Feasible = false at 149
-INFO: Feasible = false at 148
-INFO: Feasible = false at 147
-INFO: Feasible = true at 146
+INFO: Prediction failed
+INFO: Feasible = true at 176

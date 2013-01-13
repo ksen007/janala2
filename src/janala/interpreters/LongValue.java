@@ -33,6 +33,8 @@
 
 package janala.interpreters;
 
+import janala.solvers.History;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/19/12
@@ -57,7 +59,7 @@ public class LongValue extends Value {
         this.symbolic = symbolic;
     }
 
-    public int MAKE_SYMBOLIC() {
+    public int MAKE_SYMBOLIC(History history) {
          symbolic = new SymbolicInt(symbol++);
         return symbol - 1;
      }

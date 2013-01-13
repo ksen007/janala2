@@ -33,6 +33,9 @@
 
 package janala.interpreters;
 
+import janala.config.Config;
+import janala.solvers.History;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 6/19/12
@@ -63,7 +66,7 @@ public class StringValue extends ObjectValue {
     }
 
     @Override
-    public Value invokeMethod(String name, Value[] args) {
+    public Value invokeMethod(String name, Value[] args, History history) {
         if (name.equals("equals") && args.length == 1) {
             if (args[0] instanceof StringValue) {
                 StringValue other = (StringValue)args[0];
@@ -77,6 +80,20 @@ public class StringValue extends ObjectValue {
                 } else {
                     return new IntValue(result?1:0);
                 }
+            }
+        } else if (name.equals("startsWith") && args.length == 1) {
+            if (args[0] instanceof StringValue) {
+                IntValue tmp1, tmp2;
+                StringValue other = (StringValue)args[0];
+                StringValue first = new StringValue("",null);
+                first.MAKE_SYMBOLIC(history);
+                StringValue last = new StringValue(other.string,null);
+                last.MAKE_SYMBOLIC(history);
+
+                tmp1 = (IntValue)this.invokeMethod("equals", new Value[]{first.invokeMethod("concat", new Value[]{last}, history)}, history);
+                tmp2 = (IntValue)other.invokeMethod("equals", new Value[]{first}, history);
+                SymbolicAndConstraint c = new SymbolicAndConstraint(tmp1.symbolicStringPredicate);
+                c = c.AND(tmp2.symbolicStringPredicate);
             }
         } else if (name.equals("concat") && args.length == 1) {
             if (args[0] instanceof StringValue) {
@@ -110,14 +127,29 @@ public class StringValue extends ObjectValue {
                 }
             }
         }
-        return super.invokeMethod(name, args);
+        return super.invokeMethod(name, args, history);
     }
 
-    public int MAKE_SYMBOLIC() {
+    public int MAKE_SYMBOLIC(History history) {
         IntValue length = new IntValue(string.length());
         int ret = symbol;
         symbolic = new SymbolicStringExpression(symbol++, length);
-        length.MAKE_SYMBOLIC();
+        length.MAKE_SYMBOLIC(history);
+
+        Constraint results = length.symbolic.setop(SymbolicInt.COMPARISON_OPS.GE);
+        boolean resultc = length.concrete >= 0;
+        history.checkAndSetBranch(resultc, results, 0);
+        if (resultc) {
+            history.setLastBranchDone();
+        }
+
+        results = length.ISUB(new IntValue(Config.instance.maxStringLength)).symbolic.setop(SymbolicInt.COMPARISON_OPS.LE);
+        resultc = length.concrete <= Config.instance.maxStringLength;
+        history.checkAndSetBranch(resultc, results, 0);
+        if (resultc) {
+            history.setLastBranchDone();
+        }
+
         //System.out.println("String symbol x"+ret+" = \""+string+"\"");
         return ret;
     }

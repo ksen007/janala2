@@ -65,6 +65,7 @@ public class Config {
     public String[] includeList;
     private String solver;
     private String strategy;
+    public int maxStringLength;
 
     public Config() {
         try {
@@ -88,7 +89,7 @@ public class Config {
             strategy = properties.getProperty("catg.strategyClass", "janala.solvers.DFSStrategy");
             excludeList = properties.getProperty("catg.excludeList","").split(",");
             includeList = properties.getProperty("catg.includeList","catg.CATG").split(",");
-
+            maxStringLength = Integer.parseInt(properties.getProperty("catg.maxStringLength","30"));
     	} catch (IOException ex) {
     		ex.printStackTrace();
         }

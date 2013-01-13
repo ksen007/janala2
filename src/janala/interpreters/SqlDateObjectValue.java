@@ -33,6 +33,8 @@
 
 package janala.interpreters;
 
+import janala.solvers.History;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
@@ -44,7 +46,7 @@ public class SqlDateObjectValue extends ObjectValue {
     }
 
     @Override
-    public Value invokeMethod(String name, Value[] args) {
+    public Value invokeMethod(String name, Value[] args, History history) {
         if (name.equals("<init>")) {
             if (args[0] instanceof LongValue)
                 this.longValue = (LongValue)args[0];
