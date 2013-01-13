@@ -312,32 +312,36 @@ public class CVC3Solver implements Solver {
 
             for (Integer sym: inputs.keySet()) {
                 Value val = inputs.get(sym);
+                //System.out.println("sym "+sym);
                 Long l = soln.get("x"+sym);
                 if (l != null) {
                     out.println(l);
+                    //System.out.println("l = " + l);
                 } else {
                     if (val instanceof StringValue) {
                         StringValue sval = (StringValue)val;
+                        String old = sval.getConcrete();
                         IntValue tmp = sval.getSymbolic().getField("length");
-                        Long Len;
-                        if ((Len = soln.get("x"+tmp.getSymbol())) != null) {
-                            int len = (int)(long)Len;
-                            StringBuilder ret = new StringBuilder();
-                            for (int i=0 ; i< len; i++) {
-                                Long v = soln.get("x"+sym+"__"+i);
+                        int len = (int)(long)tmp.substituteInLinear(soln);
+                        StringBuilder ret = new StringBuilder();
+                        for (int i=0 ; i< len; i++) {
+                            Long v = soln.get("x"+sym+"__"+i);
 
-                                char c;
-                                if (v != null) {
-                                    c = (char)(long)v;
-                                } else {
-                                    c = 'a';
-                                }
-                                ret.append(c);
-                                out.println(ret);
+                            char c;
+                            if (v != null) {
+                                c = (char)(long)v;
+                                //System.out.println("--1");
+                            } else if (i < old.length()){
+                                //System.out.println("--2"+old+" "+old.length());
+                                c = old.charAt(i);
+                            } else {
+                                //System.out.println("--3");
+                                c = 'a';
                             }
-                        } else {
-                            out.println(val.getConcrete());
+                            ret.append(c);
+                            //System.out.println("~~~~~~~~~~~~~~~\"" + ret + "\"");
                         }
+                        out.println(ret);
                     } else {
                         out.println(val.getConcrete());
                     }

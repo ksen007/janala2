@@ -384,7 +384,7 @@ public class SymbolicStringPredicate extends Constraint {
             c = new SymbolicIntCompareConstraint(e1,e2,SymbolicIntCompareConstraint.COMPARISON_OPS.EQ);
 
             if (i !=0 ) {
-                and.AND(c);
+                and = and.AND(c);
             } else {
                 and = new SymbolicAndConstraint(c);
             }
@@ -408,8 +408,8 @@ public class SymbolicStringPredicate extends Constraint {
         if (mode == CVC3Solver.CONSTRAINT_TYPE.INT) {
             switch(this.op) {
                 case EQ:
-                    formula = s1.IF_ICMPEQ(s2);
-                    return formula.symbolic;
+                    formula = s1.ISUB(s2);
+                    return formula.symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ);
                 case NE:
                     return SymbolicTrueConstraint.instance;
                 case IN:

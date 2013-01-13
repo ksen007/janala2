@@ -78,6 +78,7 @@ public class IntValue extends Value {
 
     public int MAKE_SYMBOLIC() {
         symbolic = new SymbolicInt(symbol++);
+        //System.out.println("Int symbol x"+(symbol-1)+" = "+concrete);
         return symbol-1;
     }
 

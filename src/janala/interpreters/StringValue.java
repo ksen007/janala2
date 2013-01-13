@@ -47,6 +47,12 @@ public class StringValue extends ObjectValue {
         this.string = string;
     }
 
+    public StringValue(String string, SymbolicStringExpression symbolic) {
+        super(100, -1);
+        this.string = string;
+        this.symbolic = symbolic;
+    }
+
     @Override
     public String getConcrete() {
         return string;
@@ -74,6 +80,20 @@ public class StringValue extends ObjectValue {
                     return new IntValue(result?1:0);
                 }
             }
+        } else if (name.equals("concat") && args.length == 1) {
+            if (args[0] instanceof StringValue) {
+                StringValue other = (StringValue)args[0];
+                String result = string.concat(other.string);
+                if (symbolic !=null && other.symbolic !=null) {
+                    return new StringValue(result, symbolic.concat(other.symbolic));
+                } else if (symbolic != null) {
+                    return new StringValue(result, symbolic.concatStr(other.string));
+                } else if (other.symbolic!=null) {
+                    return new StringValue(result,other.symbolic.concatToStr(string));
+                } else {
+                    return new StringValue(result, null);
+                }
+            }
         }
         return super.invokeMethod(name, args);
     }
@@ -83,6 +103,7 @@ public class StringValue extends ObjectValue {
         int ret = symbol;
         symbolic = new SymbolicStringExpression(symbol++, length);
         length.MAKE_SYMBOLIC();
+        //System.out.println("String symbol x"+ret+" = \""+string+"\"");
         return ret;
     }
 }
