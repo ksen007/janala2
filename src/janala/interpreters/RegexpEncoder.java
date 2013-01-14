@@ -41,66 +41,6 @@ import dk.brics.automaton.Transition;
 import java.util.IdentityHashMap;
 import java.util.List;
 
-//interface Formula {
-//    String toCVC3FormulaString(String x);
-//}
-
-//class RelConstant implements Formula {
-//    int varIdx;
-//    char constant;
-//    String op;
-//
-//    RelConstant(int varIdx, char constant, String op) {
-//        this.varIdx = varIdx;
-//        this.constant = constant;
-//        this.op = op;
-//    }
-//
-//    public String toCVC3FormulaString(String x) {
-//        return " ( "+x+varIdx+" "+op+ " "+((int)constant)+" ) ";
-//    }
-//}
-//
-//class AndFormula implements Formula {
-//    Formula left;
-//    Formula right;
-//
-//    AndFormula(Formula left, Formula right) {
-//        this.left = left;
-//        this.right = right;
-//    }
-//
-//    public String toCVC3FormulaString(String x) {
-//        return "("+left.toCVC3FormulaString(x)+" AND "+right.toCVC3FormulaString(x)+ ")";
-//    }
-//}
-//
-//class OrFormula implements Formula {
-//    Formula left;
-//    Formula right;
-//
-//    OrFormula(Formula left, Formula right) {
-//        this.left = left;
-//        this.right = right;
-//    }
-//
-//    public String toCVC3FormulaString(String x) {
-//        return "("+left.toCVC3FormulaString(x)+" OR "+right.toCVC3FormulaString(x)+ ")";
-//    }
-//}
-//
-//class TrueFormula implements Formula {
-//    public String toCVC3FormulaString(String x) {
-//        return "TRUE";
-//    }
-//
-//}
-//
-//class FalseFormula implements Formula {
-//    public String toCVC3FormulaString(String x) {
-//        return "FALSE";
-//    }
-//}
 
 public class RegexpEncoder {
     public static Constraint getRegexpFormulaString(String regexp, String prefix, int length) {
@@ -108,7 +48,11 @@ public class RegexpEncoder {
         Automaton a = r.toAutomaton();
         length--;
         if (length==-1) {
-            return SymbolicTrueConstraint.instance;
+            if (a.getInitialState().isAccept()) {
+                return SymbolicTrueConstraint.instance;
+            } else {
+                return SymbolicFalseConstraint.instance;
+            }
         } else {
             return createFormula(a, prefix, length);
         }
@@ -121,7 +65,7 @@ public class RegexpEncoder {
         if (example !=null)
             return intCompare(prefix, sym, example.length(), SymbolicIntCompareConstraint.COMPARISON_OPS.GE);
         else
-            return intCompare(prefix, sym, 0, SymbolicIntCompareConstraint.COMPARISON_OPS.LT);
+            return intCompare(prefix, sym, 0, SymbolicIntCompareConstraint.COMPARISON_OPS.GE);
     }
 
 
@@ -205,6 +149,14 @@ public class RegexpEncoder {
             }
         }
         return collect;
+    }
+
+    public static void main(String[] args) {
+        RegExp r = new RegExp("[a-zA-Z]*");
+        Automaton a = r.toAutomaton();
+        System.out.println(a.getShortestExample(false));
+        System.out.println(a.toDot());
+
     }
 
 }
