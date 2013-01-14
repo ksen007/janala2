@@ -66,6 +66,7 @@ public class Config {
     private String solver;
     private String strategy;
     public int maxStringLength;
+    public boolean printFormulaAndSolutions;
 
     public Config() {
         try {
@@ -76,6 +77,7 @@ public class Config {
             verbose = properties.getProperty("catg.isVerbose","false").equals("true");
             printTrace = properties.getProperty("catg.isPrintTrace","false").equals("true");
             printConstraints = properties.getProperty("catg.isPrintConstraints","false").equals("true");
+            printFormulaAndSolutions = properties.getProperty("catg.isPrintFormulaAndSolutions","false").equals("true");
             traceFileName = properties.getProperty("catg.traceFile","trace");
             traceAuxFileName = properties.getProperty("catg.auxTraceFile","trace.aux");
             history = properties.getProperty("catg.historyFile","history");

@@ -29,25 +29,16 @@
 
 package tests;
 
-import catg.CATG;
+import java.util.regex.Pattern;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
+ * Date: 1/13/13
+ * Time: 9:48 PM
  */
-public class StringTest8 {
-    public static void main(String[] argv){
-        String a = CATG.readString("a");
-        String b = CATG.readString("b");
-        String d = CATG.readString("d");
-
-        if(a.startsWith(b)){
-            if (a.endsWith(d))
-                System.out.println("a.contains(b) && a.startsWith(c) && a.endsWith(d) && d.startsWith(e)");
-        }
-
-        System.out.println("a : " + a.replace('\0','a'));
-        System.out.println("b : " + b.replace('\0','a'));
-        System.out.println("d : " + d.replace('\0','a'));
-
+public class Quote {
+    public static void main(String[] args) {
+        System.out.println("[a-d]*".matches(Pattern.quote("[a-d]*")));
     }
+
 }

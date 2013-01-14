@@ -217,15 +217,25 @@ public class CVC3Solver implements Solver {
         PrintStream pw = new PrintStream(new BufferedOutputStream(new FileOutputStream(to)));
 
 //        System.out.println("Concat:");
+        if (Config.instance.printFormulaAndSolutions) {
+            System.out.println("-----------Formula-------------");
+        }
         for(String var:freeVars) {
             pw.print(var);
             pw.println(" :INT;");
+            if (Config.instance.printFormulaAndSolutions) {
+                System.out.print(var);
+                System.out.println(" :INT;");
+            }
         }
 
         BufferedReader br = new BufferedReader(new FileReader(from));
         String line = br.readLine();
         while (line != null) {
             pw.println(line);
+            if (Config.instance.printFormulaAndSolutions) {
+                System.out.println(line);
+            }
 //            System.out.println(line);
             line = br.readLine();
         }
@@ -379,7 +389,14 @@ public class CVC3Solver implements Solver {
         String negatedSolution = null;
 
         try {
+            if (Config.instance.printFormulaAndSolutions) {
+                System.out.println("-----------Solution-------------");
+            }
+
             line = br.readLine();
+            if (Config.instance.printFormulaAndSolutions) {
+                System.out.println(line);
+            }
             if (!line.startsWith("Satisfiable")) {
                 if (!line.contains("Unsat")) {
                     logger.log(Level.SEVERE,line);
@@ -388,11 +405,19 @@ public class CVC3Solver implements Solver {
                     Runtime.getRuntime().halt(1);
                 }
                 logger.log(Level.INFO,"-- Infeasible");
-                while ((line = br.readLine()) != null) { }
+                while ((line = br.readLine()) != null) {
+                    if (Config.instance.printFormulaAndSolutions) {
+                        System.out.println(line);
+                    }
+                }
                 br.close();
                 return null;
             } else {
                 while ((line = br.readLine()) != null) {
+                    if (Config.instance.printFormulaAndSolutions) {
+                        System.out.println(line);
+                    }
+
                     if (line.startsWith("ASSERT")) {
                         if (negatedSolution != null) {
                             negatedSolution += " AND "+line.substring(line.indexOf("("),line.indexOf(")")+1);
