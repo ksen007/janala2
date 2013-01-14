@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class IntValue extends Value {
     public SymbolicInt symbolic;
-    public SymbolicStringPredicate symbolicStringPredicate;
+    public Constraint nonIntConstraint;
     public int concrete;
     final static public IntValue TRUE = new IntValue(1);
     final static public IntValue FALSE = new IntValue(0);
@@ -58,19 +58,22 @@ public class IntValue extends Value {
     public IntValue(int i) {
         concrete = i;
         symbolic = null;
-        symbolicStringPredicate = null;
+        nonIntConstraint = null;
     }
 
-    public IntValue(int i, SymbolicInt symbolic) {
-        concrete = i;
-        this.symbolic = symbolic;
-        symbolicStringPredicate = null;
-    }
+//    public IntValue(int i, SymbolicInt symbolic) {
+//        concrete = i;
+//        this.symbolic = symbolic;
+//        nonIntConstraint = null;
+//    }
 
-    public IntValue(int concrete, SymbolicStringPredicate symbolicStringPredicate) {
+    public IntValue(int concrete, Constraint nonIntConstraint) {
         this.concrete = concrete;
-        symbolic = null;
-        this.symbolicStringPredicate = symbolicStringPredicate;
+        if (nonIntConstraint instanceof SymbolicInt) {
+            this.symbolic = (SymbolicInt)nonIntConstraint;
+        } else {
+            this.nonIntConstraint = nonIntConstraint;
+        }
     }
 
     public int getSymbol() {
@@ -116,7 +119,7 @@ public class IntValue extends Value {
 
     public IntValue IFEQ() {
         boolean result = concrete==0;
-        if (symbolic==null && symbolicStringPredicate == null) {
+        if (symbolic==null && nonIntConstraint == null) {
             return result?IntValue.TRUE:IntValue.FALSE;
         } else if (symbolic != null) {
             if (symbolic.op== SymbolicInt.COMPARISON_OPS.UN)
@@ -128,15 +131,13 @@ public class IntValue extends Value {
                         (SymbolicInt)symbolic.not():
                         symbolic);
         } else {
-            return new IntValue(result?1:0,result?
-                                    (SymbolicStringPredicate)symbolicStringPredicate.not():
-                                    symbolicStringPredicate);
+            return new IntValue(result?1:0,result?nonIntConstraint.not():nonIntConstraint);
         }
     }
 
     public IntValue IFNE() {
         boolean result = concrete!=0;
-        if (symbolic==null && symbolicStringPredicate == null) {
+        if (symbolic==null && nonIntConstraint == null) {
             return (concrete!=0)?IntValue.TRUE:IntValue.FALSE;
         } else if (symbolic != null) {
             if (symbolic.op== SymbolicInt.COMPARISON_OPS.UN)
@@ -148,9 +149,7 @@ public class IntValue extends Value {
                         symbolic:
                         (SymbolicInt)symbolic.not());
         } else {
-            return new IntValue(result?1:0,result?
-                    symbolicStringPredicate:
-                    (SymbolicStringPredicate)symbolicStringPredicate.not());
+            return new IntValue(result?1:0,result?nonIntConstraint : nonIntConstraint.not());
         }
     }
 
@@ -460,6 +459,6 @@ public class IntValue extends Value {
     }
 
     public Constraint getSymbolic() {
-        return symbolic !=null? symbolic:(symbolicStringPredicate != null? symbolicStringPredicate: null);
+        return symbolic !=null? symbolic:(nonIntConstraint != null? nonIntConstraint : null);
     }
 }

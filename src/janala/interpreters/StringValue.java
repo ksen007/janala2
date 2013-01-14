@@ -85,6 +85,8 @@ public class StringValue extends ObjectValue {
             if (args[0] instanceof StringValue) {
                 IntValue tmp1, tmp2;
                 StringValue other = (StringValue)args[0];
+                boolean result = string.startsWith(other.string);
+
                 StringValue first = new StringValue("",null);
                 first.MAKE_SYMBOLIC(history);
                 StringValue last = new StringValue(other.string,null);
@@ -92,8 +94,48 @@ public class StringValue extends ObjectValue {
 
                 tmp1 = (IntValue)this.invokeMethod("equals", new Value[]{first.invokeMethod("concat", new Value[]{last}, history)}, history);
                 tmp2 = (IntValue)other.invokeMethod("equals", new Value[]{first}, history);
-                SymbolicAndConstraint c = new SymbolicAndConstraint(tmp1.symbolicStringPredicate);
-                c = c.AND(tmp2.symbolicStringPredicate);
+                SymbolicAndConstraint c = new SymbolicAndConstraint(tmp1.nonIntConstraint);
+                c = c.AND(tmp2.nonIntConstraint);
+                return new IntValue(result?1:0, c);
+            }
+        } else if (name.equals("endsWith") && args.length == 1) {
+            if (args[0] instanceof StringValue) {
+                IntValue tmp1, tmp2;
+                StringValue other = (StringValue)args[0];
+                boolean result = string.endsWith(other.string);
+
+                StringValue first = new StringValue("",null);
+                first.MAKE_SYMBOLIC(history);
+                StringValue last = new StringValue(other.string,null);
+                last.MAKE_SYMBOLIC(history);
+
+                tmp1 = (IntValue)this.invokeMethod("equals", new Value[]{first.invokeMethod("concat", new Value[]{last}, history)}, history);
+                tmp2 = (IntValue)other.invokeMethod("equals", new Value[]{last}, history);
+                SymbolicAndConstraint c = new SymbolicAndConstraint(tmp1.nonIntConstraint);
+                c = c.AND(tmp2.nonIntConstraint);
+                return new IntValue(result?1:0, c);
+            }
+        } else if (name.equals("contains") && args.length == 1) {
+            if (args[0] instanceof StringValue) {
+                IntValue tmp1, tmp2;
+                StringValue tmp;
+                StringValue other = (StringValue)args[0];
+                boolean result = string.contains(other.string);
+
+                StringValue first = new StringValue("",null);
+                first.MAKE_SYMBOLIC(history);
+                StringValue middle = new StringValue(other.string,null);
+                middle.MAKE_SYMBOLIC(history);
+                StringValue last = new StringValue("",null);
+                last.MAKE_SYMBOLIC(history);
+
+                tmp = (StringValue)first.invokeMethod("concat", new Value[]{middle}, history);
+                tmp = (StringValue)tmp.invokeMethod("concat", new Value[]{last}, history);
+                tmp1 = (IntValue)this.invokeMethod("equals", new Value[]{tmp}, history);
+                tmp2 = (IntValue)other.invokeMethod("equals", new Value[]{middle}, history);
+                SymbolicAndConstraint c = new SymbolicAndConstraint(tmp1.nonIntConstraint);
+                c = c.AND(tmp2.nonIntConstraint);
+                return new IntValue(result?1:0, c);
             }
         } else if (name.equals("concat") && args.length == 1) {
             if (args[0] instanceof StringValue) {
