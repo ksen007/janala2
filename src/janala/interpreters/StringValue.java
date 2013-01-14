@@ -95,6 +95,20 @@ public class StringValue extends ObjectValue {
                     return new IntValue(result?1:0);
                 }
             }
+        } else if (name.equals("startsWith") && args.length == 2) {
+            if (args[0] instanceof StringValue) {
+                StringValue other = (StringValue)args[0];
+                IntValue offset = (IntValue)args[1];
+                boolean result = string.startsWith(other.string, offset.concrete);
+                if (symbolic != null) {
+                    return new IntValue(result?1:0,new SymbolicStringPredicate(
+                            SymbolicStringPredicate.COMPARISON_OPS.IN,
+                            symbolic,
+                            ".{"+offset.concrete+"}"+escapeRE(other.string)+".*"));
+                } else {
+                    return new IntValue(result?1:0);
+                }
+            }
         } else if (name.equals("endsWith") && args.length == 1) {
             StringValue other = (StringValue)args[0];
             boolean result = string.endsWith(other.string);
