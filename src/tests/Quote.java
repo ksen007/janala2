@@ -29,8 +29,6 @@
 
 package tests;
 
-import java.util.regex.Pattern;
-
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 1/13/13
@@ -38,7 +36,9 @@ import java.util.regex.Pattern;
  */
 public class Quote {
     public static void main(String[] args) {
-        System.out.println("[a-d]*".matches(Pattern.quote("[a-d]*")));
+        System.out.println("1ccAcd\u0000aaaaabbccccYX".matches("1?[a-cA-C]*[de]+[^a-e]a{5,7}b{2}[cC]{3,}(XY|YX)+"));
+        System.out.println("1c\u0000c\u0000d\u0000aaaaabbccccXY".matches("1?[a-cA-C]*[de]+[^a-e]a{5,7}b{2}[cC]{3,}(XY|YX)+"));
+
     }
 
 }

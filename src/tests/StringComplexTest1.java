@@ -1,4 +1,4 @@
-package tests.string;
+package tests;
 import catg.CATG;
 
 public class StringComplexTest1 {
@@ -8,7 +8,7 @@ public class StringComplexTest1 {
 
 		String patternString = "1?[a-cA-C]*[de]+[^a-e]a{5,7}b{2}[cC]{3,}(XY|YX)+";
 
-		if(a.startsWith("1") && a.contains("cccc") && a.length() == 20 && RegexMatch.IsMatch(a, patternString)){
+		if(a.startsWith("1") && a.contains("cccc") && a.length() == 20 && a.matches(patternString)){
 			System.out.println("a.startsWith(\"1\") && a.contains(\"cccc\") && a.length() == 20 && a matches "+patternString);
 		}
 

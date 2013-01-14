@@ -10,8 +10,8 @@ public class StringSubStringTest1 {
 		String d = CATG.readString("d");
 		String e = CATG.readString("e");
 
-		if(a.contains(b) && a.startsWith(c) && a.endsWith(d) && d.startsWith(e)){
-			System.out.println("a.contains(b) && a.startsWith(c) && a.endsWith(d) && d.startsWith(e)");
+		if(a.contains(b) && a.startsWith(c) && a.endsWith(d) ){
+			System.out.println("a.contains(b) && a.startsWith(c) && a.endsWith(d)");
 		}
 
 		System.out.println("a : " + a);

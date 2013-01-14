@@ -118,7 +118,10 @@ public class RegexpEncoder {
         RegExp r = new RegExp(regexp);
         Automaton a = r.toAutomaton();
         String example = a.getShortestExample(accept);
-        return intCompare(prefix, sym, example.length(), SymbolicIntCompareConstraint.COMPARISON_OPS.GE);
+        if (example !=null)
+            return intCompare(prefix, sym, example.length(), SymbolicIntCompareConstraint.COMPARISON_OPS.GE);
+        else
+            return intCompare(prefix, sym, 0, SymbolicIntCompareConstraint.COMPARISON_OPS.LT);
     }
 
 

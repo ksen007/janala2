@@ -45,6 +45,8 @@ rm -rf test.log
 ./$CATG 4 tests.StringTest7
 ./$CATG 4 tests.StringTest8
 ./$CATG 4 tests.StringTest9
+./$CATG 5 tests.StringSubStringTest2
+./$CATG 6 tests.StringComplexTest1
 ./$CATG 3 tests.StringRegexTest1
 ./$CATG 3 tests.StringRegexTest2
 ./$CATG 3 tests.StringRegexTest3

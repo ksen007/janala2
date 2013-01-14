@@ -137,7 +137,7 @@ public class StringValue extends ObjectValue {
                 StringValue other = (StringValue)args[0];
                 boolean result = string.matches(other.string);
                 if (symbolic != null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,".*"+other.string+".*"));
+                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,other.string));
                 } else {
                     return new IntValue(result?1:0);
                 }

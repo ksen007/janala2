@@ -1,4 +1,4 @@
-package tests.string;
+package tests;
 
 import catg.CATG;
 
@@ -13,10 +13,12 @@ public class StringComplexTest2 {
 
 
 		String patternString = "[a-zA-Z]*";
-		if(!(RegexMatch.IsMatch(a, patternString) && a.length() >= 0 && a.length() <= 100)){
-			return;
+		if(!(a.matches(patternString) && a.length() >= 0 && a.length() <= 100)){
+            System.out.println("Branch 1");
+            return;
 		}
-		if(!(RegexMatch.IsMatch(b, patternString) && b.length() >= 0 && b.length() <= 100)){
+		if(!(b.matches(patternString) && b.length() >= 0 && b.length() <= 100)){
+            System.out.println("Branch 2");
 			return;
 		}
 
