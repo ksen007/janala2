@@ -243,7 +243,24 @@ public class CVC3Solver implements Solver {
         pw.close();
     }
 
-    private boolean writeFormula(String extra, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
+    public enum RESULT_TYPE {TRUE, FALSE, UNKNOWN};
+
+    private boolean quickUnsatCheck(CONSTRAINT_TYPE type) {
+        if (type == CONSTRAINT_TYPE.INT) {
+            Constraint last = constraints.get(pathConstraintIndex);
+            if (last instanceof SymbolicStringPredicate) {
+                for (int i=0; i<pathConstraintIndex;i++) {
+                    Constraint tmp = constraints.get(i);
+                    if (tmp.equals(last)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private RESULT_TYPE writeFormula(String extra, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
         try {
             boolean allTrue = true;
             Constraint tmp;
@@ -255,9 +272,14 @@ public class CVC3Solver implements Solver {
 //                out.println(" : INT;");
 //            }
 //
+            if (quickUnsatCheck(type)) {
+                return RESULT_TYPE.FALSE;
+            }
+
             LinkedHashSet<String> freeVars = new LinkedHashSet<String>();
             for (int i=0; i<pathConstraintIndex;i++) {
                 out.print("ASSERT ");
+                //System.out.println("Constraint "+i+":" + constraints.get(i));
                 tmp = constraints.get(i).substitute(soln);
                 if (tmp != SymbolicTrueConstraint.instance) {
                     allTrue = false;
@@ -272,6 +294,10 @@ public class CVC3Solver implements Solver {
             }
 
             out.print("CHECKSAT ");
+
+
+
+            //System.out.println("Constraint "+pathConstraintIndex+": !" + constraints.get(pathConstraintIndex));
             tmp = constraints.get(pathConstraintIndex).not().substitute(soln);
             if (tmp != SymbolicTrueConstraint.instance) {
                 allTrue = false;
@@ -282,12 +308,12 @@ public class CVC3Solver implements Solver {
             out.close();
 
             concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile);
-            return allTrue;
+            return allTrue?RESULT_TYPE.TRUE:RESULT_TYPE.UNKNOWN;
         } catch (IOException ioe) {
             ioe.printStackTrace();
             logger.log(Level.SEVERE,"{0}",ioe);
             Runtime.getRuntime().halt(1);
-            return false;
+            return RESULT_TYPE.UNKNOWN;
         }
     }
 
@@ -451,8 +477,10 @@ public class CVC3Solver implements Solver {
         //console.log("Doing search at "+i+ " with tail "+(tail+1));
         while(count < MAX_COUNT) {
             TreeMap<String, Long> soln = new TreeMap<String, Long>();
+            //System.out.println("Solving int constraint: "+count);
             negatedSolution = solve(extra, CONSTRAINT_TYPE.INT, soln);
             if (negatedSolution != null) {
+                //System.out.println("Solving string constraint: "+count);
                 negatedSolution2 = solve(null, CONSTRAINT_TYPE.STR, soln);
                 if (negatedSolution2 != null) {
                     writeInputs(soln);
@@ -479,9 +507,12 @@ public class CVC3Solver implements Solver {
 
     public String solve(String extra, CONSTRAINT_TYPE type, TreeMap<String,Long> soln) {
         try {
+            RESULT_TYPE res;
             String negatedSolution;
-            if (writeFormula(extra, type, soln)) {
+            if ((res = writeFormula(extra, type, soln)) == RESULT_TYPE.TRUE) {
                 return "";
+            } else if (res == RESULT_TYPE.FALSE) {
+                return null;
             }
 
             ProcessBuilder builder = new ProcessBuilder(new String[]{Config.instance.cvc3Command,Config.instance.formulaFile});

@@ -39,226 +39,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-//function execSync(cmd) {
-//    var FFI = require("node-ffi");
-//    var libc = new FFI.Library(null, {
-//        "system": ["int32", ["string"]]
-//    });
-//
-//    var run = libc.system;
-//    run(cmd);
-//}
-//
-//var stdoutCache = {};
-//
-//function stdout(cmd) {
-//    var ret;
-//    if ((ret = stdoutCache[cmd]) !== undefined) {
-//        return ret;
-//    }
-//    //console.log(cmd);
-//    execSync(cmd+" > jalangi_javaout");
-//    var FileLineReader = require('./FileLineReader');
-//    var fd = new FileLineReader("jalangi_javaout");
-//    var line = "";
-//
-//    if (fd.hasNextLine()) {
-//        line = fd.nextLine();
-//    }
-//    fd.close();
-//    line = line.replace(/(\r\n|\n|\r)/gm,"")
-//    //console.log("Java output:"+line);
-//    stdoutCache[cmd] = line;
-//    return line;
-//}
-//
-//
-//function regex_escape (text) {
-//    return text.substring(1,text.length-1);
-////    return text.replace(/[\\]/g, "\\\\$&");
-//}
-//
-//function exprAt(sExpr, i, freeVars, assignments) {
-//    var j, len, s, idx, tmp, length;
-//    if (typeof sExpr === 'string') {
-//        return sExpr.charCodeAt(i);
-//    } else {
-//        len = sExpr.list.length;
-//        for (j=0; j<len; j++) {
-//            s = sExpr.list[j];
-//            if (typeof s === 'string') {
-//                if (i < s.length) {
-//                    return s.charCodeAt(i);
-//                } else {
-//                    i = i - s.length;
-//                }
-//            } else {
-//                idx = s+"";
-//                length = s.getField("length").symbolic.substitute(assignments);
-//                if (i < length) {
-//                    tmp = idx+"__"+i;
-//                    freeVars[tmp] = true;
-//                    return tmp;
-//                } else {
-//                    i = i - length;
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//function getStringEqualityFormula(left, right, length, freeVars, assignments) {
-//    var i, sb = "(";
-//
-//    if (length <= 0) {
-//        return "TRUE";
-//    }
-//    for(i=0; i<length; i++) {
-//        if (i!==0) {
-//            sb += " AND ";
-//        }
-//        sb += "("+exprAt(left,i,freeVars,assignments)+" = " + exprAt(right,i,freeVars,assignments)+")";
-//    }
-//    sb += ")";
-//
-//    return sb;
-//}
-//
-//    not: function() {
-//        var ret = new SymbolicStringPredicate(this);
-//        switch(this.op) {
-//            case SymbolicStringPredicate.EQ:
-//                ret.op = SymbolicStringPredicate.NE;
-//                break;
-//            case SymbolicStringPredicate.NE:
-//                ret.op = SymbolicStringPredicate.EQ;
-//                break;
-//            case SymbolicStringPredicate.IN:
-//                ret.op = SymbolicStringPredicate.NOTIN;
-//                break;
-//            case SymbolicStringPredicate.NOTIN:
-//                ret.op = SymbolicStringPredicate.IN;
-//                break;
-//        }
-//        return ret;
-//    },
-//
-//    substitute : function(assignments) {
-//        return this;
-//    },
-//
-//    getFormulaString : function(freeVars, mode, assignments) {
-//        var sb = "", s1, s2, formula, cmd, length1 = 0, length2 = 0, j;
-//        var classpath = __dirname+"/../jalangijava/out/production/jalangijava/:"+__dirname+"/../jalangijava/lib/automaton.jar ";
-//        s1 = (typeof this.left === 'string')?this.left.length:this.left.getField("length");
-//        s2 = (typeof this.right === 'string' || this.right instanceof RegExp)?this.right.length:this.right.getField("length");
-////        s1 = $7.GF(0,this.left,"length");
-////        s2 = $7.GF(0,this.right,"length");
-//
-//        if (mode === "integer") {
-//            switch(this.op) {
-//                case SymbolicStringPredicate.EQ:
-//                    formula = $7.B(0,"==",s1,s2);
-//                    return formula.symbolic.getFormulaString(freeVars,mode, assignments);
-//                case SymbolicStringPredicate.NE:
-//                    //formula = $7.B(0,"!=",s1,s2);
-//                    //return formula.symbolic.getFormulaString(freeVars,mode, assignments);
-//                    return "TRUE";
-//                case SymbolicStringPredicate.IN:
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder " +
-//                        "length \""+
-//                        regex_escape(this.right+"")+
-//                        "\" "+s1.symbolic+" true";
-//                    freeVars[s1.symbolic+""] = true;
-//                    sb = stdout(cmd);
-//                    break;
-//                case SymbolicStringPredicate.NOTIN:
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder " +
-//                        "length \""+
-//                        regex_escape(this.right+"")+
-//                        "\" "+s1.symbolic+" false";
-//                    freeVars[s1.symbolic+""] = true;
-//                    sb = stdout(cmd);
-//                    break;
-//            }
-//        } else if (mode === "string") {
-//            switch(this.op) {
-//                case SymbolicStringPredicate.EQ:
-//                    if (s1.symbolic) {
-//                        length1 = s1.symbolic.substitute(assignments);
-//                    } else {
-//                        length1 = s1;
-//                    }
-//                    if (s2.symbolic) {
-//                        length2 = s2.symbolic.substitute(assignments);
-//                    } else {
-//                        length2 = s2;
-//                    }
-//                    if (length1 !== length2) {
-//                        return "FALSE";
-//                    } else {
-//                        return getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments);
-//                    }
-//                case SymbolicStringPredicate.NE:
-//                    if (s1.symbolic) {
-//                        length1 = s1.symbolic.substitute(assignments);
-//                    } else {
-//                        length1 = s1;
-//                    }
-//                    if (s2.symbolic) {
-//                        length2 = s2.symbolic.substitute(assignments);
-//                    } else {
-//                        length2 = s2;
-//                    }
-//                    if (length1 !== length2) {
-//                        return "TRUE";
-//                    } else {
-//                        return "(NOT "+getStringEqualityFormula(this.left, this.right, length1, freeVars, assignments)+")";
-//                    }
-////                    return (length1 !== length2)?"TRUE":"FALSE";
-//                case SymbolicStringPredicate.IN:
-//                    length1 = s1.symbolic.substitute(assignments);
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder content \""+
-//                        regex_escape(this.right+"")+
-//                        "\" "+
-//                        this.left+
-//                        "__ "+length1;
-//                    for(j=0; j<length1; j++) {
-//                        freeVars[this.left+"__"+j] = true;
-//                    }
-//                    sb = stdout(cmd);
-//                    break;
-//                case SymbolicStringPredicate.NOTIN:
-//                    length1 = s1.symbolic.substitute(assignments);
-//                    cmd = "java -cp " +
-//                        classpath +
-//                        "RegexpEncoder content \""+
-//                        "~("+regex_escape(this.right+"")+
-//                        ")\" "+
-//                        this.left+
-//                        "__ "+length1;
-//                    for(j=0; j<length1; j++) {
-//                        freeVars[this.left+"__"+j] = true;
-//                    }
-//                    sb = stdout(cmd);
-//                    break;
-//            }
-//
-//        }
-//
-//        return sb;
-//    },
-//
-//
-//
-//
-//};
 
 public class SymbolicStringPredicate extends Constraint {
 
@@ -314,16 +94,25 @@ public class SymbolicStringPredicate extends Constraint {
         return this;
     }
 
+    private String stringfy(Object s) {
+        if (s instanceof String) {
+            return "\""+s+"\"";
+        } else {
+            return s.toString();
+        }
+
+    }
+
     public String toString() {
         switch(this.op) {
             case EQ:
-                return this.left+" == " + this.right;
+                return stringfy(this.left)+" == " + stringfy(this.right);
             case NE:
-                return this.left+" != " + this.right;
+                return stringfy(this.left)+" != " + stringfy(this.right);
             case IN:
-                return this.left+" regexin " + this.right;
+                return stringfy(this.left)+" regexin " + stringfy(this.right);
             case NOTIN:
-                return this.left+" regexnotin " + this.right;
+                return stringfy(this.left)+" regexnotin " + stringfy(this.right);
         }
         return null;
     }
@@ -411,7 +200,20 @@ public class SymbolicStringPredicate extends Constraint {
                     formula = s1.ISUB(s2);
                     return formula.symbolic.setop(SymbolicInt.COMPARISON_OPS.EQ);
                 case NE:
-                    return SymbolicTrueConstraint.instance;
+                    SymbolicInt int1 = s1.symbolic != null?s1.symbolic.setop(SymbolicInt.COMPARISON_OPS.GT):null;
+                    SymbolicInt int2 = s2.symbolic != null?s2.symbolic.setop(SymbolicInt.COMPARISON_OPS.GT):null;
+                    if (int1 != null && int2 != null) {
+                        SymbolicAndConstraint ret = new SymbolicAndConstraint(int1);
+                        ret = ret.AND(int2);
+                        return ret;
+                    } else if (int1 != null) {
+                        return int1;
+                    } else if (int2 != null) {
+                        return int2;
+                    } else {
+                        return SymbolicTrueConstraint.instance;
+                    }
+//                    return SymbolicTrueConstraint.instance;
                 case IN:
                     // @todo regex_escape
                     return RegexpEncoder.getLengthFormulaString((String)this.right,"x", s1.getSymbol(),true);
@@ -474,4 +276,20 @@ public class SymbolicStringPredicate extends Constraint {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof SymbolicStringPredicate))
+            return false;
+        SymbolicStringPredicate tmp = (SymbolicStringPredicate)o;
+        if (this.op != tmp.op) return false;
+        String s1 = stringfy(left);
+        String s2 = stringfy(right);
+
+        String s3 = stringfy(tmp.left);
+        String s4 = stringfy(tmp.right);
+
+        if (s1.equals(s3) && s2.equals(s4)) return true;
+        if (s1.equals(s4) && s2.equals(s3)) return true;
+        return false;
+    }
 }

@@ -68,6 +68,7 @@
             <src path="src/janala"/>
             <src path="src/catg"/>
             <src path="src/database"/>
+            <src path="src/common"/>
             <classpath refid="janala.classpath"/>
         </javac>
     </target>
