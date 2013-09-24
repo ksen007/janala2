@@ -66,6 +66,7 @@ public class Config {
     private String solver;
     private String strategy;
     public int maxStringLength;
+    public int pathId;
     public boolean printFormulaAndSolutions;
 
     public Config() {
@@ -92,6 +93,7 @@ public class Config {
             excludeList = properties.getProperty("catg.excludeList","").split(",");
             includeList = properties.getProperty("catg.includeList","catg.CATG").split(",");
             maxStringLength = Integer.parseInt(properties.getProperty("catg.maxStringLength","30"));
+            pathId = Integer.parseInt(properties.getProperty("catg.pathId","1"));
     	} catch (IOException ex) {
     		ex.printStackTrace();
         }

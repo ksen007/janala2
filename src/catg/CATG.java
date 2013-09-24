@@ -32,6 +32,7 @@ package catg;/*
  */
 
 import janala.Main;
+import janala.config.Config;
 import janala.interpreters.OrValue;
 
 /**
@@ -99,4 +100,12 @@ public class CATG {
         Main.MakeSymbolic(y);
         return y;
     }
+
+    public static boolean assertIfPossible(int pathId, boolean predicate) {
+        if (pathId == Config.instance.pathId) {
+            Main.ForceTruth(predicate?1:0);
+        }
+        return predicate;
+    }
+
 }

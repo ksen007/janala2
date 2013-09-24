@@ -209,4 +209,10 @@ public class History {
     public void addInput(int symbol, Value value) {
         inputs.put(symbol, value);
     }
+
+    public void setLastForceTruth() {
+        if (index>=1 && index-1<history.size()) {
+            history.get(index-1).isForceTruth = true;
+        }
+    }
 }

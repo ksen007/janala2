@@ -43,7 +43,29 @@ import java.util.ArrayList;
 public class DFSStrategy extends Strategy {
     @Override
     public int solve(ArrayList<BranchElement> history, int historySize, History solver) {
-        for (int i=historySize-1; i>=0; i--) {
+        int j, to = -1, ret;
+
+        for (j = 0; j < historySize; j++) {
+            BranchElement current = history.get(j);
+            if (current.isForceTruth && !current.branch) {
+                if ((ret = dfs(history,j,to,solver)) != -1) {
+                    return ret;
+                }
+                to = j;
+            } else if (current.isForceTruth) {
+                to = j;
+            }
+        }
+
+        if (j >= historySize) {
+            j = historySize-1;
+        }
+
+        return dfs(history, j, to, solver);
+    }
+
+    private int dfs(ArrayList<BranchElement> history, int from, int to, History solver) {
+        for (int i=from; i > to; i--) {
             BranchElement current = history.get(i);
             if (!current.done && current.pathConstraintIndex != -1) {
                 if (solver.solveAt(current.pathConstraintIndex)) {

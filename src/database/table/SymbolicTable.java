@@ -65,35 +65,35 @@ public class SymbolicTable {
             System.out.print(table.getName()+" {");
             for (int j=0; j<row.length; j++) {
                 if (types[j]==Table.INT) {
-                    int x = Main.readInt(0);
+                    int x = Main.readInt(i);
                     Main.MakeSymbolic(x);
                     Integer k = new Integer(x);
                     row[j] = k;
                 } else if (types[j]==Table.LONG) {
-                    long x = Main.readLong(0);
+                    long x = Main.readLong(i);
                     Main.MakeSymbolic(x);
                     Long k = new Long(x);
                     row[j] = k;
                 } else if (types[j]==Table.DATE) {
-                    long x = Main.readLong(1);
+                    long x = Main.readLong(i+1);
                     Main.MakeSymbolic(x);
                     Main.Assume(x>0?1:0);
                     java.sql.Date k = new java.sql.Date(x);
                     row[j] = k;
                 } else if (types[j]==Table.TIME) {
-                    long x = Main.readLong(1);
+                    long x = Main.readLong(i+1);
                     Main.MakeSymbolic(x);
                     Main.Assume(x>0?1:0);
                     java.sql.Time k = new java.sql.Time(x);
                     row[j] = k;
                 } else if (types[j]==Table.TIMESTAMP) {
-                    long x = Main.readLong(1);
+                    long x = Main.readLong(i+1);
                     Main.MakeSymbolic(x);
                     Main.Assume(x>0?1:0);
                     java.sql.Timestamp k = new java.sql.Timestamp(x);
                     row[j] = k;
                 } else if (types[j]==Table.STRING) {
-                    String x = Main.readString("");
+                    String x = Main.readString(i+"");
                     Main.MakeSymbolic(x);
                     row[j] = x;
                 }

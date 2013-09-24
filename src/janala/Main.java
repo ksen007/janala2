@@ -54,6 +54,14 @@ public class Main {
         }
     }
 
+    public static void ForceTruth(int b) {
+        if (b==0) {
+            System.out.print("f,");
+        } else {
+            System.out.print("t,");
+        }
+    }
+
     public static OrValue AssumeOrBegin(int b) {
         return new OrValue(b!=0);
     }

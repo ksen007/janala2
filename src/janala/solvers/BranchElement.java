@@ -43,12 +43,14 @@ public class BranchElement extends Element {
     boolean done;
     int pathConstraintIndex; // -1 for no index
     int iid;
+    boolean isForceTruth;
 
     public BranchElement(boolean branch, boolean done, int pathConstraintIndex, int iid) {
         this.branch = branch;
         this.done = done;
         this.pathConstraintIndex = pathConstraintIndex;
         this.iid = iid;
+        this.isForceTruth = false;
     }
 
     @Override
@@ -58,6 +60,7 @@ public class BranchElement extends Element {
                 ", done=" + done +
                 ", pathConstraintIndex=" + pathConstraintIndex +
                 ", iid=" + iid +
+                ", isForceTruth=" + isForceTruth +
                 '}';
     }
 }

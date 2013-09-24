@@ -67,11 +67,11 @@ rm -rf test.log
 ./$CATG 3 tests.SwitchTest2
 ./$CATG 5 tests.Linear
 ./$CATG 3 tests.SimpleDBTest
-./$CATG 20 tests.DBUpdateTest
-./$CATG 20 tests.DBSelectTest
-./$CATG 20 tests.DBDeleteTest
-./$CATG 20 tests.DBDateSelectTest
-./$CATG 9 tests.DBInsertTest
+./$CATG 17 tests.DBUpdateTest
+./$CATG 17 tests.DBSelectTest
+./$CATG 17 tests.DBDeleteTest
+./$CATG 17 tests.DBDateSelectTest
+./$CATG 6 tests.DBInsertTest
 ./$CATG 5 tests.OrAssumptionTest
 ./$CATG 4 tests.OrAssumptionTest2
 ./$CATG 29 tests.QSort

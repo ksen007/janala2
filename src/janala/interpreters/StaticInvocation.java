@@ -77,7 +77,11 @@ public class StaticInvocation {
                 history.setLastBranchDone();
             }
             return PlaceHolder.instance;
-        } else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
+        } else if (owner.equals("janala/Main") && name.equals("ForceTruth") && args.length==1) {
+            history.setLastForceTruth();
+            return PlaceHolder.instance;
+        }
+        else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
             Constraint last = history.removeLastBranch();
             boolean res = ((IntValue)args[0]).concrete!=0;
             if (!res && last!=null) last = last.not();
