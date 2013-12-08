@@ -348,40 +348,46 @@ public class CVC3Solver implements Solver {
 
             for (Integer sym: inputs.keySet()) {
                 Value val = inputs.get(sym);
-                //System.out.println("sym "+sym);
-                Long l = soln.get("x"+sym);
-                if (l != null) {
-                    out.println(l);
-                    //System.out.println("l = " + l);
+                if (sym.intValue() == Config.instance.scopeBeginSymbol) {
+                    out.println(Config.instance.scopeBeginMarker);
+                } else if (sym.intValue() == Config.instance.scopeEndSymbol) {
+                    out.println(Config.instance.scopeEndMarker);
                 } else {
-                    if (val instanceof StringValue) {
-                        StringValue sval = (StringValue)val;
-                        String old = sval.getConcrete();
-                        IntValue tmp = sval.getSymbolic().getField("length");
-                        int len = (int)(long)tmp.substituteInLinear(soln);
-                        StringBuilder ret = new StringBuilder();
-                        for (int i=0 ; i< len; i++) {
-                            Long v = soln.get("x"+sym+"__"+i);
-
-                            char c;
-                            if (v != null) {
-                                c = (char)(long)v;
-                                //System.out.println("--1");
-                            } else if (i < old.length()){
-                                //System.out.println("--2"+old+" "+old.length());
-                                c = old.charAt(i);
-                            } else {
-                                //System.out.println("--3");
-                                c = 'a';
-                            }
-                            ret.append(c);
-                            //System.out.println("~~~~~~~~~~~~~~~\"" + ret + "\"");
-                        }
-                        out.println(ret);
+                    //System.out.println("sym "+sym);
+                    Long l = soln.get("x"+sym);
+                    if (l != null) {
+                        out.println(l);
+                        //System.out.println("l = " + l);
                     } else {
-                        out.println(val.getConcrete());
-                    }
+                        if (val instanceof StringValue) {
+                            StringValue sval = (StringValue)val;
+                            String old = sval.getConcrete();
+                            IntValue tmp = sval.getSymbolic().getField("length");
+                            int len = (int)(long)tmp.substituteInLinear(soln);
+                            StringBuilder ret = new StringBuilder();
+                            for (int i=0 ; i< len; i++) {
+                                Long v = soln.get("x"+sym+"__"+i);
 
+                                char c;
+                                if (v != null) {
+                                    c = (char)(long)v;
+                                    //System.out.println("--1");
+                                } else if (i < old.length()){
+                                    //System.out.println("--2"+old+" "+old.length());
+                                    c = old.charAt(i);
+                                } else {
+                                    //System.out.println("--3");
+                                    c = 'a';
+                                }
+                                ret.append(c);
+                                //System.out.println("~~~~~~~~~~~~~~~\"" + ret + "\"");
+                            }
+                            out.println(ret);
+                        } else {
+                            out.println(val.getConcrete());
+                        }
+
+                    }
                 }
             }
 

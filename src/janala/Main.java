@@ -45,6 +45,17 @@ import java.util.ArrayList;
  * Time: 4:50 PM
  */
 public class Main {
+    private static boolean isInputAvailable() {
+        if (index < inputs.size() && scopeDepth == inputDepth) {
+            String tmp = inputs.get(index);
+            if (tmp.equals(Config.instance.scopeBeginMarker) || tmp.equals(Config.instance.scopeEndMarker)) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public static void Ignore() {}
 
     public static void Assume(int b) {
@@ -59,6 +70,33 @@ public class Main {
             System.out.print("f,");
         } else {
             System.out.print("t,");
+        }
+    }
+
+    public static void BeginScope() {
+        scopeDepth++;
+        if (index < inputs.size()) {
+            if (inputs.get(index).equals(Config.instance.scopeBeginMarker)) {
+                index++;
+                inputDepth++;
+            }
+        }
+    }
+
+    public static void EndScope() {
+        scopeDepth--;
+        while (true) {
+            if (scopeDepth == inputDepth) {
+                return;
+            }
+            if (index < inputs.size()) {
+                String tmp = inputs.get(index++);
+                if (tmp.equals(Config.instance.scopeBeginMarker)) {
+                    inputDepth++;
+                } else if (tmp.equals(Config.instance.scopeEndMarker)) {
+                    inputDepth--;
+                }
+            }
         }
     }
 
@@ -86,7 +124,7 @@ public class Main {
     public static void MakeSymbolic(String x) {    }
 
     static public int readInt(int x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             //System.out.println(input);
             return Integer.parseInt(input);
@@ -97,7 +135,7 @@ public class Main {
     }
 
     static public long readLong(long x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             //System.out.println(input);
             return Long.parseLong(input);
@@ -108,7 +146,7 @@ public class Main {
     }
 
     static public char readChar(char x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             //System.out.println(input);
             return input.charAt(0);
@@ -119,7 +157,7 @@ public class Main {
     }
 
     static public short readShort(short x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             //System.out.println(input);
             return Short.parseShort(input);
@@ -130,7 +168,7 @@ public class Main {
     }
 
     static public byte readByte(byte x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             //System.out.println(input);
             return Byte.parseByte(input);
@@ -141,7 +179,7 @@ public class Main {
     }
 
     static public boolean readBool(boolean x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             boolean ret = Integer.parseInt(input)!=0;
             //System.out.println(ret);
@@ -153,7 +191,7 @@ public class Main {
     }
 
     static public String readString(String x) {
-        if (index < inputs.size()) {
+        if (isInputAvailable()) {
             String input = inputs.get(index++);
             //System.out.println(input);
             return new String(input);
@@ -165,10 +203,14 @@ public class Main {
 
     private static ArrayList<String> inputs;
     private static int index;
+    private static int scopeDepth;
+    private static int inputDepth;
 
     static {
         inputs = new ArrayList<String>();
         index = 0;
+        scopeDepth = 0;
+        inputDepth = 0;
         DataInputStream in = null;
         try{
             FileInputStream fstream = new FileInputStream(Config.instance.inputs);

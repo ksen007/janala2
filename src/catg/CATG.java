@@ -108,4 +108,12 @@ public class CATG {
         return predicate;
     }
 
+    public static void BeginScope() {
+        Main.BeginScope();
+    }
+
+    public static void EndScope() {
+        Main.EndScope();
+    }
+
 }

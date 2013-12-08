@@ -33,6 +33,7 @@
 
 package janala.interpreters;
 
+import janala.config.Config;
 import janala.solvers.History;
 
 /**
@@ -80,8 +81,13 @@ public class StaticInvocation {
         } else if (owner.equals("janala/Main") && name.equals("ForceTruth") && args.length==1) {
             history.setLastForceTruth();
             return PlaceHolder.instance;
-        }
-        else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
+        } else if (owner.equals("janala/Main") && name.equals("BeginScope") && args.length==0) {
+            history.addInput(Config.instance.scopeBeginSymbol, null);
+            return PlaceHolder.instance;
+        } else if (owner.equals("janala/Main") && name.equals("EndScope") && args.length==0) {
+            history.addInput(Config.instance.scopeEndSymbol, null);
+            return PlaceHolder.instance;
+        } else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
             Constraint last = history.removeLastBranch();
             boolean res = ((IntValue)args[0]).concrete!=0;
             if (!res && last!=null) last = last.not();

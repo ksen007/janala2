@@ -68,6 +68,10 @@ public class Config {
     public int maxStringLength;
     public int pathId;
     public boolean printFormulaAndSolutions;
+    public String scopeBeginMarker;
+    public String scopeEndMarker;
+    public int scopeBeginSymbol = -1;
+    public int scopeEndSymbol = -2;
 
     public Config() {
         try {
@@ -79,7 +83,7 @@ public class Config {
             printTrace = properties.getProperty("catg.isPrintTrace","false").equals("true");
             printConstraints = properties.getProperty("catg.isPrintConstraints","false").equals("true");
             printFormulaAndSolutions = properties.getProperty("catg.isPrintFormulaAndSolutions","false").equals("true");
-            traceFileName = properties.getProperty("catg.traceFile","trace");
+            traceFileName = properties.getProperty("catg.traceFile", "trace");
             traceAuxFileName = properties.getProperty("catg.auxTraceFile","trace.aux");
             history = properties.getProperty("catg.historyFile","history");
             inputs = properties.getProperty("catg.inputsFile","inputs");
@@ -87,13 +91,16 @@ public class Config {
             formulaFile = properties.getProperty("catg.formulaFile", "formula");
             testLog = properties.getProperty("catg.testLogFile", "test.log");
             cvc3Command = properties.getProperty("catg.cvc3Command", "cvc3");
-            analysisClass = properties.getProperty("catg.analysisClass", "janala.logger.DJVM").replace('.','/');
+            analysisClass = properties.getProperty("catg.analysisClass", "janala.logger.DJVM").replace('.', '/');
             solver = properties.getProperty("catg.solverClass", "janala.solvers.YicesSolver2");
             strategy = properties.getProperty("catg.strategyClass", "janala.solvers.DFSStrategy");
             excludeList = properties.getProperty("catg.excludeList","").split(",");
             includeList = properties.getProperty("catg.includeList","catg.CATG").split(",");
-            maxStringLength = Integer.parseInt(properties.getProperty("catg.maxStringLength","30"));
+            maxStringLength = Integer.parseInt(properties.getProperty("catg.maxStringLength", "30"));
             pathId = Integer.parseInt(properties.getProperty("catg.pathId","1"));
+            scopeBeginMarker = properties.getProperty("catg.scopeBeginMarker", "begin$$$$");
+            scopeEndMarker = properties.getProperty("catg.scopeEndMarker", "end$$$$");
+
     	} catch (IOException ex) {
     		ex.printStackTrace();
         }
