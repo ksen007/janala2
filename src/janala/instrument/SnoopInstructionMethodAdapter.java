@@ -615,6 +615,7 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                         "(II)V");
                 mv.visitInsn(opcode);
                 addSpecialInsn(mv,0); // for non-exceptional path
+                addValueReadInsn(mv,"I","GETVALUE_");
                 return;
             case ATHROW:
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "ATHROW",

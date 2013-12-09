@@ -140,7 +140,11 @@ public class ConcolicInterpreter implements IVisitor {
     public void visitARRAYLENGTH(ARRAYLENGTH inst) {
         try {
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            currentFrame.push(new IntValue(ref.concrete.length));
+            if (ref.concrete==null) {
+                currentFrame.push(PlaceHolder.instance);
+            } else {
+                currentFrame.push(new IntValue(ref.concrete.length));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
