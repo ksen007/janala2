@@ -41,6 +41,7 @@ import janala.utils.MyLogger;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +51,7 @@ import java.util.logging.Logger;
  * Time: 2:29 PM
  */
 public class History {
-    private ArrayList<BranchElement> history;
+    private ArrayList<Element> history;
     private ArrayList<Constraint> pathConstraint;
     private int index;
     private Solver solver;
@@ -64,7 +65,7 @@ public class History {
 
 
     private History(Solver solver) {
-        history = new ArrayList<BranchElement>(1024);
+        history = new ArrayList<Element>(1024);
         pathConstraint = new ArrayList<Constraint>(1024);
         inputs = new LinkedHashMap<Integer,Value>();
         index = 0;
@@ -95,22 +96,84 @@ public class History {
         return ret;
     }
 
-    public void checkAndSetBranch(boolean result, Constraint constraint, int iid) {
-        BranchElement current;
+    Stack<MethodElement> scopeStack = new Stack<MethodElement>();
+    MethodElement lastScope;
+
+    public void beginScope(int iid) {
+        MethodElement current;
         if (index < history.size()) {
-            current = history.get(index);
-            if (!ignore && current.branch != result) {
+            Element tmp = history.get(index);
+            if (!ignore && (!(tmp instanceof MethodElement) || !((MethodElement)tmp).isBegin)) {
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
-                logger.log(Level.WARNING,"At old iid "+current.iid+ " at iid "+iid+ " constraint "+constraint);
+                logger.log(Level.WARNING,"At old iid "+tmp.iid+ " at iid "+iid+ " beginScope");
                 int len = history.size();
-                for (int j=len-1; j>index; j--) {
+                for (int j=len-1; j>=index; j--) {
                     history.remove(j);
                 }
-                current.branch = result;
-                current.done = false;
-                current.iid = iid;
+                current = new MethodElement(true, iid);
+                history.add(current);
+            } else {
+                current = (MethodElement) tmp;
+            }
+        } else {
+            current = new MethodElement(true,iid);
+            history.add(current);
+        }
+        scopeStack.push(current);
+        index++;
+    }
+
+    public void endScope(int iid) {
+        MethodElement current;
+        if (index < history.size()) {
+            Element tmp = history.get(index);
+            if (!ignore && (!(tmp instanceof MethodElement) || ((MethodElement)tmp).isBegin)) {
+                tester.log(Level.INFO,"Prediction failed");
+                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
+                        +index+" history.size() "+history.size());
+                logger.log(Level.WARNING,"At old iid "+tmp.iid+ " at iid "+iid+ " endScope");
+                int len = history.size();
+                for (int j=len-1; j>=index; j--) {
+                    history.remove(j);
+                }
+                current = new MethodElement(false, iid);
+                history.add(current);
+            } else {
+                current = (MethodElement) tmp;
+            }
+        } else {
+            current = new MethodElement(false,iid);
+            history.add(current);
+        }
+        lastScope = scopeStack.pop();
+        index++;
+
+    }
+
+    public void abstractData(boolean isEqual, int iid) {
+        lastScope.isValidExpansion = lastScope.isValidExpansion && isEqual;
+        System.out.println("isValidExpansion "+lastScope.isValidExpansion);
+    }
+
+    public void checkAndSetBranch(boolean result, Constraint constraint, int iid) {
+        BranchElement current;
+        if (index < history.size()) {
+            Element tmp = history.get(index);
+            if (!ignore && (!(tmp instanceof BranchElement) || ((BranchElement)tmp).branch != result)) {
+                tester.log(Level.INFO,"Prediction failed "+ignore);
+                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
+                        +index+" history.size() "+history.size());
+                logger.log(Level.WARNING,"At old iid "+tmp.iid+ " at iid "+iid+ " constraint "+constraint);
+                int len = history.size();
+                for (int j=len-1; j>=index; j--) {
+                    history.remove(j);
+                }
+                current = new BranchElement(result,false,-1,iid);
+                history.add(current);
+            } else {
+                current = (BranchElement) tmp;
             }
         } else {
             current = new BranchElement(result,false,-1,iid);
@@ -163,7 +226,7 @@ public class History {
     }
 
     private void writeHistory(int i) {
-        BranchElement current = history.get(i);
+        BranchElement current = (BranchElement)history.get(i);
         current.done = true;
         current.branch = !current.branch;
         int len = history.size();
@@ -185,13 +248,13 @@ public class History {
 
     public void setLastBranchDone() {
         if (index>=1 && index-1<history.size()) {
-            history.get(index-1).done = true;
+            ((BranchElement)history.get(index-1)).done = true;
         }
     }
 
     public Constraint removeLastBranch() {
         index--;
-        BranchElement current = history.get(index);
+        BranchElement current = (BranchElement)history.get(index);
         Constraint ret = null;
         if (current.pathConstraintIndex!=-1) {
             ret =  pathConstraint.remove(pathConstraint.size()-1);
@@ -212,7 +275,7 @@ public class History {
 
     public void setLastForceTruth() {
         if (index>=1 && index-1<history.size()) {
-            history.get(index-1).isForceTruth = true;
+            ((BranchElement)history.get(index-1)).isForceTruth = true;
         }
     }
 }

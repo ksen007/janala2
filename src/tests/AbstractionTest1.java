@@ -27,39 +27,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
+package tests;
 
-package janala.solvers;
+import catg.CATG;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/22/12
- * Time: 2:28 PM
+ * Date: 12/11/13
+ * Time: 10:32 PM
  */
-public class BranchElement extends Element {
-    boolean branch;
-    boolean done;
-    int pathConstraintIndex; // -1 for no index
-    boolean isForceTruth;
-
-    public BranchElement(boolean branch, boolean done, int pathConstraintIndex, int iid) {
-        this.branch = branch;
-        this.done = done;
-        this.pathConstraintIndex = pathConstraintIndex;
-        this.iid = iid;
-        this.isForceTruth = false;
+public class AbstractionTest1 {
+    public static boolean testme(int x, int y){
+        int z = foo(y);
+        if(z==x){
+            if(x>y+10){
+                return true;
+            }
+        }
+        return false;
     }
 
-    @Override
-    public String toString() {
-        return "BranchElement{" +
-                "branch=" + branch +
-                ", done=" + done +
-                ", pathConstraintIndex=" + pathConstraintIndex +
-                ", iid=" + iid +
-                ", isForceTruth=" + isForceTruth +
-                '}';
+    private static int foo(int y) {
+        return 2*y;
+    }
+
+    public static void main(String[] args){
+        int x1 = CATG.readInt(1);
+        int y1 = CATG.readInt(1);
+        int x2 = CATG.readInt(1);
+        int y2 = CATG.readInt(1);
+        System.out.println(x1);
+        System.out.println(y1);
+        System.out.println(x2);
+        System.out.println(y2);
+
+        CATG.BeginScope();
+        boolean b1 = testme(x1, y1);
+        CATG.EndScope();
+        b1 = CATG.abstractBool(b1);
+
+        CATG.BeginScope();
+        boolean b2 = testme(x2, y2);
+        CATG.EndScope();
+        b2 = CATG.abstractBool(b2);
+
+        System.out.println(b1);
+        System.out.println(b2);
+
+        if (b1 && b2) {
+            System.out.println("Error");
+        }
     }
 }

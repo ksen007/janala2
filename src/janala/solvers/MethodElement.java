@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, NTT Multimedia Communications Laboratories, Inc. and Koushik Sen
+ * Copyright (c) 2013, NTT Multimedia Communications Laboratories, Inc. and Koushik Sen
  *
  * All rights reserved.
  *
@@ -27,39 +27,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
-
 package janala.solvers;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/22/12
- * Time: 2:28 PM
+ * Date: 12/11/13
+ * Time: 5:18 PM
  */
-public class BranchElement extends Element {
-    boolean branch;
-    boolean done;
-    int pathConstraintIndex; // -1 for no index
-    boolean isForceTruth;
+public class MethodElement extends Element {
+    boolean isBegin;
+    boolean isAbstracted;
+    boolean isValidExpansion;
 
-    public BranchElement(boolean branch, boolean done, int pathConstraintIndex, int iid) {
-        this.branch = branch;
-        this.done = done;
-        this.pathConstraintIndex = pathConstraintIndex;
+    public MethodElement(boolean isBegin, int iid) {
+        this.isBegin = isBegin;
+        this.isAbstracted = true;
+        this.isValidExpansion = true;
         this.iid = iid;
-        this.isForceTruth = false;
     }
 
     @Override
     public String toString() {
-        return "BranchElement{" +
-                "branch=" + branch +
-                ", done=" + done +
-                ", pathConstraintIndex=" + pathConstraintIndex +
+        return "MethodElement{" +
+                "isBegin=" + isBegin +
+                ", isAbstracted=" + isAbstracted +
+                ", isValidExpansion=" + isValidExpansion +
                 ", iid=" + iid +
-                ", isForceTruth=" + isForceTruth +
                 '}';
     }
 }

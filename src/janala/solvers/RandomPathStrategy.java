@@ -46,13 +46,16 @@ public class RandomPathStrategy extends Strategy {
     private final static Logger logger = MyLogger.getLogger(RandomPathStrategy.class.getName());
 
     @Override
-    public int solve(ArrayList<BranchElement> history, int historySize, History solver) {
+    public int solve(ArrayList<Element> history, int historySize, History solver) {
         int begin = -1;
         for(int j=historySize-1; j>=0; j--) {
-            BranchElement current = history.get(j);
-            if (current.done) {
-                begin = j;
-                break;
+            Element tmp = history.get(j);
+            if (tmp instanceof BranchElement){
+                BranchElement current = (BranchElement)tmp;
+                if (current.done) {
+                    begin = j;
+                    break;
+                }
             }
         }
         begin = (begin+1)%historySize;
@@ -67,10 +70,13 @@ public class RandomPathStrategy extends Strategy {
                 repeat++;
             }
             if (rand.nextBoolean()) {
-                BranchElement current = history.get(i);
-                if (current.pathConstraintIndex != -1) {
-                    if (solver.solveAt(current.pathConstraintIndex)) {
-                        return i;
+                Element tmp = history.get(i);
+                if (tmp instanceof BranchElement) {
+                    BranchElement current = (BranchElement)tmp;
+                    if (current.pathConstraintIndex != -1) {
+                        if (solver.solveAt(current.pathConstraintIndex)) {
+                            return i;
+                        }
                     }
                 }
             }

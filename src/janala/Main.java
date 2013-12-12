@@ -100,6 +100,10 @@ public class Main {
         }
     }
 
+    public static void AbstractEqualsConcrete(boolean b) {
+
+    }
+
     public static OrValue AssumeOrBegin(int b) {
         return new OrValue(b!=0);
     }

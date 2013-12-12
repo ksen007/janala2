@@ -41,5 +41,5 @@ import java.util.ArrayList;
  * Time: 7:14 PM
  */
 public abstract class Strategy {
-    abstract public int solve(ArrayList<BranchElement> history, int historySize, History solver);
+    abstract public int solve(ArrayList<Element> history, int historySize, History solver);
 }

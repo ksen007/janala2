@@ -83,9 +83,14 @@ public class StaticInvocation {
             return PlaceHolder.instance;
         } else if (owner.equals("janala/Main") && name.equals("BeginScope") && args.length==0) {
             history.addInput(Config.instance.scopeBeginSymbol, null);
+            history.beginScope(iid);
             return PlaceHolder.instance;
         } else if (owner.equals("janala/Main") && name.equals("EndScope") && args.length==0) {
             history.addInput(Config.instance.scopeEndSymbol, null);
+            history.endScope(iid);
+            return PlaceHolder.instance;
+        } else if (owner.equals("janala/Main") && name.equals("AbstractEqualsConcrete") && args.length==1) {
+            history.abstractData(((IntValue) args[0]).concrete != 0, iid);
             return PlaceHolder.instance;
         } else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
             Constraint last = history.removeLastBranch();

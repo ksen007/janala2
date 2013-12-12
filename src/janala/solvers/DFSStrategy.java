@@ -42,18 +42,22 @@ import java.util.ArrayList;
  */
 public class DFSStrategy extends Strategy {
     @Override
-    public int solve(ArrayList<BranchElement> history, int historySize, History solver) {
+    public int solve(ArrayList<Element> history, int historySize, History solver) {
         int j, to = -1, ret;
 
         for (j = 0; j < historySize; j++) {
-            BranchElement current = history.get(j);
-            if (current.isForceTruth && !current.branch) {
-                if ((ret = dfs(history,j,to,solver)) != -1) {
-                    return ret;
+            Element tmp = history.get(j);
+            BranchElement current;
+            if (tmp instanceof BranchElement) {
+                current = (BranchElement)tmp;
+                if (current.isForceTruth && !current.branch) {
+                    if ((ret = dfs(history,j,to,solver)) != -1) {
+                        return ret;
+                    }
+                    to = j;
+                } else if (current.isForceTruth) {
+                    to = j;
                 }
-                to = j;
-            } else if (current.isForceTruth) {
-                to = j;
             }
         }
 
@@ -64,12 +68,15 @@ public class DFSStrategy extends Strategy {
         return dfs(history, j, to, solver);
     }
 
-    private int dfs(ArrayList<BranchElement> history, int from, int to, History solver) {
+    private int dfs(ArrayList<Element> history, int from, int to, History solver) {
         for (int i=from; i > to; i--) {
-            BranchElement current = history.get(i);
-            if (!current.done && current.pathConstraintIndex != -1) {
-                if (solver.solveAt(current.pathConstraintIndex)) {
-                    return i;
+            Element tmp = history.get(i);
+            if (tmp instanceof BranchElement) {
+                BranchElement current = (BranchElement) tmp;
+                if (!current.done && current.pathConstraintIndex != -1) {
+                    if (solver.solveAt(current.pathConstraintIndex)) {
+                        return i;
+                    }
                 }
             }
         }
