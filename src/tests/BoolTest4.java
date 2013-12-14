@@ -27,25 +27,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
+package tests;
 
-package janala.solvers;
-
-import janala.interpreters.Value;
+import catg.CATG;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/22/12
- * Time: 2:29 PM
  */
-public class InputElement {
-    Integer symbol;
-    Value value;
+public class BoolTest4 {
+    public static void main(String[] args) {
+        boolean  a, b, c;
 
-    public InputElement(Integer symbol, Value value) {
-        this.symbol = symbol;
-        this.value = value;
+
+        a = CATG.readBool(false);
+        b = CATG.readBool(false);
+
+        if (b) {
+            System.out.println("Hello");
+        }
+
     }
 }

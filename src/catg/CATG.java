@@ -43,7 +43,7 @@ import janala.interpreters.OrValue;
 public class CATG {
     public static int abstractInt(int x) {
         int y = readInt(x);
-        Main.AbstractEqualsConcrete(y==x);
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 

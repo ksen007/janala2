@@ -35,10 +35,9 @@ package janala.solvers;
 
 import janala.interpreters.Constraint;
 import janala.interpreters.ConstraintVisitor;
-import janala.interpreters.Value;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -47,7 +46,7 @@ import java.util.LinkedHashMap;
  */
 public interface Solver extends ConstraintVisitor {
     public boolean solve();
-    public void setInputs(LinkedHashMap<Integer,Value> inputs);
+    public void setInputs(LinkedList<InputElement> inputs);
     public void setPathConstraint(ArrayList<Constraint> pathConstraint);
     public void setPathConstraintIndex(int pathConstraintIndex);
 }

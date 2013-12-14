@@ -49,7 +49,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,15 +60,15 @@ import static janala.interpreters.SymbolicInt.COMPARISON_OPS;
  * Date: 6/22/12
  * Time: 4:34 PM
  */
-public class ChocoSolver implements Solver {
+public class ChocoSolver implements Solver{
     boolean first = true;
-    LinkedHashMap<Integer,Value> inputs;
+    LinkedList<InputElement> inputs;
     IntegerVariable[] vars;
     CPModel m;
     private final static Logger logger = MyLogger.getLogger(ChocoSolver.class.getName());
 
 
-    public void setInputs(LinkedHashMap<Integer,Value> inputs) {
+    public void setInputs(LinkedList<InputElement> inputs) {
         this.inputs = inputs;
         this.first = true;
     }
@@ -207,7 +207,7 @@ public class ChocoSolver implements Solver {
                     for(int i=0; i<vars.length; i++) {
                         IntDomainVar var = s.getVar(vars[i]);
 
-                        Value input = inputs.get(i+1);
+                        Value input = inputs.get(i).value;
                         if (var!=null) {
                             if (input instanceof janala.interpreters.StringValue) {
                                 out.println(StringConstants.instance.get(var.getVal()));

@@ -40,7 +40,7 @@ import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +59,7 @@ public class History {
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
     private boolean ignore;
 
-    private LinkedHashMap<Integer,Value> inputs;
+    private LinkedList<InputElement> inputs;
 //    private ArrayList<Value> inputs;
     private Strategy strategy = Config.instance.getStrategy();
 
@@ -67,7 +67,7 @@ public class History {
     private History(Solver solver) {
         history = new ArrayList<Element>(1024);
         pathConstraint = new ArrayList<Constraint>(1024);
-        inputs = new LinkedHashMap<Integer,Value>();
+        inputs = new LinkedList<InputElement>();
         index = 0;
         this.solver = solver;
         this.ignore = false;
@@ -174,7 +174,7 @@ public class History {
         BranchElement current;
         if (index < history.size()) {
             Element tmp = history.get(index);
-            if (isEnd(tmp)) {
+            if (isEnd(tmp) || ignore) {
                 current = new BranchElement(result,false,-1,iid);
                 history.add(index, current);
             } else if (!ignore && (!(tmp instanceof BranchElement) || ((BranchElement)tmp).branch != result)) {
@@ -319,8 +319,8 @@ public class History {
         if (current.pathConstraintIndex!=-1) {
             ret =  pathConstraint.remove(pathConstraint.size()-1);
         }
-        if (index==history.size()-1) {
-            history.remove(history.size()-1);
+        if (index<=history.size()-1) {
+            history.remove(index);
         }
         return ret;
     }
@@ -330,7 +330,7 @@ public class History {
     }
 
     public void addInput(int symbol, Value value) {
-        inputs.put(symbol, value);
+        inputs.addLast(new InputElement(symbol, value));
     }
 
     public void setLastForceTruth() {

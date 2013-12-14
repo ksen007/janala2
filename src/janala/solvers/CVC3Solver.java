@@ -36,13 +36,11 @@ package janala.solvers;
 import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.*;
+import janala.interpreters.StringValue;
 import janala.utils.MyLogger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,13 +50,13 @@ import java.util.logging.Logger;
  * Time: 10:03 AM
  */
 public class CVC3Solver implements Solver {
-    LinkedHashMap<Integer,Value> inputs;
+    LinkedList<InputElement> inputs;
     ArrayList<Constraint> constraints;
     int pathConstraintIndex;
     private final static Logger logger = MyLogger.getLogger(CVC3Solver.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
 
-    public void setInputs(LinkedHashMap<Integer,Value> inputs) {
+    public void setInputs(LinkedList<InputElement> inputs) {
         this.inputs = inputs;
     }
 
@@ -346,8 +344,9 @@ public class CVC3Solver implements Solver {
                     new BufferedOutputStream(
                             new FileOutputStream(Config.instance.inputs)));
 
-            for (Integer sym: inputs.keySet()) {
-                Value val = inputs.get(sym);
+            for (InputElement ielem: inputs) {
+                Integer sym = ielem.symbol;
+                Value val = ielem.value;
                 if (sym.intValue() == Config.instance.scopeBeginSymbol) {
                     out.println(Config.instance.scopeBeginMarker);
                 } else if (sym.intValue() == Config.instance.scopeEndSymbol) {

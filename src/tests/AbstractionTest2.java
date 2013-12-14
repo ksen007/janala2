@@ -80,6 +80,8 @@ public class AbstractionTest2 {
         }
         CATG.EndScope();
         ret = CATG.abstractBool(ret);
+        System.out.print("ret = ");
+        System.out.println(ret);
         return ret;
     }
 
@@ -94,6 +96,8 @@ public class AbstractionTest2 {
         CATG.EndScope();
         sum = CATG.abstractInt(sum);
 
+        System.out.print("sum = ");
+        System.out.println(sum);
         if (sum > 2) {
             System.out.println("sum > 2");
         } else {
