@@ -47,6 +47,11 @@ public class MethodElement extends Element {
     }
 
     @Override
+    public boolean isInvalidScopeBegin() {
+        return isBegin && !isValidExpansion;
+    }
+
+    @Override
     public String toString() {
         return "MethodElement{" +
                 "isBegin=" + isBegin +

@@ -49,37 +49,37 @@ public class CATG {
 
     public static boolean abstractBool(boolean x) {
         boolean y = readBool(x);
-        Main.AbstractEqualsConcrete(y==x);
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 
     public static long abstractLong(long x) {
         long y = readLong(x);
-        Main.AbstractEqualsConcrete(y==x);
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 
     public static char abstractChar(char x) {
         char y = readChar(x);
-        Main.AbstractEqualsConcrete(y==x);
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 
     public static byte abstractByte(byte x) {
         byte y = readByte(x);
-        Main.AbstractEqualsConcrete(y==x);
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 
     public static short abstractShort(short x) {
         short y = readShort(x);
-        Main.AbstractEqualsConcrete(y==x);
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 
     public static String abstractString(String x) {
         String y = readString(x);
-        Main.AbstractEqualsConcrete(y.equals(x));
+        Main.AbstractEqualsConcrete(Main.compare(y,x));
         return y;
     }
 

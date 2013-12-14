@@ -46,7 +46,7 @@ import java.util.ArrayList;
  */
 public class Main {
     private static boolean isInputAvailable() {
-        if (index < inputs.size() && scopeDepth == inputDepth) {
+        if (index < inputs.size() && scopeDepth >= inputDepth) {
             String tmp = inputs.get(index);
             if (tmp.equals(Config.instance.scopeBeginMarker) || tmp.equals(Config.instance.scopeEndMarker)) {
                 return false;
@@ -86,7 +86,7 @@ public class Main {
     public static void EndScope() {
         scopeDepth--;
         while (true) {
-            if (scopeDepth == inputDepth) {
+            if (scopeDepth >= inputDepth) {
                 return;
             }
             if (index < inputs.size()) {
@@ -101,8 +101,12 @@ public class Main {
     }
 
     public static void AbstractEqualsConcrete(boolean b) {
-
     }
+
+    public static boolean compare(Object a, Object b) {
+        return a.equals(b);
+    }
+
 
     public static OrValue AssumeOrBegin(int b) {
         return new OrValue(b!=0);

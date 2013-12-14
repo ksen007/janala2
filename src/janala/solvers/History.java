@@ -96,14 +96,23 @@ public class History {
         return ret;
     }
 
+    private boolean isEnd(Element tmp) {
+        return tmp instanceof MethodElement && !((MethodElement)tmp).isBegin;
+    }
+
     Stack<MethodElement> scopeStack = new Stack<MethodElement>();
     MethodElement lastScope;
+    int skip = 0;
 
     public void beginScope(int iid) {
         MethodElement current;
         if (index < history.size()) {
             Element tmp = history.get(index);
-            if (!ignore && (!(tmp instanceof MethodElement) || !((MethodElement)tmp).isBegin)) {
+            if (isEnd(tmp)) {
+                current = new MethodElement(true,iid);
+                history.add(index, current);
+                skip++;
+            } else if (!ignore && (!(tmp instanceof MethodElement) || !((MethodElement)tmp).isBegin)) {
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
@@ -116,6 +125,7 @@ public class History {
                 history.add(current);
             } else {
                 current = (MethodElement) tmp;
+                current.isValidExpansion = true;
             }
         } else {
             current = new MethodElement(true,iid);
@@ -129,7 +139,11 @@ public class History {
         MethodElement current;
         if (index < history.size()) {
             Element tmp = history.get(index);
-            if (!ignore && (!(tmp instanceof MethodElement) || ((MethodElement)tmp).isBegin)) {
+            if (isEnd(tmp) && skip > 0) {
+                current = new MethodElement(false,iid);
+                history.add(index, current);
+                skip--;
+            } else if (!ignore && (!(tmp instanceof MethodElement) || ((MethodElement)tmp).isBegin)) {
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
@@ -154,14 +168,16 @@ public class History {
 
     public void abstractData(boolean isEqual, int iid) {
         lastScope.isValidExpansion = lastScope.isValidExpansion && isEqual;
-        System.out.println("isValidExpansion "+lastScope.isValidExpansion);
     }
 
     public void checkAndSetBranch(boolean result, Constraint constraint, int iid) {
         BranchElement current;
         if (index < history.size()) {
             Element tmp = history.get(index);
-            if (!ignore && (!(tmp instanceof BranchElement) || ((BranchElement)tmp).branch != result)) {
+            if (isEnd(tmp)) {
+                current = new BranchElement(result,false,-1,iid);
+                history.add(index, current);
+            } else if (!ignore && (!(tmp instanceof BranchElement) || ((BranchElement)tmp).branch != result)) {
                 tester.log(Level.INFO,"Prediction failed "+ignore);
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
@@ -219,6 +235,48 @@ public class History {
         return solver.solve();
     }
 
+    private ArrayList<Constraint> collectPathConstraints(int head, int n) {
+        ArrayList<Constraint> ret = new ArrayList<Constraint>();
+        for (int i=0; i<= head; i++) {
+            Element tmp = history.get(i);
+            if (tmp instanceof BranchElement) {
+                BranchElement current = (BranchElement) tmp;
+                if (current.pathConstraintIndex != -1) {
+                    ret.add(pathConstraint.get(current.pathConstraintIndex));
+                }
+            }
+        }
+        int skip = 0;
+        for (int i=head+1; i<= n; i++) {
+            Element tmp = history.get(i);
+            if (tmp instanceof BranchElement) {
+                BranchElement current = (BranchElement) tmp;
+                if (skip == 0 && current.pathConstraintIndex != -1) {
+                    ret.add(pathConstraint.get(current.pathConstraintIndex));
+                }
+            } else if (tmp instanceof MethodElement) {
+                MethodElement melem = (MethodElement) tmp;
+                if (melem.isBegin) {
+                    skip++;
+                } else {
+                    skip--;
+                }
+            }
+        }
+        return ret;
+    }
+
+    boolean solveAt(int head, int pathConstraintIndex) {
+        ArrayList<Constraint> pathConstraint;
+        solver.setInputs(inputs);
+        solver.setPathConstraint(pathConstraint = collectPathConstraints(head, pathConstraintIndex));
+        solver.setPathConstraintIndex(pathConstraint.size()-1);
+        for (int i=pathConstraint.size()-1; i>=0; i--) {
+            pathConstraint.get(i).accept(solver);
+        }
+        return solver.solve();
+    }
+
     private void removeHistory() {
         File f = new File(Config.instance.history);
         f.delete();
@@ -226,12 +284,14 @@ public class History {
     }
 
     private void writeHistory(int i) {
-        BranchElement current = (BranchElement)history.get(i);
-        current.done = true;
-        current.branch = !current.branch;
-        int len = history.size();
-        for (int j=len-1; j>i; j--) {
-            history.remove(j);
+        if (i != Integer.MAX_VALUE) {
+            BranchElement current = (BranchElement)history.get(i);
+            current.done = true;
+            current.branch = !current.branch;
+            int len = history.size();
+            for (int j=len-1; j>i; j--) {
+                history.remove(j);
+            }
         }
         ObjectOutputStream outputStream;
         try {
