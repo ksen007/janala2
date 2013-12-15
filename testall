@@ -75,7 +75,7 @@ rm -rf test.log
 ./$CATG 5 tests.OrAssumptionTest
 ./$CATG 4 tests.OrAssumptionTest2
 ./$CATG 6 tests.AssertIfPossibleTest1
-./$CATG 10 tests.AssertIfPossibleTest1
+./$CATG 10 tests.AssertIfPossibleTest2
 ./$CATG 97 tests.ManyColumnsOrRecords
 ./$CATG 10 tests.AbstractionTest1
 ./$CATG 14 tests.AbstractionTest2
