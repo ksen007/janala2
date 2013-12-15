@@ -34,7 +34,7 @@ import catg.CATG;
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public class AbstractionTest1 {
+public class AssertIfPossibleTest1 {
     public static boolean testme(int x, int y){
         int z = foo(y);
         if(z==x){
@@ -59,15 +59,11 @@ public class AbstractionTest1 {
         System.out.println(x2);
         System.out.println(y2);
 
-        CATG.BeginScope();
         boolean b1 = testme(x1, y1);
-        CATG.EndScope();
-        b1 = CATG.abstractBool(b1);
+        CATG.assertIfPossible(1, b1);
 
-        CATG.BeginScope();
         boolean b2 = testme(x2, y2);
-        CATG.EndScope();
-        b2 = CATG.abstractBool(b2);
+        CATG.assertIfPossible(1, b2);
 
         System.out.println(b1);
         System.out.println(b2);

@@ -74,6 +74,12 @@ rm -rf test.log
 ./$CATG 6 tests.DBInsertTest
 ./$CATG 5 tests.OrAssumptionTest
 ./$CATG 4 tests.OrAssumptionTest2
+./$CATG 6 tests.AssertIfPossibleTest1
+./$CATG 10 tests.AssertIfPossibleTest1
+./$CATG 97 tests.ManyColumnsOrRecords
+./$CATG 10 tests.AbstractionTest1
+./$CATG 14 tests.AbstractionTest2
+./$CATG 119 tests.ManyColumnsRecords2
 ./$CATG 29 tests.QSort
 ./$CATG 29 tests.QSortLong
 ./$CATG 25 tests.InsertionSort

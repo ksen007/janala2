@@ -42,9 +42,11 @@ public class AbstractRefineStrategy extends Strategy  {
         int endIndex = findMatchingEndScopeIndex(history, historySize, beginIndex);
         int ret;
         if (beginIndex == -1) {
-            System.out.println("*******************Valid input found*************************");
+            System.out.println("******************* Found a real input. *************************");
+        } else {
+            System.out.println("******************* Found an intermediate input.  It should not be used for testing. *************************");
         }
-        while ((ret = dfs(history, beginIndex, endIndex, historySize, solver)) == -1) {
+        while ((ret = searchWithIfPossibleAssert(history, beginIndex, endIndex, historySize, solver)) == -1) {
             if (beginIndex == -1) {
                 return ret;
             }
@@ -150,10 +152,33 @@ public class AbstractRefineStrategy extends Strategy  {
         return historySize;
     }
 
-    private int dfs(ArrayList<Element> history, int low, int high, int historySize, History solver) {
+    public int searchWithIfPossibleAssert(ArrayList<Element> history, int low, int high, int historySize, History solver) {
+        int to, from = low, ret;
+
+        for (to = low+1; to < high; to++) {
+            Element tmp = history.get(to);
+            BranchElement current;
+            if (tmp instanceof BranchElement) {
+                current = (BranchElement)tmp;
+                if (current.isForceTruth && !current.branch) {
+                    if ((ret = dfs(history, from, to + 1, high, historySize, solver)) != -1) {
+                        return ret;
+                    }
+                    from = to;
+                } else if (current.isForceTruth) {
+                    from = to;
+                }
+            }
+        }
+
+        return dfs(history, from, to, high, historySize, solver);
+    }
+
+
+    private int dfs(ArrayList<Element> history, int low, int start, int high, int historySize, History solver) {
         LinkedList<Integer> indices = new LinkedList<Integer>();
         int skip = 0;
-        for (int i=high-1; i > low; i--) {
+        for (int i= start -1; i > low; i--) {
             Element tmp = history.get(i);
             if (tmp instanceof MethodElement) {
                 if (((MethodElement)tmp).isBegin)

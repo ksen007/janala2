@@ -17,7 +17,7 @@ import database.table.where.Where;
 
 public class ManyColumnsOrRecords {
 	public static int l_c1;
-	public static final int RECORD_COUNT = 20;
+	public static final int RECORD_COUNT = 5;
 	public static final int COLUMN_COUNT = 20;
 
 	public  static void testme(Table customers, int c1){
