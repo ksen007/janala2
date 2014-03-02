@@ -47,7 +47,7 @@ public class FieldInfo implements Serializable {
     String fieldName;
     boolean isStatic;
 
-    public int fieldId;
+    private int fieldId;
 
     public FieldInfo(String className, String fieldName, boolean aStatic) {
         this.className = className.replace('/','.');
@@ -75,5 +75,16 @@ public class FieldInfo implements Serializable {
                 ", isStatic=" + isStatic +
                 ", fieldId=" + fieldId +
                 '}';
+    }
+
+    public int getFieldId() {
+        if (fieldId == -1) {
+            if (isStatic) {
+                fieldId = ClassDepot.instance.getStaticFieldIndex(className,fieldName);
+            } else {
+                fieldId = ClassDepot.instance.getFieldIndex(className,fieldName);
+            }
+        }
+        return fieldId;
     }
 }

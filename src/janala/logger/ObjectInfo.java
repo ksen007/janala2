@@ -56,7 +56,7 @@ public class ObjectInfo implements Serializable {
     ArrayList<FieldInfo> staticFieldList;
 
     int nStaticFields;
-    public int nFields;
+    private int nFields;
     public Value[] statics;
 
     public String className;
@@ -122,12 +122,14 @@ public class ObjectInfo implements Serializable {
     }
 
     public Value getStaticField(int fieldId) {
+        initialize();
         Value v = statics[fieldId];
         if (v==null) return PlaceHolder.instance;
         else return v;
     }
 
     public void setField(int fieldId, Value value) {
+        initialize();
         statics[fieldId] = value;
     }
 
@@ -143,5 +145,19 @@ public class ObjectInfo implements Serializable {
                 ", statics=" + (statics == null ? null : Arrays.asList(statics)) +
                 ", className='" + className + '\'' +
                 '}';
+    }
+
+    private void initialize() {
+        if (nFields==-1) {
+            nFields = ClassDepot.instance.nFields(className);
+            nStaticFields = ClassDepot.instance.nStaticFields(className);
+            statics = new Value[nStaticFields];
+        }
+
+    }
+
+    public int getNFields() {
+        initialize();
+        return nFields;
     }
 }
