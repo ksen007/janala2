@@ -57,6 +57,7 @@ public class DirectConcolicExecution extends Thread implements Logger {
 
     @Override
     public void run() {
+        log(null);
         ((ConcolicInterpreter)intp).endExecution();
         MyLogger.checkLog(tester);
     }
