@@ -33,6 +33,7 @@
 
 package janala.config;
 
+import janala.logger.Logger;
 import janala.solvers.Solver;
 import janala.solvers.Strategy;
 
@@ -41,8 +42,8 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Config {
-    public static final String mainClass = System.getProperty("janala.mainClass",null);
-    public static final int iteration = Integer.getInteger("janala.iteration",0);
+    public static final String mainClass = System.getProperty("janala.mainClass", null);
+    public static final int iteration = Integer.getInteger("janala.iteration", 0);
     public static final String propFile = System.getProperty("janala.conf","catg.conf");
     public static final Config instance = new Config();
 
@@ -63,6 +64,7 @@ public class Config {
     public String cvc3Command;
     public String[] excludeList;
     public String[] includeList;
+    private String loggerClass;
     private String solver;
     private String strategy;
     public int maxStringLength;
@@ -91,6 +93,7 @@ public class Config {
             formulaFile = properties.getProperty("catg.formulaFile", "formula");
             testLog = properties.getProperty("catg.testLogFile", "test.log");
             cvc3Command = properties.getProperty("catg.cvc3Command", "cvc3");
+            loggerClass = System.getProperty("janala.loggerClass", "janala.logger.FileLogger");
             analysisClass = properties.getProperty("catg.analysisClass", "janala.logger.DJVM").replace('.', '/');
             solver = properties.getProperty("catg.solverClass", "janala.solvers.YicesSolver2");
             strategy = properties.getProperty("catg.strategyClass", "janala.solvers.DFSStrategy");
@@ -106,6 +109,24 @@ public class Config {
         }
     }
 
+
+    public Logger getLogger() {
+        try {
+            Class solverClass = Class.forName(loggerClass);
+            Logger ret = (Logger)solverClass.newInstance();
+            return ret;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
 
     public Solver getSolver() {
         try {

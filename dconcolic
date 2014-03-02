@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2012, NTT Multimedia Communications Laboratories, Inc. and Koushik Sen
+# Copyright (c) 2014, NTT Multimedia Communications Laboratories, Inc. and Koushik Sen
 #
 # All rights reserved.
 #
@@ -43,9 +43,7 @@ while [ $i -le $iter ]
 do
     cp history history.old
 	echo "[Input $i]"
-    java -Djanala.loggerClass=janala.logger.FileLogger -Djanala.conf=catg.conf -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:out/production/janala" -ea $YOURPGM
-    echo "..."
-    java -Djanala.conf=catg.conf -Djanala.mainClass=$YOURPGM -Djanala.iteration=$i -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:lib/automaton.jar:lib/iagent.jar" -ea janala.interpreters.LoadAndExecuteInstructions
+    java -Djanala.loggerClass=janala.logger.DirectConcolicExecution -Djanala.conf=catg.conf -Djanala.mainClass=$YOURPGM -Djanala.iteration=$i -javaagent:"lib/iagent.jar"  -cp "$CLASSPATH:lib/asm-all-3.3.1.jar:out/production/janala:lib/trove-3.0.3.jar:lib/choco-solver-2.1.4.jar:lib/automaton.jar:lib/iagent.jar" -ea $YOURPGM
     i=$((i+1))
 	if  [ -e "history" ]
 	then

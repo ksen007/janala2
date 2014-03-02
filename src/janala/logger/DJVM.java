@@ -33,8 +33,10 @@
 
 package janala.logger;
 
+import janala.config.Config;
+
 public class DJVM {
-    public static Logger intp = new FileLogger();
+    public static Logger intp = Config.instance.getLogger();
 
     public static void LDC(int iid, int mid, int c) {
         intp.LDC(iid,mid,c);
