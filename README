@@ -7,9 +7,13 @@ to a file a log of all instructions executed by the program and all values loade
 A concolic execution engine (see janala.interpreters.*) then takes the log and performs both symbolic and
 concrete interpretation of the logged instructions.
 
-ant build
-./testall
+You must have java, cvc3 (http://www.cs.nyu.edu/acsys/cvc3/download.html), and python 2.7 in your PATH.
 
-If you are using cygwin, replace concolic by concolic.cygwin in testall.
+    ant build
+    python testall.py
+
+This runs the tests using online concolic execution.  To run tests with offline concolic execution, use
+
+    python --offline testall.py
 
 
