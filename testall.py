@@ -33,6 +33,7 @@ import platform
 def getArguments ():
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", help="Perform concolic testing offline.  An intermediate trace file is generated during the execution of the program. offilne mode results in 2X slowdown that non-offline mode", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Print commands that are executed.", action="store_true")
     args = parser.parse_args()
     return args
 
@@ -46,6 +47,9 @@ if args.offline:
     argument = "--offline"
 else:
     argument = ""
+
+if args.verbose:
+    argument = argument + " --verbose"
 
 
 tests = ["5 tests.test_q1_q4_min",
@@ -81,7 +85,7 @@ tests = ["5 tests.test_q1_q4_min",
     "4 tests.Testme",
     "4 tests.TestmeInteger",
     "4 tests.TestmeLong",
-    "4 tests.NonLinear",
+    "5 tests.NonLinear",
     "5 tests.BoolTest2",
     "8 tests.SwitchTest",
     "3 tests.SwitchTest2",
@@ -99,6 +103,8 @@ tests = ["5 tests.test_q1_q4_min",
     "97 tests.ManyColumnsOrRecords",
     "10 tests.AbstractionTest1",
     "14 tests.AbstractionTest2",
+    "9 tests.DataAnnotation6",
+    "5 tests.DataAnnotation7",
     "119 tests.ManyColumnsRecords2",
     "29 tests.QSort",
     "29 tests.QSortLong",

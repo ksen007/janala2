@@ -37,6 +37,7 @@ import gnu.trove.iterator.TIntLongIterator;
 import janala.config.Config;
 import janala.interpreters.*;
 import janala.interpreters.StringValue;
+import janala.utils.FileUtil;
 import janala.utils.MyLogger;
 
 import java.io.*;
@@ -340,6 +341,7 @@ public class CVC3Solver implements Solver {
 
     private void writeInputs(TreeMap<String, Long> soln) {
         try {
+            FileUtil.moveFile(Config.instance.inputs, Config.instance.inputs+".bak");
             PrintStream out = new PrintStream(
                     new BufferedOutputStream(
                             new FileOutputStream(Config.instance.inputs)));

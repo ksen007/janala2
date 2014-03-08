@@ -36,6 +36,7 @@ package janala.solvers;
 import janala.config.Config;
 import janala.interpreters.Constraint;
 import janala.interpreters.Value;
+import janala.utils.FileUtil;
 import janala.utils.MyLogger;
 
 import java.io.*;
@@ -58,6 +59,7 @@ public class History {
     private final static Logger logger = MyLogger.getLogger(History.class.getName());
     private final static Logger tester = MyLogger.getTestLogger(Config.mainClass+"."+Config.iteration);
     private boolean ignore;
+    private boolean predictionFailed = false;
 
     private LinkedList<InputElement> inputs;
 //    private ArrayList<Value> inputs;
@@ -71,6 +73,47 @@ public class History {
         index = 0;
         this.solver = solver;
         this.ignore = false;
+    }
+
+    public static void createBackTrackHistory(int skipIndex) {
+        ObjectInputStream inputStream = null;
+        ArrayList<Element> history;
+        System.out.println("back up history begin");
+        try {
+            inputStream = new ObjectInputStream(new FileInputStream(Config.instance.history));
+            Object tmp = inputStream.readObject();
+            System.out.println("back up history 2");
+            if (tmp instanceof ArrayList) {
+                history = (ArrayList)tmp;
+                ((BranchElement)history.get(skipIndex)).done = true; 
+                System.out.println("back up history 3");
+                ObjectOutputStream outputStream;
+                try {
+                    outputStream = new ObjectOutputStream(new FileOutputStream(Config.instance.history+".bak"));
+                    outputStream.writeObject(history);
+                    outputStream.close();
+                    System.out.println("backed up history");
+        
+                } catch (IOException e) {
+                    logger.log(Level.SEVERE, "", e);
+                    System.out.println("back up history 5" + e);
+                    e.printStackTrace();
+                    System.exit(1);
+                }                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("back up history 4"+e);
+
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException ex) {
+                logger.log(Level.WARNING, "", ex);
+            }
+        }
     }
 
     public static History readHistory(Solver solver) {
@@ -113,6 +156,7 @@ public class History {
                 history.add(index, current);
                 skip++;
             } else if (!ignore && (!(tmp instanceof MethodElement) || !((MethodElement)tmp).isBegin)) {
+                predictionFailed = true;
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
@@ -144,6 +188,7 @@ public class History {
                 history.add(index, current);
                 skip--;
             } else if (!ignore && (!(tmp instanceof MethodElement) || ((MethodElement)tmp).isBegin)) {
+                predictionFailed = true;
                 tester.log(Level.INFO,"Prediction failed");
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
@@ -178,6 +223,7 @@ public class History {
                 current = new BranchElement(result,false,-1,iid);
                 history.add(index, current);
             } else if (!ignore && (!(tmp instanceof BranchElement) || ((BranchElement)tmp).branch != result)) {
+                predictionFailed = true;
                 tester.log(Level.INFO,"Prediction failed "+ignore);
                 logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
@@ -212,16 +258,34 @@ public class History {
 
     public void solveAndSave() {
         int i = 0;
+        String file = "backtrackFlag";
         if (Config.instance.printConstraints) {
             for(Constraint c:pathConstraint) {
                 System.out.println(i+":"+c);
                 i++;
             }
         }
-        if ((i=strategy.solve(history,index,this))>=0) {
-            writeHistory(i);
+        if (predictionFailed) {
+            System.out.println("***********");
+            // backtrack
+            FileUtil.moveFile(Config.instance.inputs+".bak", Config.instance.inputs);
+            FileUtil.moveFile(Config.instance.history+".bak", Config.instance.history);
+            FileUtil.touch(file);
         } else {
-            removeHistory();
+            if ((i=strategy.solve(history,index,this))>=0) {
+                if (FileUtil.exists(file)) {
+                    if ((i=strategy.solve(history,history.size(),this))>=0) {
+                        writeHistory(i);
+                    } else {
+                        removeHistory();
+                    }
+                    FileUtil.remove(file);
+                } else {
+                    writeHistory(i);
+                }
+            } else {
+                removeHistory();
+            }
         }
     }
 
@@ -293,6 +357,8 @@ public class History {
                 history.remove(j);
             }
         }
+        FileUtil.moveFile(Config.instance.history, Config.instance.history+".bak");
+
         ObjectOutputStream outputStream;
         try {
             outputStream = new ObjectOutputStream(new FileOutputStream(Config.instance.history));

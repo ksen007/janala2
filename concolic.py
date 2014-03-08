@@ -9,6 +9,7 @@ import argparse
 def getArguments ():
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", help="Perform concolic testing offline.  An intermediate trace file is generated during the execution of the program. offilne mode results in 2X slowdown that non-offline mode", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Print commands that are executed.", action="store_true")
     parser.add_argument("maxIterations", help="Maximum number of times the program under test can be executed.", type=int)
     parser.add_argument("className", help="Java class to be tested.")
     parser.add_argument("arguments", nargs='*', help="Arguments passed to the program under test.")
@@ -30,14 +31,17 @@ def concolic ():
     iters = args.maxIterations
     yourpgm = args.className
     isOffline = args.offline
+    verbose = args.verbose
     if isOffline:
         loggerClass = "janala.logger.FileLogger"
     else:
         loggerClass = "janala.logger.DirectConcolicExecution"
     arguments = ' '.join(args.arguments)
     cmd1 = "java -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
-    cmd1List = shlex.split(cmd1)
 
+    cmd1List = shlex.split(cmd1)
+    if verbose:
+        print cmd1
     catg_tmp_dir = "catg_tmp"
     try:
         shutil.rmtree(catg_tmp_dir)
@@ -63,6 +67,8 @@ def concolic ():
         if isOffline:
             print "..."
             cmd2 = "java -Djanala.conf="+catg_home+"catg.conf -Djanala.mainClass="+yourpgm+" -Djanala.iteration="+str(i)+" -cp "+classpath+" -ea janala.interpreters.LoadAndExecuteInstructions"
+            if verbose:
+                print cmd2
             cmd2List = shlex.split(cmd2)
             subprocess.call(cmd2List, shell=windows)
         i = i + 1
