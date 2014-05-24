@@ -62,6 +62,7 @@ public class Config {
     public String formulaFile;
     public String testLog;
     public String cvc3Command;
+    public String cvc4Command;
     public String[] excludeList;
     public String[] includeList;
     private String loggerClass;
@@ -93,6 +94,7 @@ public class Config {
             formulaFile = properties.getProperty("catg.formulaFile", "formula");
             testLog = properties.getProperty("catg.testLogFile", "test.log");
             cvc3Command = properties.getProperty("catg.cvc3Command", "cvc3");
+            cvc4Command = properties.getProperty("catg.cvc4Command", "cvc4");
             loggerClass = System.getProperty("janala.loggerClass", "janala.logger.FileLogger");
             analysisClass = properties.getProperty("catg.analysisClass", "janala.logger.DJVM").replace('.', '/');
             solver = properties.getProperty("catg.solverClass", "janala.solvers.YicesSolver2");
