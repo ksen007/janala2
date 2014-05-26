@@ -23,6 +23,7 @@ public class DataAnnotation6 {
 		CATG.EndScope();
 		flag = CATG.abstractBool(flag);
 
+        System.out.println("flag = " + flag);
 		if(flag) {
 			if(flagRuntime) {
 				// The motivation of this condition is detecting

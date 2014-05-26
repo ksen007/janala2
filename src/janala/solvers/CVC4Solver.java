@@ -277,7 +277,7 @@ public class CVC4Solver implements Solver {
             out.println("COUNTERMODEL;");
             out.close();
 
-            CVC3Solver.concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile);
+            CVC3Solver.concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile, true);
             return allTrue?RESULT_TYPE.TRUE:RESULT_TYPE.UNKNOWN;
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -390,7 +390,7 @@ public class CVC4Solver implements Solver {
                         if (negatedSolution != null) {
                             negatedSolution += " AND ("+tokens[0] +" = "+tmp+" )";
                         } else {
-                            negatedSolution += "("+tokens[0] +" = "+tmp+" )";
+                            negatedSolution = "("+tokens[0] +" = "+tmp+" )";
                         }
 
                         long val = Long.parseLong(tmp);

@@ -212,16 +212,18 @@ public class CVC3Solver implements Solver {
         }
     }
 
-    static public void concatFile(LinkedHashSet<String> freeVars, String from, String to) throws java.io.IOException {
+    static public void concatFile(LinkedHashSet<String> freeVars, String from, String to, boolean cvc4) throws java.io.IOException {
         PrintStream pw = new PrintStream(new BufferedOutputStream(new FileOutputStream(to)));
 
 //        System.out.println("Concat:");
         if (Config.instance.printFormulaAndSolutions) {
             System.out.println("-----------Formula-------------");
         }
-        pw.println("OPTION \"produce-models\";");
-        if (Config.instance.printFormulaAndSolutions) {
-            System.out.println("OPTION \"produce-models\";");
+        if (cvc4) {
+            pw.println("OPTION \"produce-models\";");
+            if (Config.instance.printFormulaAndSolutions) {
+                System.out.println("OPTION \"produce-models\";");
+            }
         }
         for(String var:freeVars) {
             pw.print(var);
@@ -310,7 +312,7 @@ public class CVC3Solver implements Solver {
             out.println("COUNTERMODEL;");
             out.close();
 
-            concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile);
+            concatFile(freeVars, Config.instance.formulaFile+".tmp", Config.instance.formulaFile, false);
             return allTrue?RESULT_TYPE.TRUE:RESULT_TYPE.UNKNOWN;
         } catch (IOException ioe) {
             ioe.printStackTrace();

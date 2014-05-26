@@ -76,14 +76,14 @@ def concolic ():
             pass
         elif i == iters:
             with open("../test.log", 'a') as f:
-                f.write("{} passed\n".format(yourpgm))
+                f.write("{} ({}) passed\n".format(yourpgm, iters))
             sys.exit()
         else:
             with open("../test.log", 'a') as f:
-                f.write("****************** {} failed!!!\n".format(yourpgm))
+                f.write("****************** {} ({}) failed!!!\n".format(yourpgm, iters))
             sys.exit()
     with open("../test.log", 'a') as f:
-        f.write("****************** {} failed!!!\n".format(yourpgm))
+        f.write("****************** {} ({}) failed!!!\n".format(yourpgm, iters))
 
 concolic()
 
