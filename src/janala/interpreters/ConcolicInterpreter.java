@@ -330,21 +330,45 @@ public class ConcolicInterpreter implements IVisitor {
     }
 
     public void visitDUP2_X1(DUP2_X1 inst) {
-        currentFrame.push(currentFrame.peek3());
-        currentFrame.push(currentFrame.peek3());
+        Value word1 = currentFrame.pop();
+        Value word2 = currentFrame.pop();
+        Value word3 = currentFrame.pop();
+        currentFrame.push(word2);
+        currentFrame.push(word1);
+        currentFrame.push(word3);
+        currentFrame.push(word2);
+        currentFrame.push(word1);
     }
 
     public void visitDUP2_X2(DUP2_X2 inst) {
-        currentFrame.push(currentFrame.peek4());
-        currentFrame.push(currentFrame.peek4());
+        Value word1 = currentFrame.pop();
+        Value word2 = currentFrame.pop();
+        Value word3 = currentFrame.pop();
+        Value word4 = currentFrame.pop();
+        currentFrame.push(word2);
+        currentFrame.push(word1);
+        currentFrame.push(word4);
+        currentFrame.push(word3);
+        currentFrame.push(word2);
+        currentFrame.push(word1);
     }
 
     public void visitDUP_X1(DUP_X1 inst) {
-        currentFrame.push(currentFrame.peek2());
+        Value top = currentFrame.pop();
+        Value top2 = currentFrame.pop();
+        currentFrame.push(top);
+        currentFrame.push(top2);
+        currentFrame.push(top);
     }
 
     public void visitDUP_X2(DUP_X2 inst) {
-        currentFrame.push(currentFrame.peek3());
+        Value word1 = currentFrame.pop();
+        Value word2 = currentFrame.pop();
+        Value word3 = currentFrame.pop();
+        currentFrame.push(word1);
+        currentFrame.push(word3);
+        currentFrame.push(word2);
+        currentFrame.push(word1);
     }
 
     public void visitF2D(F2D inst) {
