@@ -81,9 +81,10 @@ public class IntValue extends Value {
     }
 
     public int MAKE_SYMBOLIC(History history) {
-        symbolic = new SymbolicInt(symbol++);
+        symbol = symbol+inc;
+        symbolic = new SymbolicInt(symbol-inc);
         //System.out.println("Int symbol x"+(symbol-1)+" = "+concrete);
-        return symbol-1;
+        return symbol-inc;
     }
 
     public long substituteInLinear(Map<String, Long> assignments) {

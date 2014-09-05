@@ -163,7 +163,8 @@ public class StringValue extends ObjectValue {
     public int MAKE_SYMBOLIC(History history) {
         IntValue length = new IntValue(string.length());
         int ret = symbol;
-        symbolic = new SymbolicStringExpression(symbol++, length);
+        symbol = symbol + inc;
+        symbolic = new SymbolicStringExpression(ret, length);
         length.MAKE_SYMBOLIC(history);
 
         Constraint results = length.symbolic.setop(SymbolicInt.COMPARISON_OPS.GE);

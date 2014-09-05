@@ -27,28 +27,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
+package tests;
 
-package janala.interpreters;
-
-import janala.solvers.History;
+import catg.CATG;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/19/12
- * Time: 8:27 AM
+ * Date: 6/25/14
+ * Time: 1:26 PM
  */
-public class Value {
-    public static int symbol = 1;
-    public static int inc = 2;
+public class Array1 {
+    public static void main(String[] args) {
+        int[] a = new int[2];
+        a[0] = 3;
+        a[1] = 5;
 
-    public int MAKE_SYMBOLIC(History history) {
-        throw new RuntimeException("Cannot make "+this+" symbolic");
+        int x = CATG.readInt(0);
+        if (a[x]==5) {
+            System.out.println("Hello");
+        }
     }
 
-    public Object getConcrete() {
-        return null;
-    }
 }

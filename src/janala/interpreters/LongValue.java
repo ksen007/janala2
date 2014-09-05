@@ -60,8 +60,9 @@ public class LongValue extends Value {
     }
 
     public int MAKE_SYMBOLIC(History history) {
-         symbolic = new SymbolicInt(symbol++);
-        return symbol - 1;
+        symbol = symbol + inc;
+        symbolic = new SymbolicInt(symbol-inc);
+        return symbol - inc;
      }
 
     public LongValue LADD(LongValue i) {
