@@ -34,8 +34,7 @@
 package janala.solvers;
 
 import janala.config.Config;
-import janala.interpreters.Constraint;
-import janala.interpreters.Value;
+import janala.interpreters.*;
 import janala.utils.FileUtil;
 import janala.utils.MyLogger;
 
@@ -73,6 +72,38 @@ public class History {
         index = 0;
         this.solver = solver;
         this.ignore = false;
+    }
+
+    public SymbolicOrValue assumeOrBegin(IntValue arg) {
+        Constraint last = this.removeLastBranch();
+        boolean res = arg.concrete!=0;
+        if (!res && last!=null) last = last.not();
+        return new SymbolicOrValue(res,new SymbolicOrConstraint(last));
+    }
+
+    public SymbolicOrValue assumeOr(IntValue first, SymbolicOrValue second) {
+        Constraint last = this.removeLastBranch();
+        SymbolicOrValue b2 = second;
+        SymbolicOrConstraint tmp;
+        boolean res = first.concrete!=0;
+        if (!res && last!=null) last = last.not();
+        tmp = b2.symbolic.OR(last);
+        return new SymbolicOrValue(res || b2.concrete,tmp);
+    }
+
+    public Value assumeOrEnd(int iid, SymbolicOrValue b) {
+        boolean res = b.concrete;
+        Constraint c;
+        if (!res)
+            c = b.symbolic.not();
+        else
+            c = b.symbolic;
+        this.checkAndSetBranch(res, c, iid);
+        if (b.concrete) {
+            this.setLastBranchDone();
+        }
+        return PlaceHolder.instance;
+
     }
 
     public static void createBackTrackHistory(int skipIndex) {
@@ -391,8 +422,9 @@ public class History {
         return ret;
     }
 
-    public void setIgnore() {
+    public Value ignore() {
         ignore = true;
+        return PlaceHolder.instance;
     }
 
     public void addInput(int symbol, Value value) {

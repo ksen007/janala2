@@ -670,12 +670,13 @@ public class ConcolicInterpreter implements IVisitor {
 
     public void visitIALOAD(IALOAD inst) {
         try {
+            Value val;
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
-            currentFrame.push(ref.getField(i1.concrete));
+            currentFrame.push(val = ref.getField(i1.concrete));
+//            if (i1.symbolic != null &&  (val instanceof IntValue || val instanceof LongValue)) {
+//                System.out.println("Symbolic index");
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

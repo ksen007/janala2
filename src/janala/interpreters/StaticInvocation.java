@@ -97,34 +97,37 @@ public class StaticInvocation {
             history.abstractData(((IntValue) args[0]).concrete != 0, iid);
             return PlaceHolder.instance;
         } else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length==1) {
-            Constraint last = history.removeLastBranch();
-            boolean res = ((IntValue)args[0]).concrete!=0;
-            if (!res && last!=null) last = last.not();
-            return new SymbolicOrValue(res,new SymbolicOrConstraint(last));
+            return history.assumeOrBegin((IntValue)args[0]);
+//            Constraint last = history.removeLastBranch();
+//            boolean res = ((IntValue)args[0]).concrete!=0;
+//            if (!res && last!=null) last = last.not();
+//            return new SymbolicOrValue(res,new SymbolicOrConstraint(last));
         } else if (owner.equals("janala/Main") && name.equals("AssumeOr") && args.length==2) {
-            Constraint last = history.removeLastBranch();
-            SymbolicOrValue b2 = (SymbolicOrValue)args[1];
-            SymbolicOrConstraint tmp;
-            boolean res = ((IntValue)args[0]).concrete!=0;
-            if (!res && last!=null) last = last.not();
-            tmp = b2.symbolic.OR(last);
-            return new SymbolicOrValue(res || b2.concrete,tmp);
+            return history.assumeOr((IntValue)args[0],(SymbolicOrValue)args[1]);
+//            Constraint last = history.removeLastBranch();
+//            SymbolicOrValue b2 = (SymbolicOrValue)args[1];
+//            SymbolicOrConstraint tmp;
+//            boolean res = ((IntValue)args[0]).concrete!=0;
+//            if (!res && last!=null) last = last.not();
+//            tmp = b2.symbolic.OR(last);
+//            return new SymbolicOrValue(res || b2.concrete,tmp);
         } else if (owner.equals("janala/Main") && name.equals("AssumeOrEnd") && args.length==1) {
-            SymbolicOrValue b = (SymbolicOrValue)args[0];
-            boolean res = b.concrete;
-            Constraint c;
-            if (!res)
-                c = b.symbolic.not();
-            else
-                c = b.symbolic;
-            history.checkAndSetBranch(res, c, iid);
-            if (b.concrete) {
-                history.setLastBranchDone();
-            }
-            return PlaceHolder.instance;
+            return history.assumeOrEnd(iid, (SymbolicOrValue)args[0]);
+//            SymbolicOrValue b = (SymbolicOrValue)args[0];
+//            boolean res = b.concrete;
+//            Constraint c;
+//            if (!res)
+//                c = b.symbolic.not();
+//            else
+//                c = b.symbolic;
+//            history.checkAndSetBranch(res, c, iid);
+//            if (b.concrete) {
+//                history.setLastBranchDone();
+//            }
+//            return PlaceHolder.instance;
         } else if (owner.equals("janala/Main") && name.equals("Ignore") && args.length==0) {
-            history.setIgnore();
-            return PlaceHolder.instance;
+            return history.ignore();
+            //return PlaceHolder.instance;
         }
 
 
