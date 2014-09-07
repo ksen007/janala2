@@ -86,6 +86,73 @@ public class ConcolicInterpreter implements IVisitor {
         }
     }
 
+    private Value getArrayElementInt(int iid, ObjectValue ref, IntValue i1, Value val) {
+        if (i1.symbolic != null) {
+            IntValue sval = new IntValue(((IntValue)val).concrete);
+            sval.MAKE_SYMBOLIC(history);
+            SymbolicOrConstraint or1 = null;
+            SymbolicAndConstraint and1;
+
+            for (int i=0; i<ref.concrete.length; i++) {
+                IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
+                Constraint c = int1.symbolic;
+                if (int1.concrete == 0) {
+                    c = int1.symbolic.not();
+                }
+                and1 = new SymbolicAndConstraint(c);
+                int1 = sval.IF_ICMPEQ((IntValue)ref.getField(i));
+                c = int1.symbolic;
+                if (int1.concrete == 0) {
+                    c = int1.symbolic.not();
+                }
+                and1 = and1.AND(c);
+                if (or1 == null) {
+                    or1 = new SymbolicOrConstraint(and1);
+                } else {
+                    or1 = or1.OR(and1);
+                }
+            }
+            history.checkAndSetBranch(true, or1, iid);
+            history.setLastBranchDone();
+            val = sval;
+        }
+        return val;
+    }
+
+    private Value getArrayElementLong(int iid, ObjectValue ref, IntValue i1, Value val) {
+        if (i1.symbolic != null) {
+            LongValue sval = new LongValue(((LongValue)val).concrete);
+            sval.MAKE_SYMBOLIC(history);
+            SymbolicOrConstraint or1 = null;
+            SymbolicAndConstraint and1;
+
+            for (int i=0; i<ref.concrete.length; i++) {
+                IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
+                Constraint c = int1.symbolic;
+                if (int1.concrete == 0) {
+                    c = int1.symbolic.not();
+                }
+                and1 = new SymbolicAndConstraint(c);
+                int1 = sval.LCMP((LongValue)ref.getField(i));
+                int1 = int1.IFEQ();
+                c = int1.symbolic;
+                if (int1.concrete == 0) {
+                    c = int1.symbolic.not();
+                }
+                and1 = and1.AND(c);
+                if (or1 == null) {
+                    or1 = new SymbolicOrConstraint(and1);
+                } else {
+                    or1 = or1.OR(and1);
+                }
+            }
+            history.checkAndSetBranch(true, or1, iid);
+            history.setLastBranchDone();
+            val = sval;
+        }
+        return val;
+    }
+
     public void endExecution() {
         history.solveAndSave();
     }
@@ -168,10 +235,8 @@ public class ConcolicInterpreter implements IVisitor {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
-            currentFrame.push(ref.getField(i1.concrete));
+            Value val = ref.getField(i1.concrete);
+            currentFrame.push(getArrayElementInt(inst.iid, ref, i1, val));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,10 +263,8 @@ public class ConcolicInterpreter implements IVisitor {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
-            currentFrame.push(ref.getField(i1.concrete));
+            Value val = ref.getField(i1.concrete);
+            currentFrame.push(getArrayElementInt(inst.iid, ref, i1, val));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -249,9 +312,6 @@ public class ConcolicInterpreter implements IVisitor {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
             currentFrame.push2(ref.getField(i1.concrete));
         } catch (Exception e) {
             e.printStackTrace();
@@ -408,9 +468,6 @@ public class ConcolicInterpreter implements IVisitor {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
             currentFrame.push(ref.getField(i1.concrete));
         } catch (Exception e) {
             e.printStackTrace();
@@ -670,13 +727,41 @@ public class ConcolicInterpreter implements IVisitor {
 
     public void visitIALOAD(IALOAD inst) {
         try {
-            Value val;
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            currentFrame.push(val = ref.getField(i1.concrete));
-//            if (i1.symbolic != null &&  (val instanceof IntValue || val instanceof LongValue)) {
-//                System.out.println("Symbolic index");
+            Value val = ref.getField(i1.concrete);
+            currentFrame.push(getArrayElementInt(inst.iid, ref, i1, val));
+//            val = ref.getField(i1.concrete);
+//            if (i1.symbolic != null) {
+//                IntValue sval = new IntValue(((IntValue)val).concrete);
+//                sval.MAKE_SYMBOLIC(history);
+//                SymbolicOrConstraint or1 = null;
+//                SymbolicAndConstraint and1;
+//
+//                for (int i=0; i<ref.concrete.length; i++) {
+//                    IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
+//                    Constraint c = int1.symbolic;
+//                    if (int1.concrete == 0) {
+//                        c = int1.symbolic.not();
+//                    }
+//                    and1 = new SymbolicAndConstraint(c);
+//                    int1 = sval.IF_ICMPEQ((IntValue)ref.getField(i));
+//                    c = int1.symbolic;
+//                    if (int1.concrete == 0) {
+//                        c = int1.symbolic.not();
+//                    }
+//                    and1 = and1.AND(c);
+//                    if (or1 == null) {
+//                        or1 = new SymbolicOrConstraint(and1);
+//                    } else {
+//                        or1 = or1.OR(and1);
+//                    }
+//                }
+//                history.checkAndSetBranch(true, or1, inst.iid);
+//                history.setLastBranchDone();
+//                val = sval;
 //            }
+//            currentFrame.push(val);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -744,7 +829,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue i1 = (IntValue)currentFrame.pop();
         IntValue result = i1.IFEQ();
         checkAndSetBranch(result);
-        history.checkAndSetBranch(result.concrete==1, result.getSymbolic(), inst.iid);
+        history.checkAndSetBranch(result.concrete == 1, result.getSymbolic(), inst.iid);
     }
 
     public void visitIFGE(IFGE inst) {
@@ -1043,10 +1128,8 @@ public class ConcolicInterpreter implements IVisitor {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
-            currentFrame.push2(ref.getField(i1.concrete));
+            Value val = ref.getField(i1.concrete);
+            currentFrame.push2(getArrayElementLong(inst.iid, ref, i1, val));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1286,10 +1369,8 @@ public class ConcolicInterpreter implements IVisitor {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
-            }
-            currentFrame.push(ref.getField(i1.concrete));
+            Value val = ref.getField(i1.concrete);
+            currentFrame.push(getArrayElementInt(inst.iid, ref, i1, val));
         } catch (Exception e) {
             e.printStackTrace();
         }

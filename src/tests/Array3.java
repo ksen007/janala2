@@ -6,9 +6,9 @@ import catg.CATG;
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public class Array1 {
+public class Array3 {
     public static void main(String[] args) {
-        int[] a = new int[3];
+        long[] a = new long[3];
         a[0] = 3;
         a[1] = 5;
         a[2] = 10;
