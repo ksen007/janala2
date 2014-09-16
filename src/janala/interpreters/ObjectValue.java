@@ -43,6 +43,7 @@ import janala.solvers.History;
 public class ObjectValue extends Value {
     final public static ObjectValue NULL = new ObjectValue(0,0);
     Value[] concrete;
+    SymbolicObject symbolic;
     int address; // address 0 is null, address -1 is uninitialized address
 
     @Override
@@ -61,6 +62,11 @@ public class ObjectValue extends Value {
 //        symbolic = (address==0?0:-1);
     }
 
+    public ObjectValue(ObjectValue ov, SymbolicObject sym) {
+        concrete = ov.concrete;
+        address = ov.address;
+        symbolic = sym;
+    }
 
     public IntValue IF_ACMPEQ(ObjectValue o2) {
         boolean result = this==o2;

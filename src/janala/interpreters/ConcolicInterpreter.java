@@ -86,6 +86,41 @@ public class ConcolicInterpreter implements IVisitor {
         }
     }
 
+    private Value getArrayElementObject(int iid, ObjectValue ref, IntValue i1, Value val) {
+        if (i1.symbolic != null) {
+            SymbolicObject tmp = new SymbolicObject();
+            SymbolicAndConstraint and1;
+
+            SymbolicObject sref;
+
+            if (ref.symbolic != null) {
+                sref = ref.symbolic;
+            } else {
+                sref = new SymbolicObject();
+                sref.addGuardedObjectValue(null, ref);
+            }
+
+            for(Pair<Constraint,ObjectValue> pair: sref.guards) {
+                ref = pair.snd;
+                for (int i = 0; i < ref.concrete.length; i++) {
+                    IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
+                    Constraint c = int1.symbolic;
+                    if (int1.concrete == 0) {
+                        c = int1.symbolic.not();
+                    }
+                    if (pair.fst != null) {
+                        and1 = new SymbolicAndConstraint(c);
+                        c = and1.AND(pair.fst);
+                    }
+                    tmp.addGuardedObjectValue(c, (ObjectValue) ref.getField(i));
+                }
+            }
+
+            val = new ObjectValue((ObjectValue)val, tmp);
+        }
+        return val;
+    }
+
     private Value getArrayElementInt(int iid, ObjectValue ref, IntValue i1, Value val) {
         if (i1.symbolic != null) {
             IntValue sval = new IntValue(((IntValue)val).concrete);
@@ -93,23 +128,39 @@ public class ConcolicInterpreter implements IVisitor {
             SymbolicOrConstraint or1 = null;
             SymbolicAndConstraint and1;
 
-            for (int i=0; i<ref.concrete.length; i++) {
-                IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
-                Constraint c = int1.symbolic;
-                if (int1.concrete == 0) {
-                    c = int1.symbolic.not();
-                }
-                and1 = new SymbolicAndConstraint(c);
-                int1 = sval.IF_ICMPEQ((IntValue)ref.getField(i));
-                c = int1.symbolic;
-                if (int1.concrete == 0) {
-                    c = int1.symbolic.not();
-                }
-                and1 = and1.AND(c);
-                if (or1 == null) {
-                    or1 = new SymbolicOrConstraint(and1);
-                } else {
-                    or1 = or1.OR(and1);
+            SymbolicObject sref;
+
+            if (ref.symbolic != null) {
+                sref = ref.symbolic;
+            } else {
+                sref = new SymbolicObject();
+                sref.addGuardedObjectValue(null, ref);
+            }
+
+            for(Pair<Constraint,ObjectValue> pair: sref.guards) {
+                ref = pair.snd;
+                for (int i = 0; i < ref.concrete.length; i++) {
+                    IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
+                    Constraint c = int1.symbolic;
+                    if (int1.concrete == 0) {
+                        c = int1.symbolic.not();
+                    }
+                    and1 = new SymbolicAndConstraint(c);
+                    if (pair.fst != null) {
+                        and1 = and1.AND(pair.fst);
+                    }
+
+                    int1 = sval.IF_ICMPEQ((IntValue) ref.getField(i));
+                    c = int1.symbolic;
+                    if (int1.concrete == 0) {
+                        c = int1.symbolic.not();
+                    }
+                    and1 = and1.AND(c);
+                    if (or1 == null) {
+                        or1 = new SymbolicOrConstraint(and1);
+                    } else {
+                        or1 = or1.OR(and1);
+                    }
                 }
             }
             history.checkAndSetBranch(true, or1, iid);
@@ -126,24 +177,40 @@ public class ConcolicInterpreter implements IVisitor {
             SymbolicOrConstraint or1 = null;
             SymbolicAndConstraint and1;
 
-            for (int i=0; i<ref.concrete.length; i++) {
-                IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
-                Constraint c = int1.symbolic;
-                if (int1.concrete == 0) {
-                    c = int1.symbolic.not();
-                }
-                and1 = new SymbolicAndConstraint(c);
-                int1 = sval.LCMP((LongValue)ref.getField(i));
-                int1 = int1.IFEQ();
-                c = int1.symbolic;
-                if (int1.concrete == 0) {
-                    c = int1.symbolic.not();
-                }
-                and1 = and1.AND(c);
-                if (or1 == null) {
-                    or1 = new SymbolicOrConstraint(and1);
-                } else {
-                    or1 = or1.OR(and1);
+            SymbolicObject sref;
+
+            if (ref.symbolic != null) {
+                sref = ref.symbolic;
+            } else {
+                sref = new SymbolicObject();
+                sref.addGuardedObjectValue(null, ref);
+            }
+
+            for(Pair<Constraint,ObjectValue> pair: sref.guards) {
+                ref = pair.snd;
+                for (int i = 0; i < ref.concrete.length; i++) {
+                    IntValue int1 = i1.IF_ICMPEQ(new IntValue(i));
+                    Constraint c = int1.symbolic;
+                    if (int1.concrete == 0) {
+                        c = int1.symbolic.not();
+                    }
+                    and1 = new SymbolicAndConstraint(c);
+                    if (pair.fst != null) {
+                        and1 = and1.AND(pair.fst);
+                    }
+
+                    int1 = sval.LCMP((LongValue) ref.getField(i));
+                    int1 = int1.IFEQ();
+                    c = int1.symbolic;
+                    if (int1.concrete == 0) {
+                        c = int1.symbolic.not();
+                    }
+                    and1 = and1.AND(c);
+                    if (or1 == null) {
+                        or1 = new SymbolicOrConstraint(and1);
+                    } else {
+                        or1 = or1.OR(and1);
+                    }
                 }
             }
             history.checkAndSetBranch(true, or1, iid);
@@ -158,15 +225,22 @@ public class ConcolicInterpreter implements IVisitor {
     }
 
 
+//    Value val = ref.getField(i1.concrete);
+  //  currentFrame.push(getArrayElementObject(inst.iid, ref, i1, val));
+
     public void visitAALOAD(AALOAD inst) {
         try {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
+
+            Value val = ref.getField(i1.concrete);
+            currentFrame.push(getArrayElementObject(inst.iid, ref, i1, val));
+
             if (i1.symbolic != null) {
                 System.out.println("Symbolic index AALOAD "+i1.symbolic+ " "+i1.concrete+" "+inst.iid);
 //                throw new RuntimeException("I am here");
             }
-            currentFrame.push(ref.getField(i1.concrete));
+//            currentFrame.push(ref.getField(i1.concrete));
         } catch (Exception e) {
             e.printStackTrace();
         }
