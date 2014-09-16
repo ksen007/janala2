@@ -83,7 +83,10 @@ public class IntValue extends Value {
     public int MAKE_SYMBOLIC(History history) {
         symbol = symbol+inc;
         symbolic = new SymbolicInt(symbol-inc);
-        //System.out.println("Int symbol x"+(symbol-1)+" = "+concrete);
+//        System.out.println("Int symbol x"+(symbol-inc)+" = "+concrete);
+//        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+//            System.out.println(ste);
+//        }
         return symbol-inc;
     }
 

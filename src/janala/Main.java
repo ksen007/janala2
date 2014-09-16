@@ -156,8 +156,8 @@ public class Main {
     static public char readChar(char x) {
         if (isInputAvailable()) {
             String input = inputs.get(index++);
-            //System.out.println(input);
-            return input.charAt(0);
+//            System.out.println("ReadChar:"+input);
+            return (char)Integer.parseInt(input);
         } else {
             //System.out.println(x);
             return x;
