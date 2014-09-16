@@ -72,7 +72,7 @@ def concolic ():
             cmd2List = shlex.split(cmd2)
             subprocess.call(cmd2List, shell=windows)
         i = i + 1
-        if os.path.isfile("history"):
+        if os.path.isfile("history") or os.path.isfile("backtrackFlag"):
             pass
         elif i == iters:
             with open("../test.log", 'a') as f:

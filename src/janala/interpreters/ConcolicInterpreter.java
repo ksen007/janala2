@@ -236,10 +236,10 @@ public class ConcolicInterpreter implements IVisitor {
             Value val = ref.getField(i1.concrete);
             currentFrame.push(getArrayElementObject(inst.iid, ref, i1, val));
 
-            if (i1.symbolic != null) {
-                System.out.println("Symbolic index AALOAD "+i1.symbolic+ " "+i1.concrete+" "+inst.iid);
-//                throw new RuntimeException("I am here");
-            }
+//            if (i1.symbolic != null) {
+//                System.out.println("Symbolic index AALOAD "+i1.symbolic+ " "+i1.concrete+" "+inst.iid);
+////                throw new RuntimeException("I am here");
+//            }
 //            currentFrame.push(ref.getField(i1.concrete));
         } catch (Exception e) {
             e.printStackTrace();
