@@ -163,7 +163,8 @@ public class ConcolicInterpreter implements IVisitor {
             IntValue i1 = (IntValue)currentFrame.pop();
             ObjectValue ref = (ObjectValue)currentFrame.pop();
             if (i1.symbolic != null) {
-                System.out.println("Symbolic index");
+                System.out.println("Symbolic index AALOAD "+i1.symbolic+ " "+i1.concrete+" "+inst.iid);
+//                throw new RuntimeException("I am here");
             }
             currentFrame.push(ref.getField(i1.concrete));
         } catch (Exception e) {
