@@ -15,7 +15,7 @@ import database.table.operations.Operations;
 import database.table.select.Select;
 import database.table.where.Where;
 
-public class ManyColumnsRecords2 {
+public class ManyColumnsRecords1 {
     public static int l_c1;
     public static final int RECORD_COUNT = 4;
     public static final int COLUMN_COUNT = 5;
@@ -23,7 +23,6 @@ public class ManyColumnsRecords2 {
     public  static void testme(Table customers, int c1){
         int result;
 
-        CATG.BeginScope();
 
         l_c1 = c1;
 
@@ -41,7 +40,6 @@ public class ManyColumnsRecords2 {
                 new Where() {
                     @Override
                     public boolean where(Row[] rows) {
-                        CATG.BeginScope();
                         boolean ret = true;
 
                         for(int i = 1;i < COLUMN_COUNT; i++){
@@ -51,8 +49,6 @@ public class ManyColumnsRecords2 {
                                 break;
                             }
                         }
-                        CATG.EndScope();
-                        ret = CATG.abstractBool(ret);
                         return ret;
                     }
 
@@ -64,8 +60,6 @@ public class ManyColumnsRecords2 {
 
         result = t.size();
 
-        CATG.EndScope();
-        result = CATG.abstractInt(result);
 
         System.out.println(result + " record(s) are selected.");
 

@@ -250,7 +250,8 @@ public class BookStore {
 		assume(minYear >= 1950 && minYear <= 2050);
 		assume(maxYear >= 1950 && maxYear <= 2050);
 
-		ResultSet rs = statement.executeQuery("select Books.Id, Books.Price from Books inner join Publishers on Books.PublisherId = Publishers.Id " +
+		ResultSet rs = statement.executeQuery("select Books.Id, Books.Price " +
+                "from Books inner join Publishers on Books.PublisherId = Publishers.Id " +
 				"where Books.Title= '" + title + "' and Publishers.Name='"+publisherName+"' and Books.Year>=" + minYear +
 				" and Books.Year<=" + maxYear + " and Books.Stock > 0");
 

@@ -53,6 +53,7 @@ public class RedBlackTreeSearch {
             int x = Main.readInt(0);
             Main.MakeSymbolic(x);
             tree.treeInsert(new RedBlackTreeNode(x));
+            System.out.println("Inserting "+x);
         }
 
         // We only measure the complexity (i.e. path length) of the
@@ -61,7 +62,7 @@ public class RedBlackTreeSearch {
 
         int x = Main.readInt(0);
         Main.MakeSymbolic(x);
-        tree.treeSearch(tree.root(), x);
+        System.out.println("Searched "+tree.treeSearch(tree.root(), x).key());
 
     }
 }

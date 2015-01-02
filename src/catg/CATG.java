@@ -83,6 +83,15 @@ public class CATG {
         return y;
     }
 
+    public static int[] readIntArray(int length, int x) {
+        int[] ret = new int[length];
+        for (int i=0; i<length; i++) {
+            ret[i] = readInt(x);
+        }
+        return ret;
+    }
+
+
     public static int readInt(int x) {
         int y = Main.readInt(x);
         Main.MakeSymbolic(y);
