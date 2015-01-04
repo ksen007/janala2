@@ -35,6 +35,7 @@ package janala.interpreters;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import janala.config.Config;
+import janala.instrument.Coverage;
 import janala.logger.ClassNames;
 import janala.logger.FieldInfo;
 import janala.logger.ObjectInfo;
@@ -222,6 +223,7 @@ public class ConcolicInterpreter implements IVisitor {
 
     public void endExecution() {
         history.solveAndSave();
+        Coverage.write();
     }
 
 
@@ -905,6 +907,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IFEQ();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete == 1, result.getSymbolic(), inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFGE(IFGE inst) {
@@ -912,6 +915,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IFGE();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFGT(IFGT inst) {
@@ -919,6 +923,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IFGT();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFLE(IFLE inst) {
@@ -926,6 +931,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IFLE();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFLT(IFLT inst) {
@@ -933,6 +939,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IFLT();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFNE(IFNE inst) {
@@ -940,6 +947,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IFNE();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.getSymbolic(),inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFNONNULL(IFNONNULL inst) {
@@ -947,6 +955,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = o1.IFNONNULL();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIFNULL(IFNULL inst) {
@@ -954,6 +963,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = o1.IFNULL();
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ACMPEQ(IF_ACMPEQ inst) {
@@ -962,6 +972,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = o1.IF_ACMPEQ(o2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ACMPNE(IF_ACMPNE inst) {
@@ -970,6 +981,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = o1.IF_ACMPNE(o2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ICMPEQ(IF_ICMPEQ inst) {
@@ -978,6 +990,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IF_ICMPEQ(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ICMPGE(IF_ICMPGE inst) {
@@ -986,6 +999,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IF_ICMPGE(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ICMPGT(IF_ICMPGT inst) {
@@ -994,6 +1008,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IF_ICMPGT(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ICMPLE(IF_ICMPLE inst) {
@@ -1002,6 +1017,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IF_ICMPLE(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ICMPLT(IF_ICMPLT inst) {
@@ -1010,6 +1026,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IF_ICMPLT(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIF_ICMPNE(IF_ICMPNE inst) {
@@ -1018,6 +1035,7 @@ public class ConcolicInterpreter implements IVisitor {
         IntValue result = i1.IF_ICMPNE(i2);
         checkAndSetBranch(result);
         history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+        Coverage.instance.visitBranch(inst.iid, result.concrete==1);
     }
 
     public void visitIINC(IINC inst) {
@@ -1539,19 +1557,25 @@ public class ConcolicInterpreter implements IVisitor {
     public void visitLOOKUPSWITCH(LOOKUPSWITCH inst) {
         int[] keys = inst.keys;
         IntValue i1 = (IntValue)currentFrame.pop();
+        int i = 0;
         for (int key : keys) {
             IntValue result = i1.IF_ICMPEQ(new IntValue(key));
             history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+            Coverage.instance.visitBranch(inst.iid+i, result.concrete==1);
             if (result.concrete==1) return;
+            i++;
         }
     }
 
     public void visitTABLESWITCH(TABLESWITCH inst) {
         IntValue i1 = (IntValue)currentFrame.pop();
+        int j = 0;
         for (int i=inst.min; i<=inst.max; i++) {
             IntValue result = i1.IF_ICMPEQ(new IntValue(i));
             history.checkAndSetBranch(result.concrete==1, result.symbolic,inst.iid);
+            Coverage.instance.visitBranch(inst.iid+j, result.concrete==1);
             if (result.concrete==1) return;
+            j++;
         }
     }
 

@@ -57,6 +57,7 @@ public class Config {
     public String traceFileName;
     public String traceAuxFileName;
     public String history;
+    public String coverage;
     public String inputs;
     public String yicesCommand;
     public String formulaFile;
@@ -89,6 +90,7 @@ public class Config {
             traceFileName = properties.getProperty("catg.traceFile", "trace");
             traceAuxFileName = properties.getProperty("catg.auxTraceFile","trace.aux");
             history = properties.getProperty("catg.historyFile","history");
+            coverage = properties.getProperty("catg.coverageFile","coverage");
             inputs = properties.getProperty("catg.inputsFile","inputs");
             yicesCommand = properties.getProperty("catg.yicesCommand", "yices");
             formulaFile = properties.getProperty("catg.formulaFile", "formula");

@@ -944,76 +944,91 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
     @Override
     public void visitJumpInsn(int opcode, Label label) {
-        addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid(line));
+        int iid3;
+        addBipushInsn(mv, iid3 = GlobalStateForInstrumentation.instance.getIid(line));
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         addBipushInsn(mv, System.identityHashCode(label)); // label.getOffset()
         switch (opcode) {
             case IFEQ:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFEQ", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IFNE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFNE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IFLT:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFLT", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IFGE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFGE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IFGT:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFGT", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IFLE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFLE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPEQ:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ICMPEQ", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPNE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ICMPNE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPLT:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ICMPLT", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPGE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ICMPGE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPGT:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ICMPGT", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ICMPLE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ICMPLE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ACMPEQ:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ACMPEQ", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IF_ACMPNE:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IF_ACMPNE", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
@@ -1027,11 +1042,13 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
                 mv.visitJumpInsn(opcode, label);
                 break;
             case IFNULL:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFNULL", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
                 break;
             case IFNONNULL:
+                Coverage.instance.addBranchCount(iid3);
                 mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, "IFNONNULL", "(III)V");
                 mv.visitJumpInsn(opcode, label);
                 addSpecialInsn(mv,1); // for true path
@@ -1076,7 +1093,8 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
     @Override
     public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels) {
-        addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid(line));
+        int iid3;
+        addBipushInsn(mv, iid3 = GlobalStateForInstrumentation.instance.getIid(line));
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         addBipushInsn(mv, min);
         addBipushInsn(mv, max);
@@ -1085,6 +1103,10 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv,labels.length);
         mv.visitIntInsn(NEWARRAY, T_INT);
         for (int i=0; i<labels.length; i++) {
+            Coverage.instance.addBranchCount(iid3);
+            if (i!= 0) {
+                iid3 = GlobalStateForInstrumentation.instance.getIid(line);
+            }
             mv.visitInsn(DUP);
             addBipushInsn(mv,i);
             addBipushInsn(mv,System.identityHashCode(labels[i])); // label.getOffset()
@@ -1097,7 +1119,8 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
 
     @Override
     public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
-        addBipushInsn(mv, GlobalStateForInstrumentation.instance.getIid(line));
+        int iid3;
+        addBipushInsn(mv, iid3 = GlobalStateForInstrumentation.instance.getIid(line));
         addBipushInsn(mv,GlobalStateForInstrumentation.instance.getMid());
         addBipushInsn(mv,System.identityHashCode(dflt));  // label.getOffset()
 
@@ -1113,6 +1136,10 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv,labels.length);
         mv.visitIntInsn(NEWARRAY, T_INT);
         for (int i=0; i<labels.length; i++) {
+            Coverage.instance.addBranchCount(iid3);
+            if (i!= 0) {
+                iid3 = GlobalStateForInstrumentation.instance.getIid(line);
+            }
             mv.visitInsn(DUP);
             addBipushInsn(mv,i);
             addBipushInsn(mv,System.identityHashCode(labels[i])); // label.getOffset()

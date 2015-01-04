@@ -34,6 +34,7 @@
 package janala.solvers;
 
 import janala.config.Config;
+import janala.instrument.Coverage;
 import janala.interpreters.*;
 import janala.utils.FileUtil;
 import janala.utils.MyLogger;
