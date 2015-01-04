@@ -37,7 +37,7 @@ def concolic ():
     else:
         loggerClass = "janala.logger.DirectConcolicExecution"
     arguments = ' '.join(args.arguments)
-    cmd1 = "java -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
+    cmd1 = "java -Xmx4096M -Xms2048M -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
 
     cmd1List = shlex.split(cmd1)
     if verbose:
@@ -66,7 +66,7 @@ def concolic ():
         subprocess.call(cmd1List, shell=windows)
         if isOffline:
             print "..."
-            cmd2 = "java -Djanala.conf="+catg_home+"catg.conf -Djanala.mainClass="+yourpgm+" -Djanala.iteration="+str(i)+" -cp "+classpath+" -ea janala.interpreters.LoadAndExecuteInstructions"
+            cmd2 = "java -Xmx4096M -Xms2048M -Djanala.conf="+catg_home+"catg.conf -Djanala.mainClass="+yourpgm+" -Djanala.iteration="+str(i)+" -cp "+classpath+" -ea janala.interpreters.LoadAndExecuteInstructions"
             if verbose:
                 print cmd2
             cmd2List = shlex.split(cmd2)
