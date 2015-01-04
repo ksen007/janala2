@@ -110,6 +110,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
         }
 
         if (toInstrument) {
+            //System.err.println("begin transform "+cname);
             Coverage.read();
             GlobalStateForInstrumentation.instance.setCid(Coverage.instance.getCid(cname));
             ClassReader cr = new ClassReader(cbuf);

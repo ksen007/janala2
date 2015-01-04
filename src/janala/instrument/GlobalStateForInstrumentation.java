@@ -39,12 +39,15 @@ public class GlobalStateForInstrumentation {
     private int mid = 0;
     private int cid = 0;
 
+    public final static int CBITS = 14;
+    public final static int MBITS = 8;
+
 //    private TObjectIntHashMap<String> classNameToInternalID = new TObjectIntHashMap<String>();
 
     public int getIid(int line) {
         //System.out.println("iid="+iid+" line="+line);
         iid++;
-        return cid + iid;
+        return cid + iid + (this.mid << (32-CBITS-MBITS));
     }
 
     public int getMid() {
@@ -52,7 +55,8 @@ public class GlobalStateForInstrumentation {
     }
 
     public void incMid() {
-        mid++;
+        this.mid++;
+        this.iid = 0;
     }
 
     public int getCid() {
@@ -62,6 +66,6 @@ public class GlobalStateForInstrumentation {
     public void setCid(int cid) {
         this.iid = 0;
         this.mid = 0;
-        this.cid = cid << 16;
+        this.cid = cid << (32-CBITS);
     }
 }

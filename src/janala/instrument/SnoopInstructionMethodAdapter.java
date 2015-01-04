@@ -1103,10 +1103,10 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv,labels.length);
         mv.visitIntInsn(NEWARRAY, T_INT);
         for (int i=0; i<labels.length; i++) {
-            Coverage.instance.addBranchCount(iid3);
             if (i!= 0) {
                 iid3 = GlobalStateForInstrumentation.instance.getIid(line);
             }
+            Coverage.instance.addBranchCount(iid3);
             mv.visitInsn(DUP);
             addBipushInsn(mv,i);
             addBipushInsn(mv,System.identityHashCode(labels[i])); // label.getOffset()
@@ -1136,10 +1136,10 @@ public class SnoopInstructionMethodAdapter extends MethodAdapter implements Opco
         addBipushInsn(mv,labels.length);
         mv.visitIntInsn(NEWARRAY, T_INT);
         for (int i=0; i<labels.length; i++) {
-            Coverage.instance.addBranchCount(iid3);
             if (i!= 0) {
                 iid3 = GlobalStateForInstrumentation.instance.getIid(line);
             }
+            Coverage.instance.addBranchCount(iid3);
             mv.visitInsn(DUP);
             addBipushInsn(mv,i);
             addBipushInsn(mv,System.identityHashCode(labels[i])); // label.getOffset()
