@@ -33,8 +33,8 @@
 
 package janala.solvers;
 
+import janala.Main;
 import janala.config.Config;
-import janala.instrument.Coverage;
 import janala.interpreters.*;
 import janala.utils.FileUtil;
 import janala.utils.MyLogger;
@@ -168,7 +168,20 @@ public class History {
                 logger.log(Level.WARNING, "", ex);
             }
         }
+        ret.print();
         return ret;
+    }
+
+    public void print() {
+        int i = 0;
+        if (Config.instance.printHistory) {
+            System.out.println("History");
+            System.out.println("-------");
+            for(Element e: history) {
+                System.out.println(i+":"+e);
+                i++;
+            }
+        }
     }
 
     private boolean isEnd(Element tmp) {
@@ -178,6 +191,20 @@ public class History {
     Stack<MethodElement> scopeStack = new Stack<MethodElement>();
     MethodElement lastScope;
     int skip = 0;
+
+    private void setInPrefix() {
+        if (index < history.size()) {
+            Element tmp = history.get(index);
+            if (isEnd(tmp)) {
+                Main.isInPrefix = false;
+            } else {
+                Main.isInPrefix = true;
+            }
+        } else {
+            Main.isInPrefix = false;
+        }
+
+    }
 
     public void beginScope(int iid) {
         MethodElement current;
@@ -209,6 +236,7 @@ public class History {
         }
         scopeStack.push(current);
         index++;
+        setInPrefix();
     }
 
     public void endScope(int iid) {
@@ -240,6 +268,7 @@ public class History {
         }
         lastScope = scopeStack.pop();
         index++;
+        setInPrefix();
 
     }
 
@@ -257,7 +286,7 @@ public class History {
             } else if (!ignore && (!(tmp instanceof BranchElement) || ((BranchElement)tmp).branch != result)) {
                 predictionFailed = true;
                 tester.log(Level.INFO,"Prediction failed "+ignore);
-                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed !!!!!!!!!!!!!!!!! index "
+                logger.log(Level.WARNING,"!!!!!!!!!!!!!!!!! Prediction failed (checkAndSetBranch) !!!!!!!!!!!!!!!!! index "
                         +index+" history.size() "+history.size());
                 logger.log(Level.WARNING,"At old iid "+tmp.iid+ " at iid "+iid+ " constraint "+constraint);
                 int len = history.size();
@@ -286,6 +315,7 @@ public class History {
         }
 //        current.branch = result.result;
         index++;
+        setInPrefix();
     }
 
     public void solveAndSave() {
@@ -297,6 +327,7 @@ public class History {
                 i++;
             }
         }
+        print();
         if (predictionFailed) {
             System.out.println("***********");
             // backtrack
@@ -433,7 +464,9 @@ public class History {
     }
 
     public void setLastForceTruth() {
+        System.out.println("Set Last Force True in");
         if (index>=1 && index-1<history.size()) {
+            System.out.println("Set Last Force True set");
             ((BranchElement)history.get(index-1)).isForceTruth = true;
         }
     }

@@ -224,8 +224,8 @@ public class ConcolicInterpreter implements IVisitor {
 
     public void endExecution() {
         history.solveAndSave();
-        Coverage.write();
         Main.writeOldStates();
+        Coverage.write();
     }
 
 

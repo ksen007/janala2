@@ -79,6 +79,7 @@ public class Config {
     public String test;
     public TestChecker testChecker;
     public String oldStates;
+    public boolean printHistory;
 
     public Config() {
         try {
@@ -87,6 +88,7 @@ public class Config {
             
             isTest = properties.getProperty("catg.isInternalTestMode","false").equals("true");
             verbose = properties.getProperty("catg.isVerbose","false").equals("true");
+            printHistory = properties.getProperty("catg.isPrintHistory","false").equals("true");
             printTrace = properties.getProperty("catg.isPrintTrace","false").equals("true");
             printConstraints = properties.getProperty("catg.isPrintConstraints","false").equals("true");
             printFormulaAndSolutions = properties.getProperty("catg.isPrintFormulaAndSolutions","false").equals("true");
@@ -112,7 +114,7 @@ public class Config {
             scopeEndMarker = properties.getProperty("catg.scopeEndMarker", "end$$$$");
 
             oldStates = properties.getProperty("catg.oldStatesFile","oldStates");
-            test = properties.getProperty("catg.test", "test");
+            test = properties.getProperty("catg.test", System.getProperty("catg.test", "test"));
             String testCheckingClass = properties.getProperty("catg.testCheckingClass", "janala.config.DefaultTestCheckerImpl");
             testChecker = (TestChecker) loadClass(testCheckingClass);
 

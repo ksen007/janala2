@@ -55,6 +55,7 @@ import java.util.logging.Logger;
  */
 public class Main {
     private final static Logger logger = MyLogger.getLogger(Coverage.class.getName());
+    public static boolean isInPrefix = true;
 
     private static boolean isInputAvailable() {
         if (index < inputs.size() && scopeDepth >= inputDepth) {
@@ -263,6 +264,7 @@ public class Main {
         for (i=0; i<len; i++) {
             char c = eventName.charAt(i);
             pathsState = pathsState.step(c);
+            //System.out.println("Stepping on '"+c+"'");
             if (pathsState == null) {
                 System.out.println("Pruning path as event prefix '"+eventPrefix+"' is not in regular expression '"+pathRegex+"'");
                 System.exit(0);
@@ -273,6 +275,7 @@ public class Main {
     public static void pathRegex(String regex) {
         pathRegex = regex;
         Automaton pathsAutomaton = (new RegExp(regex)).toAutomaton();
+        //System.out.println(pathsAutomaton.toDot());
         pathsState = pathsAutomaton.getInitialState();
     }
 
@@ -323,19 +326,22 @@ public class Main {
     }
 
     public static void equivalent(String location, Serializable value) {
-        readOldStates();
-        HashSet<Serializable> states = oldStates.get(location);
-        if (states == null) {
-            states = new HashSet<Serializable>();
-            oldStates.put(location, states);
-            states.add(value);
-            oldStatesChanged = true;
-        } else {
-            if (!states.contains(value)) {
+        if (!isInPrefix) {
+            readOldStates();
+            HashSet<Serializable> states = oldStates.get(location);
+            if (states == null) {
+                states = new HashSet<Serializable>();
+                oldStates.put(location, states);
                 states.add(value);
+                oldStatesChanged = true;
             } else {
-                System.out.println("Pruning path as equivalent state found");
-                System.exit(0);
+                if (!states.contains(value)) {
+                    states.add(value);
+                    oldStatesChanged = true;
+                } else {
+                    System.out.println("Pruning path as equivalent state found");
+                    System.exit(0);
+                }
             }
         }
     }
