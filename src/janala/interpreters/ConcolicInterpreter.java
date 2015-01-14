@@ -34,6 +34,7 @@
 package janala.interpreters;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
+import janala.Main;
 import janala.config.Config;
 import janala.instrument.Coverage;
 import janala.logger.ClassNames;
@@ -224,6 +225,7 @@ public class ConcolicInterpreter implements IVisitor {
     public void endExecution() {
         history.solveAndSave();
         Coverage.write();
+        Main.writeOldStates();
     }
 
 

@@ -76,6 +76,9 @@ public class Config {
     public String scopeEndMarker;
     public int scopeBeginSymbol = -1;
     public int scopeEndSymbol = -2;
+    public String test;
+    public TestChecker testChecker;
+    public String oldStates;
 
     public Config() {
         try {
@@ -108,11 +111,33 @@ public class Config {
             scopeBeginMarker = properties.getProperty("catg.scopeBeginMarker", "begin$$$$");
             scopeEndMarker = properties.getProperty("catg.scopeEndMarker", "end$$$$");
 
+            oldStates = properties.getProperty("catg.oldStatesFile","oldStates");
+            test = properties.getProperty("catg.test", "test");
+            String testCheckingClass = properties.getProperty("catg.testCheckingClass", "janala.config.DefaultTestCheckerImpl");
+            testChecker = (TestChecker) loadClass(testCheckingClass);
+
     	} catch (IOException ex) {
     		ex.printStackTrace();
         }
     }
 
+    public Object loadClass(String cName) {
+        try {
+            Class clazz = Class.forName(cName);
+            Object ret = clazz.newInstance();
+            return ret;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return null;
+    }
 
     public Logger getLogger() {
         try {

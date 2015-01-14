@@ -33,11 +33,20 @@
 
 package janala;
 
+import dk.brics.automaton.Automaton;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.State;
 import janala.config.Config;
+import janala.instrument.Coverage;
 import janala.interpreters.OrValue;
+import janala.utils.MyLogger;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
@@ -45,6 +54,8 @@ import java.util.ArrayList;
  * Time: 4:50 PM
  */
 public class Main {
+    private final static Logger logger = MyLogger.getLogger(Coverage.class.getName());
+
     private static boolean isInputAvailable() {
         if (index < inputs.size() && scopeDepth >= inputDepth) {
             String tmp = inputs.get(index);
@@ -242,4 +253,90 @@ public class Main {
     }
 
 
+    private static State pathsState;
+    private static String pathRegex;
+    private static String eventPrefix = "";
+
+    public static void event(String eventName) {
+        eventPrefix = eventPrefix + " " + eventName;
+        int i, len = eventName.length();
+        for (i=0; i<len; i++) {
+            char c = eventName.charAt(i);
+            pathsState = pathsState.step(c);
+            if (pathsState == null) {
+                System.out.println("Pruning path as event prefix '"+eventPrefix+"' is not in regular expression '"+pathRegex+"'");
+                System.exit(0);
+            }
+        }
+    }
+
+    public static void pathRegex(String regex) {
+        pathRegex = regex;
+        Automaton pathsAutomaton = (new RegExp(regex)).toAutomaton();
+        pathsState = pathsAutomaton.getInitialState();
+    }
+
+
+    private static TreeMap<String, HashSet<Serializable>> oldStates;
+    private static boolean oldStatesChanged = false;
+
+    public static void readOldStates() {
+        if (oldStates == null) {
+            ObjectInputStream inputStream = null;
+
+            try {
+                inputStream = new ObjectInputStream(new FileInputStream(Config.instance.oldStates));
+                Object tmp = inputStream.readObject();
+                if (tmp instanceof TreeMap) {
+                    oldStates = (TreeMap<String, HashSet<Serializable>>) tmp;
+                } else {
+                    oldStates = new TreeMap<String, HashSet<Serializable>>();
+                }
+            } catch (Exception e) {
+                oldStates = new TreeMap<String, HashSet<Serializable>>();
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (IOException ex) {
+                    logger.log(Level.WARNING, "", ex);
+                }
+            }
+        }
+    }
+
+    public static void writeOldStates() {
+        if (oldStatesChanged) {
+            ObjectOutputStream outputStream;
+            try {
+                outputStream = new ObjectOutputStream(new FileOutputStream(Config.instance.oldStates));
+                outputStream.writeObject(oldStates);
+                outputStream.close();
+
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "", e);
+                System.exit(1);
+            }
+
+        }
+    }
+
+    public static void equivalent(String location, Serializable value) {
+        readOldStates();
+        HashSet<Serializable> states = oldStates.get(location);
+        if (states == null) {
+            states = new HashSet<Serializable>();
+            oldStates.put(location, states);
+            states.add(value);
+            oldStatesChanged = true;
+        } else {
+            if (!states.contains(value)) {
+                states.add(value);
+            } else {
+                System.out.println("Pruning path as equivalent state found");
+                System.exit(0);
+            }
+        }
+    }
 }

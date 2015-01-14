@@ -35,6 +35,8 @@ import janala.Main;
 import janala.config.Config;
 import janala.interpreters.OrValue;
 
+import java.io.Serializable;
+
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  * Date: 7/1/12
@@ -165,6 +167,24 @@ public class CATG {
 
     public static void EndScope() {
         Main.EndScope();
+    }
+
+    public static void event(String test, String eventName) {
+        if (Config.instance.testChecker.check(test)) {
+            Main.event(eventName);
+        }
+    }
+
+    public static void pathRegex(String test, String regex) {
+        if (Config.instance.testChecker.check(test)) {
+            Main.pathRegex(regex);
+        }
+    }
+
+    public static void equivalent(String test, String location, Serializable value) {
+        if (Config.instance.testChecker.check(test)) {
+            Main.equivalent(location, value);
+        }
     }
 
 }
