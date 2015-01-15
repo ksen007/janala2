@@ -43,6 +43,7 @@ import java.util.logging.Logger;
  */
 public class Coverage implements Serializable {
     private HashMap<String,Integer> classNameToCid;
+    private TreeMap<Integer, String> cidmidToName;
     private int nBranches;
     private int nCovered;
     private TreeMap<Integer, Integer> covered;
@@ -51,6 +52,8 @@ public class Coverage implements Serializable {
 
     public static Coverage instance = null;
     private final static Logger logger = MyLogger.getLogger(Coverage.class.getName());
+    private String lastMethod;
+    private String lastClassName;
 
 
     private Coverage() {
@@ -59,6 +62,7 @@ public class Coverage implements Serializable {
         nCovered = 0;
         covered = new TreeMap<Integer, Integer>();
         tmpCovered = new TreeMap<Integer, Integer>();
+        cidmidToName = new TreeMap<Integer, String>();
     }
 
     public static void read() {
@@ -105,6 +109,7 @@ public class Coverage implements Serializable {
 
     public int getCid(String cname) {
         int ret;
+        lastClassName = cname;
         if (classNameToCid.containsKey(cname)) {
             isNewClass = false;
             return classNameToCid.get(cname);
@@ -117,6 +122,12 @@ public class Coverage implements Serializable {
                 isNewClass = true;
             return ret;
         }
+    }
+
+    public void setCidmidToName(int mid) {
+        int cid = classNameToCid.get(lastClassName);
+        int cidmid = (cid << GlobalStateForInstrumentation.MBITS) + mid;
+        cidmidToName.put(cidmid, lastClassName+"."+lastMethod);
     }
 
     public void addBranchCount(int iid) {
@@ -154,26 +165,33 @@ public class Coverage implements Serializable {
     }
 
     public void printCoverage() {
-        TreeMap<Integer, Integer> counters = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> methodToTotalBranches = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> methodToCoveredBranches = new TreeMap<Integer, Integer>();
         TreeMap<Integer, Boolean> mcovered = new TreeMap<Integer, Boolean>();
         for (int key : covered.keySet()) {
             //System.out.println(key);
             int cidmid = key >> (32-GlobalStateForInstrumentation.CBITS-GlobalStateForInstrumentation.MBITS);
-            if (!counters.containsKey(cidmid)) {
-                counters.put(cidmid,0);
+            if (!methodToTotalBranches.containsKey(cidmid)) {
+                methodToTotalBranches.put(cidmid, 0);
+                methodToCoveredBranches.put(cidmid, 0);
                 mcovered.put(cidmid, false);
             }
-            counters.put(cidmid, counters.get(cidmid)+2);
+            methodToTotalBranches.put(cidmid, methodToTotalBranches.get(cidmid)+2);
             int value = covered.get(key);
             if (value > 0) {
+                if ((value & 2) > 0)
+                    methodToCoveredBranches.put(cidmid, methodToCoveredBranches.get(cidmid)+1);
+                if ((value & 1) > 0)
+                    methodToCoveredBranches.put(cidmid, methodToCoveredBranches.get(cidmid)+1);
                 mcovered.put(cidmid, true);
             }
         }
         int mtotals = 0;
         int nM = 0;
-        for (int key : counters.keySet()) {
+        for (int key : methodToTotalBranches.keySet()) {
             if (mcovered.get(key)) {
-                mtotals+=counters.get(key);
+                mtotals+=methodToTotalBranches.get(key);
+                System.out.println("In "+cidmidToName.get(key)+" covered "+methodToCoveredBranches.get(key)+" of "+methodToTotalBranches.get(key)+" branches");
                 nM++;
             }
         }
@@ -186,4 +204,11 @@ public class Coverage implements Serializable {
         //System.out.println("Total methods = "+counters.size());
     }
 
+    public void setLastMethod(String lastMethod) {
+        this.lastMethod = lastMethod;
+    }
+
+    public String getLastMethod() {
+        return lastMethod;
+    }
 }

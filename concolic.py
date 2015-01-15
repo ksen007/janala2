@@ -33,7 +33,11 @@ def concolic ():
     yourpgm = args.className
     isOffline = args.offline
     verbose = args.verbose
-    jvmOpts = "-D"+(" -D".join(args.D))
+    print args.D
+    if not args.D == None:
+        jvmOpts = "-D"+(" -D".join(args.D))
+    else:
+        jvmOpts = ""
     print jvmOpts
     if isOffline:
         loggerClass = "janala.logger.FileLogger"

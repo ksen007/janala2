@@ -27,46 +27,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
+package tests.java16;
+
+import catg.CATG;
+
+import tests.java16.util.TreeMap;
+
+/**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
+public class TreeMapTest {
+    public static void main(String[] args) {
+        TreeMap<SimpleObject, Integer> t = new TreeMap<SimpleObject, Integer>();
 
-package janala.instrument;
+        SimpleObject x = new SimpleObject(CATG.readInt(0));
+        t.put(x, 1);
+        x = new SimpleObject(CATG.readInt(0));
+        t.put(x, 1);
+        x = new SimpleObject(CATG.readInt(0));
+        t.put(x, 1);
+        x = new SimpleObject(CATG.readInt(0));
+        t.put(x, 1);
+        x = new SimpleObject(CATG.readInt(0));
+        t.put(x, 1);
 
-public class GlobalStateForInstrumentation {
-    public static GlobalStateForInstrumentation instance = new GlobalStateForInstrumentation();
-    private int iid = 0;
-    private int mid = 0;
-    private int cid = 0;
+        x = new SimpleObject(CATG.readInt(0));
+        t.remove(x);
 
-    public final static int CBITS = 14;
-    public final static int MBITS = 8;
-
-//    private TObjectIntHashMap<String> classNameToInternalID = new TObjectIntHashMap<String>();
-
-    public int getIid(int line) {
-        //System.out.println("iid="+iid+" line="+line);
-        iid++;
-        return cid + iid + (this.mid << (32-CBITS-MBITS));
-    }
-
-    public int getMid() {
-        return mid;
-    }
-
-    public void incMid() {
-        this.mid++;
-        this.iid = 0;
-        Coverage.instance.setCidmidToName(mid);
-    }
-
-    public int getCid() {
-        return cid;
-    }
-
-    public void setCid(int cid) {
-        this.iid = 0;
-        this.mid = 0;
-        this.cid = cid << (32-CBITS);
+        x = new SimpleObject(CATG.readInt(0));
+        t.get(x);
     }
 }
