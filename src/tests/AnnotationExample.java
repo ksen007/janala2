@@ -34,46 +34,32 @@ import catg.CATG;
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public class AbstractionTest1 {
-    public static boolean testme(int x, int y){
-        int z = foo(y);
-        if(z==x){
-            if(x>y+10){
-                return true;
+public class AnnotationExample {
+    public static int count(int[] array,int element){
+        int ret = 0;
+        for (int i=0; i<array.length; i++)
+            if (array[i]==element) {
+                CATG.event("test1", "a");
+                ret++;
             }
-        }
-        return false;
+        return ret;
     }
-
-    private static int foo(int y) {
-        return 2*y;
-    }
-
-    public static void main(String[] args){
-        int x1 = CATG.readInt(1);
-        int y1 = CATG.readInt(1);
-        int x2 = CATG.readInt(1);
-        int y2 = CATG.readInt(1);
-        System.out.println(x1);
-        System.out.println(y1);
-        System.out.println(x2);
-        System.out.println(y2);
-
-        CATG.BeginScope("test");
-        boolean b1 = testme(x1, y1);
-        CATG.EndScope("test");
-        b1 = CATG.abstractBool("test", b1);
-
-        CATG.BeginScope("test");
-        boolean b2 = testme(x2, y2);
-        CATG.EndScope("test");
-        b2 = CATG.abstractBool("test", b2);
-
-        System.out.println(b1);
-        System.out.println(b2);
-
-        if (b1 && b2) {
-            System.out.println("Error");
+    public static void main(String[] args) {
+        CATG.pathRegex("test1", "a?ba?");
+        int[] input = CATG.readIntArray(6, 0);
+        int count1 = count(input, 3);
+        System.out.print("count1 = ");
+        System.out.println(count1);
+        CATG.equivalent("test2", "loc1", count1>0);
+        CATG.event("test1", "b");
+        int count2 = count(input, 7);
+        System.out.print("count2 = ");
+        System.out.println(count2);
+//        CATG.equivalent("test2", "loc2", count2>0);
+        if (count1 == 0 && count2 == 0) {
+            System.out.println("do something ");
+        } else {
+            System.out.println("do something else");
         }
     }
 }

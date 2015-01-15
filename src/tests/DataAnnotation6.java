@@ -13,15 +13,15 @@ public class DataAnnotation6 {
 		System.out.println("z = " + z);
 
 		boolean flag, flagRuntime;
-		CATG.BeginScope();
+		CATG.BeginScope("test");
 		{
 			flag = someComplexLogic(x, y, z);
 
 			flagRuntime = flag;
 			System.out.println("flagRuntime = " + flagRuntime);
 		}
-		CATG.EndScope();
-		flag = CATG.abstractBool(flag);
+		CATG.EndScope("test");
+		flag = CATG.abstractBool("test", flag);
 
         System.out.println("flag = " + flag);
 		if(flag) {

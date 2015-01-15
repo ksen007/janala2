@@ -43,46 +43,74 @@ import java.io.Serializable;
  * Time: 12:09 PM
  */
 public class CATG {
-    public static int abstractInt(int x) {
-        int y = readInt(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static int abstractInt(String test, int x) {
+        if (Config.instance.testChecker.check(test)) {
+            int y = readInt(x);
+            Main.AbstractEqualsConcrete(Main.compare(y, x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
-    public static boolean abstractBool(boolean x) {
-        boolean y = readBool(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static boolean abstractBool(String test, boolean x) {
+        if (Config.instance.testChecker.check(test)) {
+            boolean y = readBool(x);
+            Main.AbstractEqualsConcrete(Main.compare(y,x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
-    public static long abstractLong(long x) {
-        long y = readLong(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static long abstractLong(String test, long x) {
+        if (Config.instance.testChecker.check(test)) {
+            long y = readLong(x);
+            Main.AbstractEqualsConcrete(Main.compare(y,x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
-    public static char abstractChar(char x) {
-        char y = readChar(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static char abstractChar(String test, char x) {
+        if (Config.instance.testChecker.check(test)) {
+            char y = readChar(x);
+            Main.AbstractEqualsConcrete(Main.compare(y,x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
-    public static byte abstractByte(byte x) {
-        byte y = readByte(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static byte abstractByte(String test, byte x) {
+        if (Config.instance.testChecker.check(test)) {
+            byte y = readByte(x);
+            Main.AbstractEqualsConcrete(Main.compare(y,x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
-    public static short abstractShort(short x) {
-        short y = readShort(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static short abstractShort(String test, short x) {
+        if (Config.instance.testChecker.check(test)) {
+            short y = readShort(x);
+            Main.AbstractEqualsConcrete(Main.compare(y,x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
-    public static String abstractString(String x) {
-        String y = readString(x);
-        Main.AbstractEqualsConcrete(Main.compare(y,x));
-        return y;
+    public static String abstractString(String test, String x) {
+        if (Config.instance.testChecker.check(test)) {
+            String y = readString(x);
+            Main.AbstractEqualsConcrete(Main.compare(y,x));
+            return y;
+        } else {
+            return x;
+        }
     }
 
     public static int[] readIntArray(int length, int x) {
@@ -161,12 +189,16 @@ public class CATG {
         return predicate;
     }
 
-    public static void BeginScope() {
-        Main.BeginScope();
+    public static void BeginScope(String test) {
+        if (Config.instance.testChecker.check(test)) {
+            Main.BeginScope();
+        }
     }
 
-    public static void EndScope() {
-        Main.EndScope();
+    public static void EndScope(String test) {
+        if (Config.instance.testChecker.check(test)) {
+            Main.EndScope();
+        }
     }
 
     public static void event(String test, String eventName) {

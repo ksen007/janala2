@@ -181,6 +181,7 @@ public class Coverage implements Serializable {
         //System.out.println("Total branches ="+covered.size());
         System.out.println("Branch coverage with respect to covered classes = "+(100.0*nCovered/nBranches)+"%");
         System.out.println("Branch coverage with respect to covered methods = "+(100.0*nCovered/mtotals)+"%");
+        System.out.println("Total branches in covered methods = "+mtotals);
         //System.out.println("Methods covered = "+nM);
         //System.out.println("Total methods = "+counters.size());
     }

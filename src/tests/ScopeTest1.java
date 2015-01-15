@@ -59,9 +59,9 @@ public class ScopeTest1 {
             System.out.println("20");
         }
 
-        CATG.BeginScope();
+        CATG.BeginScope("test");
         testme();
-        CATG.EndScope();
+        CATG.EndScope("test");
 
         int y2 = CATG.readInt(0);
         if (y2 == 30) {
