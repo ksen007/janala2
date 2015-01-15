@@ -50,11 +50,11 @@ public class TreeMapTest {
         t.put(x, 1);
         x = new SimpleObject(CATG.readInt(0));
         t.put(x, 1);
+        x = new SimpleObject(CATG.readInt(0));
+        t.put(x, 1);
 
         x = new SimpleObject(CATG.readInt(0));
         t.remove(x);
 
-        x = new SimpleObject(CATG.readInt(0));
-        t.get(x);
     }
 }

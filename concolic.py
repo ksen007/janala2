@@ -10,6 +10,7 @@ def getArguments ():
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", help="Perform concolic testing offline.  An intermediate trace file is generated during the execution of the program. offilne mode results in 2X slowdown that non-offline mode", action="store_true")
     parser.add_argument("-v", "--verbose", help="Print commands that are executed.", action="store_true")
+    parser.add_argument("-c", "--coverage", help="Compute deatiled coverage by rerunning tests.", action="store_true")
     parser.add_argument("-D", help="JVM options", action="append")
     parser.add_argument("maxIterations", help="Maximum number of times the program under test can be executed.", type=int)
     parser.add_argument("className", help="Java class to be tested.")
@@ -20,33 +21,8 @@ def getArguments ():
 
 
 def concolic ():
-    if platform.system() == "Windows":
-        sep = ";"
-        windows=True
-    else:
-        sep = ":"
-        windows=False
-    catg_home = os.path.abspath(os.path.dirname(__file__)).replace("\\","/")+"/"
-    classpath = catg_home+"out/production/tests"+sep+catg_home+"out/production/janala"+sep+catg_home+"lib/asm-all-3.3.1.jar"+sep+catg_home+"lib/trove-3.0.3.jar"+sep+catg_home+"lib/automaton.jar"+sep+catg_home+"lib/iagent.jar"
-    args = getArguments()
-    iters = args.maxIterations
-    yourpgm = args.className
-    isOffline = args.offline
-    verbose = args.verbose
-    print args.D
-    if not args.D == None:
-        jvmOpts = "-D"+(" -D".join(args.D))
-    else:
-        jvmOpts = ""
-    print jvmOpts
-    if isOffline:
-        loggerClass = "janala.logger.FileLogger"
-    else:
-        loggerClass = "janala.logger.DirectConcolicExecution"
-    arguments = ' '.join(args.arguments)
     cmd1 = "java -Xmx4096M -Xms2048M -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
 
-    print cmd1
     cmd1List = shlex.split(cmd1)
     if verbose:
         print cmd1
@@ -61,8 +37,15 @@ def concolic ():
 
     i = 1
     while i <= iters:
-        try: 
-            shutil.copy("inputs", "inputs{}".format(i))
+        try:
+            try:
+                with open ("isRealInput", "r") as myfile:
+                    data=myfile.read().replace('\n', '')
+                print data
+            except:
+                data = "true"
+            if data != "false":
+                shutil.copy("inputs", "inputs{}".format(i))
             shutil.copy("inputs", "inputs.old")
         except:
             pass
@@ -85,13 +68,71 @@ def concolic ():
         elif i == iters:
             with open("../test.log", 'a') as f:
                 f.write("{} ({}) passed\n".format(yourpgm, iters))
-            sys.exit()
+            return
         else:
             with open("../test.log", 'a') as f:
                 f.write("****************** {} ({}) failed!!!\n".format(yourpgm, iters))
-            sys.exit()
+            return
     with open("../test.log", 'a') as f:
         f.write("****************** {} ({}) failed!!!\n".format(yourpgm, iters))
 
+def remove(file):
+    try:
+        os.remove(file)
+    except:
+        pass
+
+
+def rerunTests():
+    print "Rerunning tests"
+    cmd1 = "java -Xmx4096M -Xms2048M -ea -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -cp "+catg_home+"lib/emma.jar emmarun -merge yes -raw -sp "+catg_home+"src/ -cp "+ classpath+" "+yourpgm+" "+arguments
+    cmd1List = shlex.split(cmd1)
+    remove('inputs')
+    remove('inputs.bak')
+    remove('inputs.old')
+    print "[inputs1]"
+    if verbose:
+        print cmd1
+    subprocess.call(cmd1List, shell=windows)
+    for filename in os.listdir('.'):
+        if filename.startswith('inputs'):
+            shutil.copy(filename, "inputs")
+            print "["+filename+"]"
+            if verbose:
+                print cmd1
+            subprocess.call(cmd1List, shell=windows)
+    cmd2 = "java -cp "+catg_home+"lib/emma.jar emma report -r html -in coverage.es -sp "+catg_home+"src/"
+    cmd2List = shlex.split(cmd2)
+    subprocess.call(cmd2List, shell=windows)
+
+if platform.system() == "Windows":
+    sep = ";"
+    windows=True
+else:
+    sep = ":"
+    windows=False
+catg_home = os.path.abspath(os.path.dirname(__file__)).replace("\\","/")+"/"
+classpath = catg_home+"out/production/tests"+sep+catg_home+"out/production/janala"+sep+catg_home+"lib/asm-all-3.3.1.jar"+sep+catg_home+"lib/trove-3.0.3.jar"+sep+catg_home+"lib/automaton.jar"+sep+catg_home+"lib/iagent.jar"
+args = getArguments()
+iters = args.maxIterations
+yourpgm = args.className
+isOffline = args.offline
+verbose = args.verbose
+print args.D
+if not args.D == None:
+    jvmOpts = "-D"+(" -D".join(args.D))
+else:
+    jvmOpts = ""
+print jvmOpts
+if isOffline:
+    loggerClass = "janala.logger.FileLogger"
+else:
+    loggerClass = "janala.logger.DirectConcolicExecution"
+arguments = ' '.join(args.arguments)
+
+
+
 concolic()
+if args.coverage:
+    rerunTests()
 

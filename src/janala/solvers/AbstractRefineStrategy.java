@@ -29,6 +29,7 @@
 
 package janala.solvers;
 
+import janala.Main;
 import janala.instrument.Coverage;
 
 import java.util.ArrayList;
@@ -46,8 +47,10 @@ public class AbstractRefineStrategy extends Strategy  {
         if (beginIndex == -1) {
             Coverage.instance.commitBranches();
             System.out.println("******************* Found a real input. *************************");
+            Main.setRealInput(true);
         } else {
             System.out.println("******************* Found an intermediate input.  It should not be used for testing. *************************");
+            Main.setRealInput(false);
         }
         while ((ret = searchWithIfPossibleAssert(history, beginIndex, endIndex, historySize, solver)) == -1) {
             if (beginIndex == -1) {

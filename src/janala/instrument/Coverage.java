@@ -191,7 +191,7 @@ public class Coverage implements Serializable {
         for (int key : methodToTotalBranches.keySet()) {
             if (mcovered.get(key)) {
                 mtotals+=methodToTotalBranches.get(key);
-                System.out.println("In "+cidmidToName.get(key)+" covered "+methodToCoveredBranches.get(key)+" of "+methodToTotalBranches.get(key)+" branches");
+//                System.out.println("In "+cidmidToName.get(key)+" covered "+methodToCoveredBranches.get(key)+" of "+methodToTotalBranches.get(key)+" branches");
                 nM++;
             }
         }

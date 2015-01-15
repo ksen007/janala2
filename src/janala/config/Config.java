@@ -95,7 +95,7 @@ public class Config {
             traceFileName = properties.getProperty("catg.traceFile", "trace");
             traceAuxFileName = properties.getProperty("catg.auxTraceFile","trace.aux");
             history = properties.getProperty("catg.historyFile","history");
-            coverage = properties.getProperty("catg.coverageFile","coverage");
+            coverage = properties.getProperty("catg.coverageFile","coverage.catg");
             inputs = properties.getProperty("catg.inputsFile","inputs");
             yicesCommand = properties.getProperty("catg.yicesCommand", "yices");
             formulaFile = properties.getProperty("catg.formulaFile", "formula");

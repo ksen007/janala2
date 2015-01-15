@@ -258,6 +258,19 @@ public class Main {
     private static String pathRegex;
     private static String eventPrefix = "";
 
+    public static void setRealInput(boolean isReal) {
+        Writer writer = null;
+
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(
+                  new FileOutputStream("isRealInput"), "utf-8"));
+            writer.write(""+isReal);
+        } catch (IOException ex) {
+        } finally {
+           try {writer.close();} catch (Exception ex) {}
+        }
+    }
+
     public static void event(String eventName) {
         eventPrefix = eventPrefix + " " + eventName;
         int i, len = eventName.length();
@@ -267,6 +280,7 @@ public class Main {
             //System.out.println("Stepping on '"+c+"'");
             if (pathsState == null) {
                 System.out.println("Pruning path as event prefix '"+eventPrefix+"' is not in regular expression '"+pathRegex+"'");
+                Main.setRealInput(false);
                 System.exit(0);
             }
         }
@@ -340,6 +354,7 @@ public class Main {
                     oldStatesChanged = true;
                 } else {
                     System.out.println("Pruning path as equivalent state found");
+                    Main.setRealInput(false);
                     System.exit(0);
                 }
             }
