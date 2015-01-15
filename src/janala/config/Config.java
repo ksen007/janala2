@@ -114,8 +114,8 @@ public class Config {
             scopeEndMarker = properties.getProperty("catg.scopeEndMarker", "end$$$$");
 
             oldStates = properties.getProperty("catg.oldStatesFile","oldStates");
-            test = properties.getProperty("catg.test", System.getProperty("catg.test", "test"));
-            String testCheckingClass = properties.getProperty("catg.testCheckingClass", "janala.config.DefaultTestCheckerImpl");
+            test = System.getProperty("catg.test", properties.getProperty("catg.test",  "test"));
+            String testCheckingClass = System.getProperty("catg.testCheckingClass",properties.getProperty("catg.testCheckingClass", "janala.config.DefaultTestCheckerImpl"));
             testChecker = (TestChecker) loadClass(testCheckingClass);
 
     	} catch (IOException ex) {

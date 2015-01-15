@@ -10,6 +10,7 @@ def getArguments ():
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", help="Perform concolic testing offline.  An intermediate trace file is generated during the execution of the program. offilne mode results in 2X slowdown that non-offline mode", action="store_true")
     parser.add_argument("-v", "--verbose", help="Print commands that are executed.", action="store_true")
+    parser.add_argument("-D", help="JVM options", action="append")
     parser.add_argument("maxIterations", help="Maximum number of times the program under test can be executed.", type=int)
     parser.add_argument("className", help="Java class to be tested.")
     parser.add_argument("arguments", nargs='*', help="Arguments passed to the program under test.")
@@ -32,13 +33,16 @@ def concolic ():
     yourpgm = args.className
     isOffline = args.offline
     verbose = args.verbose
+    jvmOpts = "-D"+(" -D".join(args.D))
+    print jvmOpts
     if isOffline:
         loggerClass = "janala.logger.FileLogger"
     else:
         loggerClass = "janala.logger.DirectConcolicExecution"
     arguments = ' '.join(args.arguments)
-    cmd1 = "java -Xmx4096M -Xms2048M -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
+    cmd1 = "java -Xmx4096M -Xms2048M -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
 
+    print cmd1
     cmd1List = shlex.split(cmd1)
     if verbose:
         print cmd1
