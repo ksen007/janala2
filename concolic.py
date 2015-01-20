@@ -19,6 +19,7 @@ def getArguments ():
     return args
 
 
+catg_tmp_dir = "catg_tmp"
 
 def concolic ():
     cmd1 = "java -Xmx4096M -Xms2048M -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
@@ -26,7 +27,6 @@ def concolic ():
     cmd1List = shlex.split(cmd1)
     if verbose:
         print cmd1
-    catg_tmp_dir = "catg_tmp"
     try:
         shutil.rmtree(catg_tmp_dir)
     except: pass
@@ -135,4 +135,7 @@ arguments = ' '.join(args.arguments)
 concolic()
 if args.coverage:
     rerunTests()
+    print "\n\n*********************************************************************************************"
+    print "To see detailed coverage information open the file catg_tmp/coverage/index.html in a browser."
+    print "*********************************************************************************************\n"
 
