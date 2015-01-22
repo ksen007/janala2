@@ -390,6 +390,7 @@ class Yylex {
                         yy_move_end();
                     }
                     yy_to_mark();
+                    CATG.equivalent("test1", "loc1", yy_last_accept_state);
                     switch (yy_last_accept_state) {
                         case 1:
 						

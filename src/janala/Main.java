@@ -258,13 +258,17 @@ public class Main {
     private static String pathRegex;
     private static String eventPrefix = "";
 
+    private static boolean isRealInput = true;
     public static void setRealInput(boolean isReal) {
         Writer writer = null;
 
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(
-                  new FileOutputStream("isRealInput"), "utf-8"));
-            writer.write(""+isReal);
+            if (isRealInput) {
+                writer = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream("isRealInput"), "utf-8"));
+                writer.write("" + isReal);
+                isRealInput = isReal;
+            }
         } catch (IOException ex) {
         } finally {
            try {writer.close();} catch (Exception ex) {}

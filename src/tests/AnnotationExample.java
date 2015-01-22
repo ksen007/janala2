@@ -46,7 +46,7 @@ public class AnnotationExample {
     }
     public static void main(String[] args) {
         CATG.pathRegex("test1", "a?ba?");
-        int[] input = CATG.readIntArray(6, 0);
+        int[] input = CATG.readIntArray(7, 0);
 
         CATG.BeginScope("test3");
         int count1 = count(input, 3);

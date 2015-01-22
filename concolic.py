@@ -6,6 +6,8 @@ import sys
 import shlex
 import argparse
 
+from datetime import datetime
+
 def getArguments ():
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", help="Perform concolic testing offline.  An intermediate trace file is generated during the execution of the program. offilne mode results in 2X slowdown that non-offline mode", action="store_true")
@@ -53,7 +55,10 @@ def concolic ():
             shutil.copy("history", "history.old")
         except:
             pass
-        print "[Input {}]".format(i)
+        dt = datetime.now()
+
+        print "[Input {} at ({}, {}, {}, {}, {})]".format(i, dt.day, dt.hour, dt.minute, dt.second, dt.microsecond)
+        sys.stdout.flush()
         subprocess.call(cmd1List, shell=windows)
         if isOffline:
             print "..."
