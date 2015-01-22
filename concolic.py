@@ -12,7 +12,7 @@ def getArguments ():
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", help="Perform concolic testing offline.  An intermediate trace file is generated during the execution of the program. offilne mode results in 2X slowdown that non-offline mode", action="store_true")
     parser.add_argument("-v", "--verbose", help="Print commands that are executed.", action="store_true")
-    parser.add_argument("-c", "--coverage", help="Compute deatiled coverage by rerunning tests.", action="store_true")
+    parser.add_argument("-c", "--coverage", help="Compute detailed coverage by rerunning tests.", action="store_true")
     parser.add_argument("-D", help="JVM options", action="append")
     parser.add_argument("maxIterations", help="Maximum number of times the program under test can be executed.", type=int)
     parser.add_argument("className", help="Java class to be tested.")
