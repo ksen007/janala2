@@ -56,6 +56,7 @@ import java.util.logging.Logger;
 public class Main {
     private final static Logger logger = MyLogger.getLogger(Coverage.class.getName());
     public static boolean isInPrefix = true;
+    public static boolean skipPath = false;
 
     private static boolean isInputAvailable() {
         if (index < inputs.size() && scopeDepth >= inputDepth) {
@@ -68,6 +69,10 @@ public class Main {
         return false;
     }
 
+    public static void SkipPath() {
+        skipPath = true;
+    }
+    
     public static void Ignore() {}
 
     public static void Assume(int b) {

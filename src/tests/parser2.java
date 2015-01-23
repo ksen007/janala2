@@ -29,12 +29,13 @@
 
 package tests;
 
+
 import catg.CATG;
 
 /**
  * Author: Koushik Sen (ksen@cs.berkeley.edu)
  */
-public class parser {
+public class parser2 {
     int  ident = 1;
     int number = 2;
     int lparen = 3;
@@ -58,7 +59,10 @@ public class parser {
     int becomes = 21;
     int thensym = 22;
     int dosym = 23;
+    int constsym = 24;
     int comma = 25;
+    int varsym = 26;
+    int procsym = 27;
     int period = 28;
     int oddsym = 29;
 
@@ -104,6 +108,36 @@ public class parser {
         return ret;
     }
 
+    boolean myalnum(char s[])
+    {
+        CATG.BeginScope("test1");
+        boolean ret;
+        if (!isalpha(s[0])) ret = false;
+        else {
+            for (int i = 0; i < s.length && isalphanum(s[i]); i++) {
+            }
+            ret = true;
+        }
+        CATG.EndScope("test1");
+        ret = CATG.abstractBool("test1", ret);
+        return ret;
+    }
+
+    boolean mynum(char s[])
+    {
+        CATG.BeginScope("test1");
+        boolean ret;
+        if (!isdigit(s[0])) ret = false;
+        else {
+            for (int i = 0; i < s.length && isdigit(s[i]); i++) {
+            }
+            ret = true;
+        }
+        CATG.EndScope("test1");
+        ret = CATG.abstractBool("test1", ret);
+        return ret;
+    }
+
     char[] token;
     final public static int  TOKEN_LEN = 6;
 
@@ -112,6 +146,10 @@ public class parser {
     }
 
     int gettoken(char[] s){
+
+        //printf("gettoken");
+//        if(myalnum(s) ) return ident;
+//        if(mynum(s) ) return number;
         if(matchStr(s, "id") ) return ident;
         if(matchStr(s, "10") ) return number;
         if(matchStr(s, "(") ) return lparen;
@@ -135,22 +173,36 @@ public class parser {
         if(matchStr(s, ":=") ) return becomes;
         if(matchStr(s, "then") ) return thensym;
         if(matchStr(s, "do") ) return dosym;
+        //  if(matchStr(s,"const") ) return constsym;
+        //if(matchStr(s,",") ) return comma;
+        //if(matchStr(s,"var") ) return varsym;
+        //if(matchStr(s,"proc") ) return procsym;
         if(matchStr(s, ".") ) return period;
         if(matchStr(s, "odd") ) return oddsym;
+        //  if(cute_isalnum(s) ) return ident;
+        // if(cute_isnum(s) ) return number;
         return 0;
     }
 
+    int count = 0;
+    int MAX = 3;
     void getsym(){
-        int i;
-        for (i = 0; i < TOKEN_LEN; i++) {
-            token[i] = CATG.readChar('0');
-        }
+        count++;
+        if (count <= MAX) {
+            int i;
+            for (i = 0; i < TOKEN_LEN; i++) {
+                token[i] = CATG.readChar('0');
+            }
 
-        CATG.BeginScope("test1");
-        sym = gettoken(token);
-        CATG.EndScope("test1");
-        sym = CATG.abstractInt("test1", sym);
-        System.out.println(token);
+            CATG.BeginScope("test1");
+            sym = gettoken(token);
+            CATG.EndScope("test1");
+            sym = CATG.abstractInt("test1", sym);
+            System.out.println(token);
+        } else {
+            sym = period;
+            System.out.println(".");
+        }
     }
 
 
@@ -239,6 +291,30 @@ public class parser {
             statement();
         }
     }
+
+    void block() {
+          if (accept(constsym)) {
+            do {
+              expect(ident);
+              expect(eql);
+              expect(number);
+            } while (accept(comma));
+            expect(semicolon);
+          }
+          if (accept(varsym)) {
+            do {
+              expect(ident);
+            } while (accept(comma));
+            expect(semicolon);
+          }
+          while (accept(procsym)) {
+            expect(ident);
+            expect(semicolon);
+            block();
+            expect(semicolon);
+          }
+          statement();
+          }
 
     void f() {
         init_token();

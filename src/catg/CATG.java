@@ -219,4 +219,9 @@ public class CATG {
         }
     }
 
+    
+    public static void skipPath() {
+        Main.SkipPath();
+        
+    }
 }

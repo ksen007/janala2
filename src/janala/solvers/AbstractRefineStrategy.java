@@ -41,10 +41,15 @@ import java.util.LinkedList;
 public class AbstractRefineStrategy extends Strategy  {
     @Override
     public int solve(ArrayList<Element> history, int historySize, History solver) {
-        int beginIndex = findUnsatBeginScopeIndex(history, historySize);
+        int oldBeginIndex;
+        int beginIndex = oldBeginIndex = findUnsatBeginScopeIndex(history, historySize);
+        if (Main.skipPath) {
+            beginIndex = -1;
+            System.out.println("************************ Skipping path ************************************");
+        }
         int endIndex = findMatchingEndScopeIndex(history, historySize, beginIndex);
         int ret;
-        if (beginIndex == -1) {
+        if (oldBeginIndex == -1 && !Main.skipPath) {
             Coverage.instance.commitBranches();
             System.out.println("******************* Found a real input. *************************");
             Main.setRealInput(true);
