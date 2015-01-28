@@ -93,7 +93,6 @@ public class parser {
             for (int i = 0; i < len; i++) {
                 if (s2.charAt(i) != s1[i]) {
                     ret = false;
-                    break;
                 }
             }
         } else {
@@ -140,17 +139,32 @@ public class parser {
         return 0;
     }
 
-    void getsym(){
-        int i;
-        for (i = 0; i < TOKEN_LEN; i++) {
-            token[i] = CATG.readChar('0');
-        }
+    int count = 0;
+    int MAX = 5;
 
-        CATG.BeginScope("test1");
-        sym = gettoken(token);
-        CATG.EndScope("test1");
-        sym = CATG.abstractInt("test1", sym);
-        System.out.println(token);
+    void getsym(){
+        count++;
+        if (count <= MAX) {
+            int i;
+            System.out.print(":");
+            for (i = 0; i < TOKEN_LEN; i++) {
+                token[i] = CATG.readChar('0');
+                System.out.print(token[i]);
+            }
+            System.out.println(":");
+
+            CATG.BeginScope("test1");
+            sym = gettoken(token);
+            CATG.EndScope("test1");
+            System.out.print("<");
+            System.out.println(sym);
+            sym = CATG.abstractInt("test1", sym);
+            System.out.print(sym);
+            System.out.println(">");
+        } else {
+            sym = period;
+            System.out.println("Token:.:");
+        }
     }
 
 

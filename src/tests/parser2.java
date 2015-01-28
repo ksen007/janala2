@@ -198,10 +198,10 @@ public class parser2 {
             sym = gettoken(token);
             CATG.EndScope("test1");
             sym = CATG.abstractInt("test1", sym);
-            System.out.println(token);
+            System.out.println("Token:"+token+":");
         } else {
             sym = period;
-            System.out.println(".");
+            System.out.println("Token:.:");
         }
     }
 
