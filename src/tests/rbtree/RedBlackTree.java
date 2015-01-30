@@ -41,6 +41,8 @@
 
 package tests.rbtree;
 
+import catg.CATG;
+
 /**
  * A <code>RedBlackTree</code> object is a Red-Black
  * tree.
@@ -117,6 +119,7 @@ public class RedBlackTree {
                 } else {
                     if (x == (x.parent()).right()) {
                         x = x.parent();
+                        CATG.event("test1", "l");
                         leftRotate(x);
                     }
 
@@ -135,6 +138,7 @@ public class RedBlackTree {
                 } else {
                     if (x == (x.parent()).left()) {
                         x = x.parent();
+                        CATG.event("test1", "r");
                         rightRotate(x);
                     }
 

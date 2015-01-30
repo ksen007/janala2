@@ -35,9 +35,10 @@
 
 package tests;
 
+import catg.CATG;
+import janala.Main;
 import tests.rbtree.RedBlackTree;
 import tests.rbtree.RedBlackTreeNode;
-import janala.Main;
 
 /**
  * @author Koushik Sen <ksen@cs.berkeley.edu>
@@ -45,13 +46,16 @@ import janala.Main;
  */
 public class RedBlackTreeSearch {
     public static void main(String[] args) {
-        int N = 4;
+        int N = 6;
 
+        CATG.pathRegex("test1", "((al)|(ar)).*");
         RedBlackTree tree = new RedBlackTree();
 
         for (int i = 0; i < N; i++) {
-            int x = Main.readInt(0);
-            Main.MakeSymbolic(x);
+            int x = CATG.readInt(0);
+            if (i==N-1) {
+                CATG.event("test1", "a");
+            }
             tree.treeInsert(new RedBlackTreeNode(x));
             System.out.println("Inserting "+x);
         }
@@ -62,7 +66,7 @@ public class RedBlackTreeSearch {
 
         int x = Main.readInt(0);
         Main.MakeSymbolic(x);
-        System.out.println("Searched "+tree.treeSearch(tree.root(), x).key());
+        System.out.println("Searched "+tree.treeSearch(tree.root(), x));
 
     }
 }

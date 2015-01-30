@@ -39,12 +39,15 @@ import tests.java16.util.PriorityQueue;
  */
 public class PriorityQueueTest {
     public static void main(String[] args) {
+        CATG.pathRegex("test1", "~(.*(uu|dd).*)");
+
         PriorityQueue<SimpleObject> t = new PriorityQueue<SimpleObject>();
 
         SimpleObject x = new SimpleObject(CATG.readInt(0));
         t.add(x);
         x = new SimpleObject(CATG.readInt(0));
         t.add(x);
+
         x = new SimpleObject(CATG.readInt(0));
         t.add(x);
         x = new SimpleObject(CATG.readInt(0));

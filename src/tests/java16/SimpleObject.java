@@ -46,6 +46,7 @@ public class SimpleObject implements Comparable<SimpleObject> {
 
     public SimpleObject(int v) {
         this.v = v;
+        System.out.println(v);
     }
 
     public int hashCode() {

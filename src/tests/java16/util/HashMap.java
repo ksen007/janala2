@@ -24,6 +24,8 @@
  */
 
 package tests.java16.util;
+import catg.CATG;
+
 import java.io.*;
 import java.util.Iterator;
 
@@ -392,6 +394,7 @@ public class HashMap<K,V>
         for (Entry<K,V> e = table[i]; e != null; e = e.next) {
             Object k;
             if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+                CATG.event("test1", "b");
                 V oldValue = e.value;
                 e.value = value;
                 e.recordAccess(this);

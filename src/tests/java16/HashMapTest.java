@@ -37,12 +37,15 @@ import tests.java16.util.HashMap;
  */
 public class HashMapTest {
     public static void main(String[] args) {
+        CATG.pathRegex("test1", "a ~b");
+
         HashMap<SimpleObject, Integer> t = new HashMap<SimpleObject, Integer>();
 
         SimpleObject x = new SimpleObject(CATG.readInt(0));
         t.put(x, 1);
         x = new SimpleObject(CATG.readInt(0));
         t.put(x, 1);
+        CATG.event("test1", "a");
         x = new SimpleObject(CATG.readInt(0));
         t.put(x, 1);
         x = new SimpleObject(CATG.readInt(0));

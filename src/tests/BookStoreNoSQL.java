@@ -110,16 +110,16 @@ public class BookStoreNoSQL {
 
 	public static void main(String[] argv) {
 		try {
-			System.out.println();
-			System.out.println();
+			//System.out.println();
+			//System.out.println();
 			BookStoreNoSQL bookStore = new BookStoreNoSQL();
 			bookStore.initialize();
-			bookStore.printPreConditions();
+			//bookStore.printPreConditions();
 			bookStore.execute();
-			bookStore.printPostConditions();
+			//bookStore.printPostConditions();
 			bookStore.dispose();
-			System.out.println();
-			System.out.println();
+			//System.out.println();
+			//System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -417,6 +417,7 @@ public class BookStoreNoSQL {
 					state = S24_finishedCannelScreen();
 					break;
 				}
+                CATG.equivalent("test1", "loc1", state);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -730,7 +731,7 @@ public class BookStoreNoSQL {
 
 	private int hash(int password) {
 
-		return password % 5 + 3;
+		return password;
 	}
 
 	public void dispose() {

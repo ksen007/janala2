@@ -25,6 +25,8 @@
 
 package tests.java16.util;
 
+import catg.CATG;
+
 import java.util.Iterator;
 
 /**
@@ -566,8 +568,10 @@ public class TreeMap<K,V>
                     t = t.left;
                 else if (cmp > 0)
                     t = t.right;
-                else
+                else {
+                    CATG.event("test1","b");
                     return t.setValue(value);
+                }
             } while (t != null);
         }
         Entry<K,V> e = new Entry<K,V>(key, value, parent);

@@ -25,6 +25,8 @@
 
 package tests.java16.util;
 
+import catg.CATG;
+
 import java.util.Iterator;
 
 /**
@@ -598,10 +600,12 @@ public class PriorityQueue<E> extends AbstractQueue<E>
         while (k > 0) {
             int parent = (k - 1) >>> 1;
             Object e = queue[parent];
-            if (key.compareTo((E) e) >= 0)
+            if (key.compareTo((E) e) >= 0) {
                 break;
+            }
             queue[k] = e;
             k = parent;
+            CATG.event("test1", "u");
         }
         queue[k] = key;
     }
@@ -647,6 +651,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
                 break;
             queue[k] = c;
             k = child;
+            CATG.event("test1", "d");
         }
         queue[k] = key;
     }
