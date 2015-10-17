@@ -24,7 +24,11 @@ def getArguments ():
 catg_tmp_dir = "catg_tmp"
 
 def concolic ():
-    cmd1 = "java -Xmx4096M -Xms2048M -Djanala.loggerClass="+loggerClass+" -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -javaagent:\""+catg_home+"lib/iagent.jar\" -cp "+ classpath+" -ea "+yourpgm+" "+arguments
+    cmd1 = ("java -Xmx4096M -Xms2048M -Djanala.loggerClass=" + loggerClass
+            + " -Djanala.conf=" + catg_home + "catg.conf "
+            + jvmOpts + " -javaagent:\""
+            + catg_home + "lib/catg-dev.jar\" -cp "
+            + classpath+" -ea "+yourpgm+" "+arguments)
 
     cmd1List = shlex.split(cmd1)
     if verbose:
@@ -51,7 +55,7 @@ def concolic ():
             shutil.copy("inputs", "inputs.old")
         except:
             pass
-        try: 
+        try:
             shutil.copy("history", "history.old")
         except:
             pass
@@ -116,8 +120,13 @@ if platform.system() == "Windows":
 else:
     sep = ":"
     windows=False
+
 catg_home = os.path.abspath(os.path.dirname(__file__)).replace("\\","/")+"/"
-classpath = catg_home+"out/production/tests"+sep+catg_home+"out/production/janala"+sep+catg_home+"lib/asm-all-3.3.1.jar"+sep+catg_home+"lib/trove-3.0.3.jar"+sep+catg_home+"lib/automaton.jar"+sep+catg_home+"lib/iagent.jar"
+
+classpath = (catg_home + "build/classes/integration" + sep 
+             + catg_home + "lib/asm-all-5.0.4.jar" + sep
+             + catg_home+"lib/automaton-1.11-8.jar" + sep
+             + catg_home+"lib/catg-dev.jar")
 args = getArguments()
 iters = args.maxIterations
 yourpgm = args.className
@@ -135,12 +144,9 @@ else:
     loggerClass = "janala.logger.DirectConcolicExecution"
 arguments = ' '.join(args.arguments)
 
-
-
 concolic()
 if args.coverage:
     rerunTests()
     print "\n\n*********************************************************************************************"
     print "To see detailed coverage information open the file catg_tmp/coverage/index.html in a browser."
     print "*********************************************************************************************\n"
-
