@@ -1,0 +1,63 @@
+
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use 'jcenter' for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+}
+
+sourceSets {
+    main {
+        java {
+            exclude 'src/integration'
+        }
+    }
+
+    integration {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir 'src/integration'
+        }
+    }
+}
+
+
+configurations {
+    integrationCompile.extendsFrom testCompile
+    integrationRuntime.extendsFrom testRuntime
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    compile 'org.ow2.asm:asm-all:5.0.4'  // Bytecode manipulation
+    compile 'org.choco-solver:choco-solver:3.3.1'
+    compile 'dk.brics.automaton:automaton:1.11-8' // Used for regex
+    compile 'junit:junit:4.12' // Used for assertions
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.3'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+}
+
+apply plugin: "jacoco"
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+}
+
+version = '0.2'
+jar {
+    manifest {
+        attributes 'Premain-Class': 'janala.instrument.SnoopInstructionTransformer'
+    }
+}
+
+task integrationTest (type: Test) {
+    testClassesDir = sourceSets.integration.output.classesDir
+    classpath = sourceSets.integration.runtimeClasspath
+}
