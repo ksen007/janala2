@@ -9,8 +9,8 @@ concrete interpretation of the logged instructions.
 
 You must have java, gradle, cvc4 (http://cvc4.cs.nyu.edu/downloads/), and python 2.7 in your PATH. Two extra jar files are needed to run the tool. Create a `lib` directory in the root directory and download two jar files   
 
- * [asm-all-5.0.4.jar]: http://mvnrepository.com/artifact/org.ow2.asm/asm-all/5.0.4
- * [automaton-1.11-8.jar]: http://mvnrepository.com/artifact/dk.brics.automaton/automaton/1.11-8
+ * asm-all-5.0.4.jar: http://mvnrepository.com/artifact/org.ow2.asm/asm-all/5.0.4
+ * automaton-1.11-8.jar: http://mvnrepository.com/artifact/dk.brics.automaton/automaton/1.11-8
 
 place them in the `lib` directory. Then invoke
 
