@@ -7,17 +7,35 @@ to a file a log of all instructions executed by the program and all values loade
 A concolic execution engine (see janala.interpreters.*) then takes the log and performs both symbolic and
 concrete interpretation of the logged instructions.
 
-You must have java, cvc4 (http://cvc4.cs.nyu.edu/downloads/), and python 2.7 in your PATH.
+You must have java, gradle, cvc4 (http://cvc4.cs.nyu.edu/downloads/), and python 2.7 in your PATH. Two extra jar files are needed to run the tool. Create a `lib` directory in the root directory and download two jar files   
 
-    ant build
+ * [asm-all-5.0.4.jar]: http://mvnrepository.com/artifact/org.ow2.asm/asm-all/5.0.4
+ * [automaton-1.11-8.jar]: http://mvnrepository.com/artifact/dk.brics.automaton/automaton/1.11-8
+
+place them in the `lib` directory. Then invoke
+
+    gradle build
+    
+and
+
+    gradle integrationTest
+    
+To run the the full integration tests, use
+
+    ./setup.sh  # This builds CATG and copy it to lib/
     python testall.py
+
+To run tests and see coverage report, use
+
+    gradle build
+    gradle jacocoTestReport
 
 This runs the tests using online concolic execution.  To run tests with offline concolic execution, use
 
     python --offline testall.py
 
 
-If you want to generate tests on a Java class file having a main method, you need to use the concolic.py script.  For example, the following command generates test inputs for the class tests.Testme (the java source of this class can be found in [src/tests/Testme.java](src/tests/Testme.java).
+If you want to generate tests on a Java class file having a main method, you need to use the concolic.py script.  For example, the following command generates test inputs for the class tests.Testme (the java source of this class can be found in [src/integration/java/tests/Testme.java](src/integration/java/tests/Testme.java).
 
     python concolic.py --coverage 100 tests.Testme
     
