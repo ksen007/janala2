@@ -66,6 +66,7 @@ public class Dijkstra {
             }
 
             // Fix the vertex.
+            assert min >= 0; // This assertion sometimes triggers
             fixed[min] = true;
 
             // Process the vertex's outgoing edges.

@@ -59,7 +59,7 @@ public class Node {
      * @see #key()
      * @see #keyTo
      */
-    protected int key;
+    protected int key_;
 
     /**
      * The satellite data in the node.
@@ -75,7 +75,7 @@ public class Node {
      * @param _key The key of the node.
      */
     public Node(int _key) {
-        key = _key;
+        key_ = _key;
         data = null;
     }
 
@@ -87,7 +87,7 @@ public class Node {
      */
     public Node(int _key, Object dat) {
         this(_key);
-        Object data = dat;
+        data = dat;
     }
 
     /**
@@ -96,7 +96,7 @@ public class Node {
      * @return The key of the node.
      */
     public int key() {
-        return this.key;
+        return this.key_;
     }
 
     /**
@@ -114,7 +114,7 @@ public class Node {
      * @return The node as a <code>String</code>.
      */
     public String toString() {
-        return new String("Key: " + this.key);
+        return new String("Key: " + this.key_);
     }
 
     /**
@@ -123,7 +123,7 @@ public class Node {
      * @param _key The new key of the node.
      */
     public void keyTo(int _key) {
-        this.key = _key;
+        this.key_ = _key;
     }
 
     /**
@@ -131,9 +131,9 @@ public class Node {
      *
      * @param o The new data of the node.
      */
-	public void objectTo(Object o)
-	{
-		this.data = o;
-	}
+  public void objectTo(Object o)
+  {
+    this.data = o;
+  }
 
 } // End class Node

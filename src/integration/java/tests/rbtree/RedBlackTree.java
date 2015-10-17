@@ -81,27 +81,28 @@ public class RedBlackTree {
      * @throws NullPointerException If the parameter x is null.
      */
     public void treeInsert(RedBlackTreeNode x) throws NullPointerException {
-        RedBlackTreeNode y = null;
-        RedBlackTreeNode z = this.root;
+      System.out.println("Inserting...");
+      RedBlackTreeNode y = null;
+      RedBlackTreeNode z = this.root;
 
-        while (z != null) {
-            y = z;
-            if (x.key() < z.key()) {
-                z = z.left();
-            } else {
-                z = z.right();
-            }
-        }
-        x.parentTo(y);
-        if (y == null) {
-            this.root = x;
+      while (z != null) {
+        y = z;
+        if (x.key() < z.key()) {
+          z = z.left();
         } else {
-            if (x.key() < y.key()) {
-                y.leftTo(x);
-            } else {
-                y.rightTo(x);
-            }
+          z = z.right();
         }
+      }
+      x.parentTo(y);
+      if (y == null) {
+        this.root = x;
+      } else {
+        if (x.key() < y.key()) {
+          y.leftTo(x);
+        } else {
+          y.rightTo(x);
+        }
+      }
 
 
         x.setRed();

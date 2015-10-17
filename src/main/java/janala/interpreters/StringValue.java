@@ -1,187 +1,239 @@
-/*
- * Copyright (c) 2012, NTT Multimedia Communications Laboratories, Inc. and Koushik Sen
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * 1. Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- */
-
 package janala.interpreters;
 
 import janala.config.Config;
 import janala.solvers.History;
 
-/**
- * Author: Koushik Sen (ksen@cs.berkeley.edu)
- * Date: 6/19/12
- * Time: 12:12 PM
- */
-public class StringValue extends ObjectValue {
-    private String string;
-    private SymbolicStringExpression symbolic;
+public final class StringValue extends ObjectValue {
+  private final String string;
+  private SymbolicStringExpression symbolicExp;
 
-    public StringValue(String string, int address) {
-        super(100,address);
-        this.string = string;
+  public StringValue(String string, int address) {
+    super(100, address);
+    this.string = string;
+  }
+
+  public StringValue(String string, SymbolicStringExpression symbolicExp) {
+    super(100, -1);
+    this.string = string;
+    this.symbolicExp = symbolicExp;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null) {
+      return false;
+    } else if (o == this) {
+      return true;
+    } else if (o instanceof StringValue) {
+      StringValue other = (StringValue)o;
+      return (this.string == other.string ||
+        this.string.equals(other.string)) && 
+        (this.symbolicExp == other.symbolicExp || 
+          this.symbolicExp.equals(other.symbolicExp));
+    } else {
+      return false;
     }
+  }
 
-    public StringValue(String string, SymbolicStringExpression symbolic) {
-        super(100, -1);
-        this.string = string;
-        this.symbolic = symbolic;
+  @Override
+  public String getConcrete() {
+    return string;
+  }
+
+  public SymbolicStringExpression getSymbolicExp() {
+    return symbolicExp;
+  }
+
+  private String escapeRE(String str) {
+    return str.replaceAll("([^a-zA-z0-9])", "\\\\$1");
+  }
+
+  private Value invokeEquals(Value arg) {
+    if (arg instanceof StringValue) {
+      StringValue other = (StringValue) arg;
+      boolean result = string.equals(other.string);
+      if (symbolicExp != null && other.symbolicExp != null) {
+        return new IntValue(
+          result ? 1 : 0,
+          new SymbolicStringPredicate(
+            SymbolicStringPredicate.STRING_COMPARISON_OPS.EQ, symbolicExp, other.symbolicExp));
+      } else if (symbolicExp != null) {
+        return new IntValue(
+          result ? 1 : 0,
+          new SymbolicStringPredicate(
+            SymbolicStringPredicate.STRING_COMPARISON_OPS.EQ, symbolicExp, other.string));
+      } else if (other.symbolicExp != null) {
+        return new IntValue(
+          result ? 1 : 0,
+          new SymbolicStringPredicate(
+            SymbolicStringPredicate.STRING_COMPARISON_OPS.EQ, string, other.symbolicExp));
+      } else {
+        return new IntValue(result ? 1 : 0);
+      }
+    } else {
+      // arg is not StringValue type.
+      return new IntValue(0);
     }
+  }
 
-    @Override
-    public String getConcrete() {
-        return string;
-    }
-
-    public SymbolicStringExpression getSymbolic() {
-        return symbolic;
-    }
-
-    private String escapeRE(String str) {
-        return str.replaceAll("([^a-zA-z0-9])", "\\\\$1");
-    }
-
-    @Override
-    public Value invokeMethod(String name, Value[] args, History history) {
-        if (name.equals("equals") && args.length == 1) {
-            if (args[0] instanceof StringValue) {
-                StringValue other = (StringValue)args[0];
-                boolean result = string.equals(other.string);
-                if (symbolic !=null && other.symbolic !=null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.EQ,symbolic,other.symbolic));
-                } else if (symbolic != null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.EQ,symbolic,other.string));
-                } else if (other.symbolic!=null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.EQ,string,other.symbolic));
-                } else {
-                    return new IntValue(result?1:0);
-                }
-            }
-        } else if (name.equals("startsWith") && args.length == 1) {
-            if (args[0] instanceof StringValue) {
-                StringValue other = (StringValue)args[0];
-                boolean result = string.startsWith(other.string);
-                if (symbolic != null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,escapeRE(other.string)+".*"));
-                } else {
-                    return new IntValue(result?1:0);
-                }
-            }
-        } else if (name.equals("startsWith") && args.length == 2) {
-            if (args[0] instanceof StringValue) {
-                StringValue other = (StringValue)args[0];
-                IntValue offset = (IntValue)args[1];
-                boolean result = string.startsWith(other.string, offset.concrete);
-                if (symbolic != null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(
-                            SymbolicStringPredicate.COMPARISON_OPS.IN,
-                            symbolic,
-                            ".{"+offset.concrete+"}"+escapeRE(other.string)+".*"));
-                } else {
-                    return new IntValue(result?1:0);
-                }
-            }
-        } else if (name.equals("endsWith") && args.length == 1) {
-            StringValue other = (StringValue)args[0];
-            boolean result = string.endsWith(other.string);
-            if (symbolic != null) {
-                return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,".*"+escapeRE(other.string)));
-            } else {
-                return new IntValue(result?1:0);
-            }
-        } else if (name.equals("contains") && args.length == 1) {
-            StringValue other = (StringValue)args[0];
-            boolean result = string.contains(other.string);
-            if (symbolic != null) {
-                return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,".*"+escapeRE(other.string)+".*"));
-            } else {
-                return new IntValue(result?1:0);
-            }
-        } else if (name.equals("concat") && args.length == 1) {
-            if (args[0] instanceof StringValue) {
-                StringValue other = (StringValue)args[0];
-                String result = string.concat(other.string);
-                if (symbolic !=null && other.symbolic !=null) {
-                    return new StringValue(result, symbolic.concat(other.symbolic));
-                } else if (symbolic != null) {
-                    return new StringValue(result, symbolic.concatStr(other.string));
-                } else if (other.symbolic!=null) {
-                    return new StringValue(result,other.symbolic.concatToStr(string));
-                } else {
-                    return new StringValue(result, null);
-                }
-            }
-        } else if (name.equals("length") && args.length == 0) {
-            int result = string.length();
-            if (symbolic != null) {
-                return symbolic.getField("length");
-            } else {
-                return new IntValue(result);
-            }
-        } else if (name.equals("matches") && args.length == 1) {
-            if (args[0] instanceof StringValue) {
-                StringValue other = (StringValue)args[0];
-                boolean result = string.matches(other.string);
-                if (symbolic != null) {
-                    return new IntValue(result?1:0,new SymbolicStringPredicate(SymbolicStringPredicate.COMPARISON_OPS.IN,symbolic,other.string));
-                } else {
-                    return new IntValue(result?1:0);
-                }
-            }
+  private Value invokeStartsWith(Value[] args) {
+    if (args.length == 1) {
+      if (args[0] instanceof StringValue) {
+        StringValue other = (StringValue) args[0];
+        boolean result = string.startsWith(other.string);
+        if (symbolicExp != null) {
+          return new IntValue(
+            result ? 1 : 0,
+            new SymbolicStringPredicate(
+              SymbolicStringPredicate.STRING_COMPARISON_OPS.IN,
+              symbolicExp,
+              escapeRE(other.string) + ".*"));
+        } else {
+          return new IntValue(result ? 1 : 0);
         }
-        return super.invokeMethod(name, args, history);
+      }
+    } else if (args.length == 2) {
+      if (args[0] instanceof StringValue) {
+        StringValue other = (StringValue) args[0];
+        IntValue offset = (IntValue) args[1];
+        boolean result = string.startsWith(other.string, offset.concrete);
+        if (symbolicExp != null) {
+          return new IntValue(
+            result ? 1 : 0,
+            new SymbolicStringPredicate(
+              SymbolicStringPredicate.STRING_COMPARISON_OPS.IN,
+              symbolicExp,
+              ".{" + offset.concrete + "}" + escapeRE(other.string) + ".*"));
+        } else {
+          return new IntValue(result ? 1 : 0);
+        }
+      }
+    }
+    return new IntValue(0);
+  }
+
+  private Value invokeEndsWith(Value arg) {
+    StringValue other = (StringValue) arg;
+    boolean result = string.endsWith(other.string);
+    if (symbolicExp != null) {
+      return new IntValue(
+        result ? 1 : 0,
+        new SymbolicStringPredicate(
+          SymbolicStringPredicate.STRING_COMPARISON_OPS.IN,
+          symbolicExp,
+          ".*" + escapeRE(other.string)));
+    } else {
+      return new IntValue(result ? 1 : 0);
+    }
+  }
+
+  private Value invokeContains(Value arg) {
+    StringValue other = (StringValue) arg;
+    boolean result = string.contains(other.string);
+    if (symbolicExp != null) {
+      return new IntValue(
+        result ? 1 : 0,
+        new SymbolicStringPredicate(
+          SymbolicStringPredicate.STRING_COMPARISON_OPS.IN,
+          symbolicExp,
+          ".*" + escapeRE(other.string) + ".*"));
+    } else {
+      return new IntValue(result ? 1 : 0);
+    }
+  }
+
+  private Value invokeConcat(Value arg) {
+    StringValue other = (StringValue) arg;
+    String result = string.concat(other.string);
+    if (symbolicExp != null && other.symbolicExp  != null) {
+      return new StringValue(result, symbolicExp.concat(other.symbolicExp));
+    } else if (symbolicExp != null) {
+      return new StringValue(result, symbolicExp.concatStr(other.string));
+    } else if (other.symbolicExp  != null) {
+      return new StringValue(result, other.symbolicExp.concatToStr(string));
+    } else {
+      return new StringValue(result, null);
+    }
+  }
+
+  private Value invokeMatches(Value arg) {
+    StringValue other = (StringValue) arg;
+    boolean result = string.matches(other.string);
+    if (symbolicExp != null) {
+      return new IntValue(
+        result ? 1 : 0,
+        new SymbolicStringPredicate(
+          SymbolicStringPredicate.STRING_COMPARISON_OPS.IN, symbolicExp, other.string));
+    } else {
+      return new IntValue(result ? 1 : 0);
+    }
+  }
+
+  private Value invokeReplace(Value from, Value to) {
+    if ((from instanceof IntValue) &&
+        (to instanceof IntValue)) {
+      // e.g., replace('a', 'b')
+      char fromChar = (char) ((IntValue) from).concrete;
+      char toChar = (char) ((IntValue) to).concrete;
+      // TODO(zhihan): Consider how to handle expressions.
+      // As of now just use the concrete value.
+      return new StringValue(string.replace(fromChar, toChar), null);
+    }
+    return null;
+  }
+
+  @Override
+  public Value invokeMethod(String name, Value[] args, History history) {
+    if (name.equals("equals") && args.length == 1) {
+      return invokeEquals(args[0]);
+    } else if (name.equals("startsWith")) {
+      return invokeStartsWith(args);
+    } else if (name.equals("endsWith") && args.length == 1) {
+      return invokeEndsWith(args[0]);
+    } else if (name.equals("contains") && args.length == 1) {
+      return invokeContains(args[0]);
+    } else if (name.equals("concat") && args.length == 1) {
+      return invokeConcat(args[0]);
+    } else if (name.equals("length") && (args == null || args.length == 0)) {
+      int result = string.length();
+      if (symbolicExp != null) {
+        return symbolicExp.getField("length");
+      } else {
+        return new IntValue(result);
+      }
+    } else if (name.equals("matches") && args.length == 1) {
+      return invokeMatches(args[0]);
+    } else if (name.equals("replace") && args.length == 2) {
+      return invokeReplace(args[0], args[1]);
+    }
+    return super.invokeMethod(name, args, history);
+  }
+
+  public int MAKE_SYMBOLIC(History history) {
+    IntValue length = new IntValue(string.length());
+    int ret = symbol;
+    symbol = symbol + inc;
+    symbolicExp = new SymbolicStringExpression(ret, length);
+    length.MAKE_SYMBOLIC(history);
+
+    Constraint results = length.symbolic.setop(COMPARISON_OPS.GE);
+    boolean resultc = length.concrete >= 0;
+    history.checkAndSetBranch(resultc, results, 0);
+    if (resultc) {
+      history.setLastBranchDone();
     }
 
-    public int MAKE_SYMBOLIC(History history) {
-        IntValue length = new IntValue(string.length());
-        int ret = symbol;
-        symbol = symbol + inc;
-        symbolic = new SymbolicStringExpression(ret, length);
-        length.MAKE_SYMBOLIC(history);
-
-        Constraint results = length.symbolic.setop(SymbolicInt.COMPARISON_OPS.GE);
-        boolean resultc = length.concrete >= 0;
-        history.checkAndSetBranch(resultc, results, 0);
-        if (resultc) {
-            history.setLastBranchDone();
-        }
-
-        results = length.ISUB(new IntValue(Config.instance.maxStringLength)).symbolic.setop(SymbolicInt.COMPARISON_OPS.LE);
-        resultc = length.concrete <= Config.instance.maxStringLength;
-        history.checkAndSetBranch(resultc, results, 0);
-        if (resultc) {
-            history.setLastBranchDone();
-        }
-
-        //System.out.println("String symbol x"+ret+" = \""+string+"\"");
-        return ret;
+    results =
+        length
+            .ISUB(new IntValue(Config.instance.maxStringLength))
+            .symbolic
+            .setop(COMPARISON_OPS.LE);
+    resultc = length.concrete <= Config.instance.maxStringLength;
+    history.checkAndSetBranch(resultc, results, 0);
+    if (resultc) {
+      history.setLastBranchDone();
     }
+
+    return ret;
+  }
 }

@@ -121,23 +121,6 @@ public class RedBlackTreeNode extends Node {
         right = null;
     }
 
-    /**
-     * Returns the key of the node.
-     *
-     * @return The key of the node.
-     */
-    public int key() {
-        return super.key();
-    }
-
-    /**
-     * Returns the object of the node.
-     *
-     * @return The object of the node.
-     */
-    public Object object() {
-        return super.object();
-    }
 
     /**
      * Returns the parent of the node.
@@ -172,7 +155,7 @@ public class RedBlackTreeNode extends Node {
      * @return The node as a <code>String</code>.
      */
     public String toString() {
-        return new String("Key: " + this.key + ", color: " + this.color + ", parent: " + p);
+      return new String("Key: " + this.key() + ", color: " + this.color + ", parent: " + p);
     }
 
 
