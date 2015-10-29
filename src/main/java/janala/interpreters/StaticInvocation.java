@@ -70,7 +70,7 @@ public final class StaticInvocation {
     } else if (owner.equals("janala/Main")
         && name.equals("AbstractEqualsConcrete")
         && args.length == 1) {
-      history.abstractData(((IntValue) args[0]).concrete != 0, iid);
+      history.abstractData(((IntValue) args[0]).concrete != 0);
       return PlaceHolder.instance;
     } else if (owner.equals("janala/Main") && name.equals("AssumeOrBegin") && args.length == 1) {
       return history.assumeOrBegin((IntValue) args[0]);

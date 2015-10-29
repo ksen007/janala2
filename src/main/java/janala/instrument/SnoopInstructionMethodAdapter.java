@@ -4,7 +4,6 @@ import janala.config.Config;
 import janala.logger.ClassNames;
 import janala.logger.ObjectInfo;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Label;
 import java.util.LinkedList;
@@ -13,7 +12,6 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
   boolean isInit;
   boolean isSuperInitCalled;
   LinkedList<TryCatchBlock> tryCatchBlocks;
-  private int line;
   boolean calledNew = false;
 
   private final Coverage coverage;
@@ -83,9 +81,8 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
   }
 
   @Override
-  public void visitLineNumber(int i, Label label) {
-    line = i;
-    mv.visitLineNumber(i, label);
+  public void visitLineNumber(int lineNumber, Label label) {
+    mv.visitLineNumber(lineNumber, label);
   }
 
   @Override
@@ -626,7 +623,7 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
     }
   }
 
-  private void addMethodWithTryCatch(int opcode, String owner, String name, String desc) {
+  private void addMethodWithTryCatch(int opcode, String owner, String name, String desc, boolean itf) {
     addBipushInsn(mv, instrumentationState.incAndGetId());
     addBipushInsn(mv, instrumentationState.getMid());
 
@@ -646,7 +643,7 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
     tryCatchBlocks.addFirst(new TryCatchBlock(begin, handler, handler, null));
 
     mv.visitLabel(begin);
-    mv.visitMethodInsn(opcode, owner, name, desc);
+    mv.visitMethodInsn(opcode, owner, name, desc, itf);
     mv.visitJumpInsn(GOTO, end);
 
     mv.visitLabel(handler);
@@ -670,19 +667,19 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
         // case, there is no need to wrap the method call in try catch block as
         // it uses uninitialized this object.
         isSuperInitCalled = true;
-        mv.visitMethodInsn(opcode, owner, name, desc);
+        mv.visitMethodInsn(opcode, owner, name, desc, itf);
         if (calledNew) {
           calledNew = false;
         }
       } else {
-        addMethodWithTryCatch(opcode, owner, name, desc);
+        addMethodWithTryCatch(opcode, owner, name, desc, itf);
         if (calledNew) {
           calledNew = false;
           addValueReadInsn(mv, "Ljava/lang/Object;", "GETVALUE_");
         }
       }
     } else {
-      addMethodWithTryCatch(opcode, owner, name, desc);
+      addMethodWithTryCatch(opcode, owner, name, desc, itf);
     }
   }
 
@@ -819,8 +816,8 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
       mv.visitMethodInsn(
           INVOKESTATIC, Config.instance.analysisClass, "LDC", "(IILjava/lang/String;)V", false);
     } else {
-      mv.visitMethodInsn(
-          INVOKESTATIC, Config.instance.instance.analysisClass, "LDC", "(IILjava/lang/Object;)V", false);
+      mv.visitMethodInsn(INVOKESTATIC, Config.instance.analysisClass, 
+          "LDC", "(IILjava/lang/Object;)V", false);
     }
     mv.visitLdcInsn(cst);
   }
@@ -836,7 +833,7 @@ public class SnoopInstructionMethodAdapter extends MethodVisitor implements Opco
   }
 
   @Override
-  public void visitTableSwitchInsn(int min, int max, Label dflt, Label[] labels) {
+  public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
     int iid3;
     addBipushInsn(mv, iid3 = instrumentationState.incAndGetId());
     addBipushInsn(mv, instrumentationState.getMid());

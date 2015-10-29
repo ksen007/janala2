@@ -3,78 +3,97 @@ package janala.interpreters;
 import janala.logger.inst.*;
 
 public class PrintInterpreter implements IVisitor {
+  @Override
   public void visitAALOAD(AALOAD inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitAASTORE(AASTORE inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitACONST_NULL(ACONST_NULL inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitALOAD(ALOAD inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitANEWARRAY(ANEWARRAY inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitARETURN(ARETURN inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitARRAYLENGTH(ARRAYLENGTH inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitASTORE(ASTORE inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitATHROW(ATHROW inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitBALOAD(BALOAD inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitBASTORE(BASTORE inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitBIPUSH(BIPUSH inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitCALOAD(CALOAD inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitCASTORE(CASTORE inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitCHECKCAST(CHECKCAST inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitD2F(D2F inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitD2I(D2I inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitD2L(D2L inst) {
     System.out.println(inst);
   }
 
+  @Override
   public void visitDADD(DADD inst) {
     System.out.println(inst);
   }

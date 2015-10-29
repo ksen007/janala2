@@ -83,12 +83,6 @@ public class Config {
 
       oldStates = properties.getProperty("catg.oldStatesFile", "oldStates");
       test = System.getProperty("catg.test", properties.getProperty("catg.test", "test"));
-      String testCheckingClass =
-          System.getProperty(
-              "catg.testCheckingClass",
-              properties.getProperty(
-                  "catg.testCheckingClass", "janala.config.DefaultTestCheckerImpl"));
-
     } catch (IOException ex) {
       //ex.printStackTrace();
       // If no property file is given, set up the bare minimum
@@ -102,7 +96,7 @@ public class Config {
 
   private Object getObject(String className) {
     try {
-      Class clazz = Class.forName(className);
+      Class<?> clazz = Class.forName(className);
       Object ret = clazz.newInstance();
       return ret;
     } catch (ClassNotFoundException e) {

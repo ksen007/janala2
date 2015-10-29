@@ -65,7 +65,7 @@ import catg.CATG;
 
 public class AbstractionTest2 {
     public static boolean foo(){
-        CATG.BeginScope("test");
+        CATG.BeginScope();
         boolean ret;
         int x = CATG.readInt(0);
         int y = CATG.readInt(0);
@@ -78,7 +78,7 @@ public class AbstractionTest2 {
         } else {
             ret = false;
         }
-        CATG.EndScope("test");
+        CATG.EndScope();
         ret = CATG.abstractBool("test", ret);
         System.out.print("ret = ");
         System.out.println(ret);
@@ -88,13 +88,13 @@ public class AbstractionTest2 {
     public static void main(String[] args){
         int sum = 0;
 
-        CATG.BeginScope("test");
+        CATG.BeginScope();
         if (foo()) sum++;
         if (foo()) sum++;
         if (foo()) sum++;
         if (foo()) sum++;
-        CATG.EndScope("test");
-        sum = CATG.abstractInt("test", sum);
+        CATG.EndScope();
+        sum = CATG.abstractInt(sum);
 
         System.out.print("sum = ");
         System.out.println(sum);

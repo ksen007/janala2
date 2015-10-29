@@ -45,7 +45,7 @@ public class TreeMapTest {
         t.put(x, 1);
         x = new SimpleObject(CATG.readInt(0));
         t.put(x, 1);
-        CATG.event("test1", "a");
+        CATG.event("test1");
         x = new SimpleObject(CATG.readInt(0));
         t.put(x, 1);
         x = new SimpleObject(CATG.readInt(0));

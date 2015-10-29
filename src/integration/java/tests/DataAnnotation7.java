@@ -8,13 +8,13 @@ public class DataAnnotation7 {
        System.out.println("x = " + x);
 
 		boolean a, b;
-		CATG.BeginScope("test");
+		CATG.BeginScope();
         System.out.println("1");
         a = !x;
 		b = a;
         System.out.println("2");
 
-		CATG.EndScope("test");
+		CATG.EndScope();
 		a = CATG.abstractBool("test", a);
 
        System.out.println("a = " + a);

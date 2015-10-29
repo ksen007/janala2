@@ -12,15 +12,15 @@ public class SnoopInstructionClassAdapter extends ClassVisitor {
     super(Opcodes.ASM5, cv);
   }
 
-  public MethodVisitor visitMethod(
-      int access, String name, String desc, String signature, String[] exceptions) {
+  @Override
+  public MethodVisitor visitMethod(int access, String name, String desc, 
+      String signature, String[] exceptions) {
     Coverage.instance.setLastMethod(name + ":" + signature);
     MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
     if (mv != null) {
-      mv = new SnoopInstructionMethodAdapter(mv, name.equals("<init>"), 
+      return new SnoopInstructionMethodAdapter(mv, name.equals("<init>"), 
           Coverage.get(), GlobalStateForInstrumentation.instance, ClassNames.getInstance());
     }
-
-    return mv;
+    return null;
   }
 }

@@ -71,9 +71,9 @@ public class SortedListInsert3 {
             System.out.println(x);
             list.insert(x);
             System.out.println("Length  = " + len);
-            CATG.event("test", "a");
+            CATG.event("a");
         }
-        CATG.event("test", "b");
+        CATG.event("b");
 
     }
 }

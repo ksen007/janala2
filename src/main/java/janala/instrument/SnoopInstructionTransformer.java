@@ -19,6 +19,8 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
     writeInstrumentedClasses = true;
     instDir = "instrumented";
   }
+  
+  @SuppressWarnings("unused")
   public static void premain(String agentArgs, Instrumentation inst) {
     inst.addTransformer(new SnoopInstructionTransformer());
   }
@@ -35,6 +37,7 @@ public class SnoopInstructionTransformer implements ClassFileTransformer {
     return false;
   }
 
+  @Override
   public byte[] transform(ClassLoader loader, String cname, Class<?> classBeingRedefined,
       ProtectionDomain d, byte[] cbuf)
     throws IllegalClassFormatException {

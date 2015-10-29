@@ -84,7 +84,7 @@ public class parser {
     }
 
     boolean matchStr(char[] s1, String s2) {
-        CATG.BeginScope("test1");
+        CATG.BeginScope();
         boolean ret;
         int len = s2.length();
 
@@ -98,7 +98,7 @@ public class parser {
         } else {
             ret = false;
         }
-        CATG.EndScope("test1");
+        CATG.EndScope();
         ret = CATG.abstractBool("test1", ret);
         return ret;
     }
@@ -153,12 +153,12 @@ public class parser {
             }
             System.out.println(":");
 
-            CATG.BeginScope("test1");
+            CATG.BeginScope();
             sym = gettoken(token);
-            CATG.EndScope("test1");
+            CATG.EndScope();
             System.out.print("<");
             System.out.println(sym);
-            sym = CATG.abstractInt("test1", sym);
+            sym = CATG.abstractInt(sym);
             System.out.print(sym);
             System.out.println(">");
         } else {

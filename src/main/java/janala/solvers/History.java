@@ -257,7 +257,8 @@ public static History readHistory(Solver solver, InputStream is) {
     setInPrefix();
   }
 
-  public void abstractData(boolean isEqual, int iid) {
+  /** Called from Main.AbstractEqualrConcrete */
+  public void abstractData(boolean isEqual) {
     lastScope.isValidExpansion = lastScope.isValidExpansion && isEqual;
   }
   

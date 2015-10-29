@@ -605,7 +605,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
             }
             queue[k] = e;
             k = parent;
-            CATG.event("test1", "u");
+            CATG.event("u");
         }
         queue[k] = key;
     }
@@ -651,7 +651,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
                 break;
             queue[k] = c;
             k = child;
-            CATG.event("test1", "d");
+            CATG.event("d");
         }
         queue[k] = key;
     }

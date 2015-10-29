@@ -10,8 +10,6 @@ import janala.utils.MyLogger;
 import janala.utils.Inputs;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -28,10 +26,14 @@ public class Main {
   private static int inputDepth;
 
   static {
-    
     scopeDepth = 0;
     inputDepth = 0;
     inputs = new Inputs(Config.instance.inputs);
+  }
+  
+  /** Set the inputs of the system. */
+  static void setInput(Inputs inputsOverride) {
+    inputs = inputsOverride;
   }
 
   private static boolean isInputAvailable() {
@@ -89,7 +91,9 @@ public class Main {
     }
   }
 
-  public static void AbstractEqualsConcrete(boolean b) {}
+  /** Insert a check that an abstract value is equal to the concrete value. 
+   * @param predicate */
+  public static void AbstractEqualsConcrete(boolean predicate) {}
 
   public static boolean compare(Object a, Object b) {
     return a.equals(b);
@@ -111,19 +115,40 @@ public class Main {
   }
 
   // These functions will be handled in the concolic interpreter.
-  public static void MakeSymbolic(int x) {}
+  /**
+   * @param intValue
+   */
+  public static void MakeSymbolic(int intValue) {}
 
-  public static void MakeSymbolic(long x) {}
+  /**
+   * @param longValue
+   */
+  public static void MakeSymbolic(long longValue) {}
 
-  public static void MakeSymbolic(char x) {}
+  /**
+   * @param charValue
+   */
+  public static void MakeSymbolic(char charValue) {}
 
-  public static void MakeSymbolic(byte x) {}
+  /**
+   * @param byteValue
+   */
+  public static void MakeSymbolic(byte byteValue) {}
 
-  public static void MakeSymbolic(short x) {}
+  /**
+   * @param shortValue
+   */
+  public static void MakeSymbolic(short shortValue) {}
 
-  public static void MakeSymbolic(boolean x) {}
+  /**
+   * @param boolValue
+   */
+  public static void MakeSymbolic(boolean boolValue) {}
 
-  public static void MakeSymbolic(String x) {}
+  /**
+   * @param stringValue
+   */
+  public static void MakeSymbolic(String stringValue) {}
 
   public static int readInt(int x) {
     if (isInputAvailable()) {
@@ -256,7 +281,7 @@ public class Main {
       try {
         inputStream = new ObjectInputStream(new FileInputStream(Config.instance.oldStates));
         Object tmp = inputStream.readObject();
-        if (tmp instanceof TreeMap) {
+        if (tmp instanceof TreeMap<?,?>) {
           oldStates = (TreeMap<String, HashSet<Serializable>>) tmp;
         } else {
           oldStates = new TreeMap<String, HashSet<Serializable>>();

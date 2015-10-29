@@ -43,15 +43,15 @@ public class Annot1 {
     public static void main(String[] args) {
         int[] input = CATG.readIntArray(10,0);
 
-        CATG.BeginScope("test");
+        CATG.BeginScope();
         int count1 = count(input, 3);
-        CATG.EndScope("test");
-        count1 = CATG.abstractInt("test", count1);
+        CATG.EndScope();
+        count1 = CATG.abstractInt(count1);
 
-        CATG.BeginScope("test");
+        CATG.BeginScope();
         int count2 = count(input, 7);
-        CATG.EndScope("test");
-        count2 = CATG.abstractInt("test", count2);
+        CATG.EndScope();
+        count2 = CATG.abstractInt(count2);
 
         if (count1+count2 == 0) {
             System.out.println("do something");

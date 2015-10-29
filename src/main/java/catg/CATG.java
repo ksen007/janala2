@@ -7,10 +7,11 @@ import janala.interpreters.OrValue;
 import java.io.Serializable;
 
 public class CATG {
-  public static int abstractInt(String test, int x) {
-    int y = readInt(x);
-    Main.AbstractEqualsConcrete(Main.compare(y, x));
-    return y;
+  /** */
+  public static int abstractInt(int value) {
+    int inputValue = readInt(value);
+    Main.AbstractEqualsConcrete(Main.compare(inputValue, value));
+    return inputValue;
   }
 
   public static boolean abstractBool(String test, boolean x) {
@@ -124,15 +125,15 @@ public class CATG {
     return predicate;
   }
 
-  public static void BeginScope(String test) {
+  public static void BeginScope() {
     Main.BeginScope();
   }
 
-  public static void EndScope(String test) {
+  public static void EndScope() {
     Main.EndScope();
   }
 
-  public static void event(String test, String eventName) {
+  public static void event(String eventName) {
     Main.event(eventName);
   }
 

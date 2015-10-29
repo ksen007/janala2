@@ -88,7 +88,7 @@ public class parser2 {
     }
 
     boolean matchStr(char[] s1, String s2) {
-        CATG.BeginScope("test1");
+        CATG.BeginScope();
         boolean ret;
         int len = s2.length();
 
@@ -103,14 +103,14 @@ public class parser2 {
         } else {
             ret = false;
         }
-        CATG.EndScope("test1");
+        CATG.EndScope();
         ret = CATG.abstractBool("test1", ret);
         return ret;
     }
 
     boolean myalnum(char s[])
     {
-        CATG.BeginScope("test1");
+        CATG.BeginScope();
         boolean ret;
         if (!isalpha(s[0])) ret = false;
         else {
@@ -118,14 +118,14 @@ public class parser2 {
             }
             ret = true;
         }
-        CATG.EndScope("test1");
+        CATG.EndScope();
         ret = CATG.abstractBool("test1", ret);
         return ret;
     }
 
     boolean mynum(char s[])
     {
-        CATG.BeginScope("test1");
+        CATG.BeginScope();
         boolean ret;
         if (!isdigit(s[0])) ret = false;
         else {
@@ -133,7 +133,7 @@ public class parser2 {
             }
             ret = true;
         }
-        CATG.EndScope("test1");
+        CATG.EndScope();
         ret = CATG.abstractBool("test1", ret);
         return ret;
     }
@@ -194,10 +194,10 @@ public class parser2 {
                 token[i] = CATG.readChar('0');
             }
 
-            CATG.BeginScope("test1");
+            CATG.BeginScope();
             sym = gettoken(token);
-            CATG.EndScope("test1");
-            sym = CATG.abstractInt("test1", sym);
+            CATG.EndScope();
+            sym = CATG.abstractInt(sym);
             System.out.println("Token:"+token+":");
         } else {
             sym = period;

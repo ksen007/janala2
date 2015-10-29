@@ -1,4 +1,4 @@
-package janala.solvers
+package janala.integration.solvers
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
@@ -9,6 +9,8 @@ import janala.interpreters.Constraint;
 import janala.interpreters.SymbolicInt;
 import janala.interpreters.IntValue;
 import janala.interpreters.COMPARISON_OPS;
+import janala.solvers.CVC4Solver
+import janala.solvers.InputElement
 
 import org.junit.Test
 import org.junit.Before

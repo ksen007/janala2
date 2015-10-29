@@ -23,7 +23,7 @@ public class ManyColumnsRecords2 {
     public  static void testme(Table customers, int c1){
         int result;
 
-        CATG.BeginScope("test");
+        CATG.BeginScope();
 
         l_c1 = c1;
 
@@ -41,7 +41,7 @@ public class ManyColumnsRecords2 {
                 new Where() {
                     @Override
                     public boolean where(Row[] rows) {
-                        CATG.BeginScope("test");
+                        CATG.BeginScope();
                         boolean ret = true;
 
                         for(int i = 1;i < COLUMN_COUNT; i++){
@@ -51,7 +51,7 @@ public class ManyColumnsRecords2 {
                                 break;
                             }
                         }
-                        CATG.EndScope("test");
+                        CATG.EndScope();
                         ret = CATG.abstractBool("test", ret);
                         return ret;
                     }
@@ -64,8 +64,8 @@ public class ManyColumnsRecords2 {
 
         result = t.size();
 
-        CATG.EndScope("test");
-        result = CATG.abstractInt("test", result);
+        CATG.EndScope();
+        result = CATG.abstractInt(result);
 
         System.out.println(result + " record(s) are selected.");
 

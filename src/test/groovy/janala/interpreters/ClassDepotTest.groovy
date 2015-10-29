@@ -7,17 +7,19 @@ import org.junit.Test
 
 import groovy.transform.CompileStatic
 
+
 @CompileStatic
 class TestClassForDepot {
   private String id;
   public static sId;
 }
 
+
+@CompileStatic
 class ClassDepotTest {
   @Test
   void testInit() {
     ClassDepot a = new ClassDepot()
-    assertEquals(0, a.getClassId("a"))
 
     ClassDepot.setInstance(a)
     assertEquals(a, ClassDepot.getInstance())

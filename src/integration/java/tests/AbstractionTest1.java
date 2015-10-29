@@ -59,14 +59,14 @@ public class AbstractionTest1 {
         System.out.println(x2);
         System.out.println(y2);
 
-        CATG.BeginScope("test");
+        CATG.BeginScope();
         boolean b1 = testme(x1, y1);
-        CATG.EndScope("test");
+        CATG.EndScope();
         b1 = CATG.abstractBool("test", b1);
 
-        CATG.BeginScope("test");
+        CATG.BeginScope();
         boolean b2 = testme(x2, y2);
-        CATG.EndScope("test");
+        CATG.EndScope();
         b2 = CATG.abstractBool("test", b2);
 
         System.out.println(b1);

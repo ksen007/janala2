@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class ClassDepot implements Serializable {
 
-  private Map<String, ClassTemplate> templates;
+  final private Map<String, ClassTemplate> templates;
 
   public static ClassDepot instance = new ClassDepot();
   public static void setInstance(ClassDepot i) {
@@ -28,14 +28,14 @@ public class ClassDepot implements Serializable {
     templates = new TreeMap<String, ClassTemplate>();
   }
 
-  private ClassTemplate getOrCreateTemplate(String cName, Class clazz) {
+  private ClassTemplate getOrCreateTemplate(String cName, Class<?> clazz) {
     ClassTemplate ct = templates.get(cName);
     if (ct != null) {
       return ct;
     }
     ct = new ClassTemplate(clazz);
     templates.put(cName, ct);
-    Class parent = clazz.getSuperclass();
+    Class<?> parent = clazz.getSuperclass();
     if (parent != null) {
       ClassTemplate pt = getOrCreateTemplate(parent.getName(), parent);
       ct.addFields(pt);
@@ -45,7 +45,7 @@ public class ClassDepot implements Serializable {
 
   public int getFieldIndex(String cName, String field) {
     try {
-      Class clazz = Class.forName(cName);
+      Class<?> clazz = Class.forName(cName);
       ClassTemplate ct = getOrCreateTemplate(cName, clazz);
       return ct.getFieldIndex(field);
     } catch (ClassNotFoundException e) {
@@ -56,7 +56,7 @@ public class ClassDepot implements Serializable {
 
   public int getStaticFieldIndex(String cName, String field) {
     try {
-      Class clazz = Class.forName(cName);
+      Class<?> clazz = Class.forName(cName);
       ClassTemplate ct = getOrCreateTemplate(cName, clazz);
       return ct.getStaticFieldIndex(field);
     } catch (ClassNotFoundException e) {
@@ -67,7 +67,7 @@ public class ClassDepot implements Serializable {
 
   public int nFields(String cName) {
     try {
-      Class clazz = Class.forName(cName);
+      Class<?> clazz = Class.forName(cName);
       ClassTemplate ct = getOrCreateTemplate(cName, clazz);
       return ct.nFields();
     } catch (ClassNotFoundException e) {
@@ -78,16 +78,12 @@ public class ClassDepot implements Serializable {
 
   public int nStaticFields(String cName) {
     try {
-      Class clazz = Class.forName(cName);
+      Class<?> clazz = Class.forName(cName);
       ClassTemplate ct = getOrCreateTemplate(cName, clazz);
       return ct.nStaticFields();
     } catch (ClassNotFoundException e) {
       logger.log(Level.SEVERE, "", e);
       return -1;
     }
-  }
-
-  public int getClassId(String className) {
-    return 0; //To change body of created methods use File | Settings | File Templates.
   }
 }

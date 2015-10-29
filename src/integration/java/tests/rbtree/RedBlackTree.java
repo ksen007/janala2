@@ -120,7 +120,7 @@ public class RedBlackTree {
                 } else {
                     if (x == (x.parent()).right()) {
                         x = x.parent();
-                        CATG.event("test1", "l");
+                        CATG.event("l");
                         leftRotate(x);
                     }
 
@@ -139,7 +139,7 @@ public class RedBlackTree {
                 } else {
                     if (x == (x.parent()).left()) {
                         x = x.parent();
-                        CATG.event("test1", "r");
+                        CATG.event("r");
                         rightRotate(x);
                     }
 

@@ -17,7 +17,6 @@ public final class ClassRunner {
   InvocationTargetException, InstantiationException {
     Method[] methods = clazz.getMethods();
     for (Method method: methods) {
-      // TODO (investigate why annotation cannot be used)
       if (method.getName().startsWith("test")) {
         System.out.println("Running " + method.getName());
         new Runner(clazz, method).run();

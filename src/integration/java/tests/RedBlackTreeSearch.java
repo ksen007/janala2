@@ -54,7 +54,7 @@ public class RedBlackTreeSearch {
         for (int i = 0; i < N; i++) {
             int x = CATG.readInt(0);
             if (i==N-1) {
-              CATG.event("test1", "a");
+              CATG.event("a");
             }
             System.out.println("Inserting " + x);
             tree.treeInsert(new RedBlackTreeNode(x));

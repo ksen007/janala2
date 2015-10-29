@@ -394,7 +394,7 @@ public class HashMap<K,V>
         for (Entry<K,V> e = table[i]; e != null; e = e.next) {
             Object k;
             if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
-                CATG.event("test1", "b");
+                CATG.event("test1");
                 V oldValue = e.value;
                 e.value = value;
                 e.recordAccess(this);
