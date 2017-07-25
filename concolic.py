@@ -94,7 +94,7 @@ def remove(file):
 
 def rerunTests():
     print "Rerunning tests"
-    cmd1 = "java -Xmx4096M -Xms2048M -ea -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -cp "+catg_home+"lib/emma.jar emmarun -merge yes -raw -sp "+catg_home+"src/ -cp "+ classpath+" "+yourpgm+" "+arguments
+    cmd1 = "java -Xmx4096M -Xms2048M -noverify -ea -Djanala.conf="+catg_home+"catg.conf "+jvmOpts+" -cp "+catg_home+"lib/emma.jar emmarun -merge yes -raw -sp "+catg_home+"src/integration/java -cp "+ classpath+" "+yourpgm+" "+arguments
     cmd1List = shlex.split(cmd1)
     remove('inputs')
     remove('inputs.bak')
@@ -110,7 +110,7 @@ def rerunTests():
             if verbose:
                 print cmd1
             subprocess.call(cmd1List, shell=windows)
-    cmd2 = "java -cp "+catg_home+"lib/emma.jar emma report -r html -in coverage.es -sp "+catg_home+"src/"
+    cmd2 = "java -cp "+catg_home+"lib/emma.jar emma report -r html -in coverage.es -sp "+catg_home+"src/integration/java"
     cmd2List = shlex.split(cmd2)
     subprocess.call(cmd2List, shell=windows)
 
