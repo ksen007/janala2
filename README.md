@@ -37,7 +37,7 @@ This runs the tests using online concolic execution.  To run tests with offline 
 
 If you want to generate tests on a Java class file having a main method, you need to use the concolic.py script.  For example, the following command generates test inputs for the class tests.Testme (the java source of this class can be found in [src/integration/java/tests/Testme.java](src/integration/java/tests/Testme.java).
 
-    python concolic.py --coverage 100 tests.Testme
+    python concolic.py tests.Testme
     
 
 
