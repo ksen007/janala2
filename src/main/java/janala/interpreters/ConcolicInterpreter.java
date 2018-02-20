@@ -1371,19 +1371,20 @@ public class ConcolicInterpreter implements IVisitor {
   }
 
   public void visitPUTFIELD(PUTFIELD inst) {
+    ObjectInfo oi = cnames.get(inst.cIdx);
+    FieldInfo fi = oi.get(inst.fIdx, false);
+    Value value;
+    if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
+      value = currentFrame.pop2();
+    } else {
+      value = currentFrame.pop();
+    }
+    ObjectValue ref = (ObjectValue) currentFrame.pop();
     try {
-      ObjectInfo oi = cnames.get(inst.cIdx);
-      FieldInfo fi = oi.get(inst.fIdx, false);
-      Value value;
-      if (inst.desc.startsWith("D") || inst.desc.startsWith("J")) {
-        value = currentFrame.pop2();
-      } else {
-        value = currentFrame.pop();
-      }
-      ObjectValue ref = (ObjectValue) currentFrame.pop();
       ref.setField(fi.getFieldId(), value);
     } catch (Exception e) {
-      e.printStackTrace();
+      ObjectValue newref = (ObjectValue) currentFrame.pop();
+      newref.setField(fi.getFieldId(), value);
     }
     checkAndSetException();
   }
